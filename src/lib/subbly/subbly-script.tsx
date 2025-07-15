@@ -1,10 +1,11 @@
 import Script from 'next/script'
-import type { ConfigureItemPayload } from '@/lib/subbly/types'
+import type { ConfigureItemPayload, UpdateCartPayload } from '@/lib/subbly/types'
 
 declare global {
   interface Window {
     subblyCart?: {
-      configureItem: (payload: ConfigureItemPayload) => void
+      configureItem: (payload: ConfigureItemPayload) => Promise<void>
+      updateCart: (payload: UpdateCartPayload) => Promise<void>
     }
   }
 }

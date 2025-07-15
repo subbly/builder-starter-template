@@ -1,6 +1,7 @@
 export type CartItemAddPayloadSubscription = {
   productId: number
   quantity?: number
+  options?: SurveyOption[]
 }
 
 export type CartItemAddPayloadOneTime = {
@@ -38,16 +39,38 @@ export type CartItemAddPayloadBundle = {
     items: BundlePayloadItem[]
     preferences: []
   }
+  options?: SurveyOption[]
 }
 
 export type CartItemAddPayloadBundleConfigure = {
-  productId: number
+  productId?: number
   bundleId: number
   quantity?: number
+  options?: SurveyOption[]
 }
 
 export type CartItemAddPayloadSurvey = {
   surveyId: number
+}
+
+export type SurveyAnswer = {
+  /**
+   * Answer ID - required for select, multiple, quantity question types
+   */
+  id?: number
+  /**
+   * Answer content - required only for text question type
+   */
+  content?: string
+  /**
+   * Quantity - required only for quantity question type
+   */
+  quantity?: number
+}
+
+export type SurveyOption = {
+  questionId: number
+  answers: SurveyAnswer[]
 }
 
 export type ConfigureItemPayload =
@@ -56,6 +79,25 @@ export type ConfigureItemPayload =
   | CartItemAddPayloadBundle
   | CartItemAddPayloadBundleConfigure
   | CartItemAddPayloadSurvey
+
+export type UpdateCartPayload = {
+  couponCode?: string
+  currencyCode?: string
+  giftCardCode?: string
+  giftInfo?: {
+    message: string | null
+    /**
+     * Only for subscription/bundle plans
+     */
+    numberOfOrders: number | null
+    recipientEmail?: string | null
+    /**
+     * Only for subscription/bundle plans
+     */
+    startsAt: string | null
+  } | null
+  referralId?: number | null
+}
 
 export type ListProductsFilters = {
   page?: number

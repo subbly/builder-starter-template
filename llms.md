@@ -54,12 +54,17 @@ This section explains how to use the Subbly cart integration hook to add product
 import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
 
 // Use the hook in your component
-const { addToCart } = useSubblyCart();
+const { addToCart, updateCart } = useSubblyCart();
 
 // Add a product to the cart
 addToCart({
   productId: 123,
   quantity: 1
+});
+
+// Update cart information
+updateCart({
+  couponCode: 'SAVE20'
 });
 ```
 
@@ -474,9 +479,21 @@ type GiftCardRecipient = {
   message: string | null
 }
 
+type SurveyAnswer = {
+  id?: number              // required for select, multiple, quantity question types
+  content?: string         // required for text question type
+  quantity?: number        // required for quantity question type
+}
+
+type SurveyOption = {
+  questionId: number
+  answers: SurveyAnswer[]
+}
+
 type CartItemAddPayloadSubscription = {
   productId: number               // ID of the plan to add
   quantity?: number
+  options?: SurveyOption[]
 }
   
 type CartItemAddPayloadOneTime = {
@@ -494,12 +511,14 @@ type CartItemAddPayloadBundle = {
     items: BundlePayloadItem[]
     preferences: []
   }
+  options?: SurveyOption[]
 }
 
 type CartItemAddPayloadBundleConfigure = {
-  productId: number
+  productId?: number
   bundleId: number
   quantity?: number
+  options?: SurveyOption[]
 }
 
 type CartItemAddPayloadSurvey = {
@@ -512,6 +531,19 @@ type ConfigureItemPayload =
   | CartItemAddPayloadBundle
   | CartItemAddPayloadBundleConfigure
   | CartItemAddPayloadSurvey
+
+type UpdateCartPayload = {
+  couponCode?: string
+  currencyCode?: string
+  giftCardCode?: string
+  giftInfo?: {
+    message: string | null
+    numberOfOrders: number | null    // Only for subscription/bundle plans
+    recipientEmail?: string | null
+    startsAt: string | null          // Only for subscription/bundle plans
+  } | null
+  referralId?: number | null
+}
 ```
 
 ## Available Functions
@@ -597,30 +629,74 @@ async function loadBundleGroups(bundleId: number, headers?: BundleHeaders): Prom
 Adds an item to the Subbly cart.
 
 ```typescript
-function addToCart(payload: ConfigureItemPayload): void
+async function addToCart(payload: ConfigureItemPayload): Promise<void>
 ```
-
-The `payload` parameter must be one of these types:
-
-- For subscription products: `{ productId: number, quantity?: number }`
-- For one-time products: `{ productId: number, quantity?: number, addon?: boolean, addonDuration?: number | 0 | 1, giftCard?: GiftCardRecipient | null }`
-- For bundles: `{ productId: number, bundle?: { items: BundlePayloadItem[], preferences: [] }, quantity?: number }` or `{ productId: number, bundleId: number, quantity?: number }`
-- For surveys: `{ surveyId: number }`
 
 Examples:
 
 ```typescript
 // Add a subscription product
-addToCart({ productId: 123, quantity: 1 });
+await addToCart({ productId: 123, quantity: 1 });
+
+// Add a subscription product with survey options
+await addToCart({ 
+  productId: 123, 
+  quantity: 1,
+  options: [{
+    questionId: 1,
+    answers: [{ id: 5 }]
+  }]
+});
 
 // Add a one-time product as an addon
-addToCart({ productId: 456, addon: true, addonDuration: 0 });
+await addToCart({ productId: 456, addon: true, addonDuration: 0 });
 
 // Add a bundle
-addToCart({ productId: 789, bundleId: 101, quantity: 2 });
+await addToCart({ productId: 789, bundleId: 101, quantity: 2 });
 
 // Add a survey
-addToCart({ surveyId: 101 });
+await addToCart({ surveyId: 101 });
+```
+
+#### updateCart
+
+Updates the cart with new information.
+
+```typescript
+async function updateCart(payload: UpdateCartPayload): Promise<void>
+```
+
+Examples:
+
+```typescript
+// Apply a coupon code
+await updateCart({ couponCode: 'SAVE20' });
+
+// Change currency
+await updateCart({ currencyCode: 'EUR' });
+
+// Apply a gift card
+await updateCart({ giftCardCode: 'ba445a44-e446-47da-b496-97d569f59ff5' });
+
+// Set gift information for a subscription
+await updateCart({ 
+  giftInfo: {
+    message: 'Happy Birthday!',
+    numberOfOrders: 3,          // Only for subscription/bundle plans
+    recipientEmail: 'friend@example.com',
+    startsAt: '2024-02-01'      // Only for subscription/bundle plans
+  }
+});
+
+// Set a referral ID
+await updateCart({ referralId: 555 });
+
+// Update multiple cart properties at once
+await updateCart({
+  couponCode: 'SAVE20',
+  currencyCode: 'EUR',
+  referralId: 555
+});
 ```
 
 ## Next.js Integration Examples
@@ -640,9 +716,9 @@ export default async function ProductsPage() {
   const productList = await listProducts({
     page: 1,
     perPage: 20,
-    type: 'one_time',   // Only one-time products
-    digital: 0,         // Only physical products
-    giftCard: 0         // Exclude gift cards
+    type: 'one_time',
+    digital: 0,
+    giftCard: 0
   });
   
   // Access the data and pagination info
@@ -842,14 +918,67 @@ import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
 import { Button } from '@/components/ui/button';
 
 export default function AddToCartButton({ productId }) {
-  const { addToCart } = useSubblyCart();
+  const { addToCart, updateCart } = useSubblyCart();
+  
+  const handleAddToCart = async () => {
+    await addToCart({ productId });
+  };
   
   return (
-    <Button onClick={() => addToCart({ productId })}>
+    <Button onClick={handleAddToCart}>
       Add to Cart
     </Button>
   );
 }
+```
+
+#### Adding Products with Survey Options
+
+```typescript
+'use client';
+
+import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
+import { Button } from '@/components/ui/button';
+import { SurveyOption } from '@/lib/subbly/types';
+
+export default function AddProductWithSurvey({ productId, surveyOptions }: {
+  productId: number;
+  surveyOptions: SurveyOption[];
+}) {
+  const { addToCart } = useSubblyCart();
+  
+  const handleAddToCart = async () => {
+    await addToCart({
+      productId,
+      quantity: 1,
+      options: surveyOptions
+    });
+  };
+  
+  return (
+    <Button onClick={handleAddToCart}>
+      Add to Cart
+    </Button>
+  );
+}
+
+const surveyOptions: SurveyOption[] = [
+  {
+    questionId: 1,
+    answers: [{ id: 5 }, { id: 6}]  // Multiple
+  },
+  {
+    questionId: 2,
+    answers: [{ content: 'Custom text response' }]  // Text answer
+  },
+  {
+    questionId: 3,
+    answers: [
+      { id: 10, quantity: 2 },
+      { id: 11, quantity: 1 }
+    ]
+  }
+];
 ```
 
 #### Adding a Bundle
@@ -863,9 +992,81 @@ import { Button } from '@/components/ui/button';
 export default function AddBundleButton({ productId, bundleId }) {
   const { addToCart } = useSubblyCart();
   
+  const handleAddBundle = async () => {
+    await addToCart({ productId, bundleId });
+  };
+  
   return (
-    <Button onClick={() => addToCart({ productId, bundleId })}>
+    <Button onClick={handleAddBundle}>
       Add Bundle to Cart
+    </Button>
+  );
+}
+```
+
+#### Using updateCart
+
+```typescript
+'use client';
+
+import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+
+export default function CartUpdater() {
+  const { updateCart } = useSubblyCart();
+  const [couponCode, setCouponCode] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  const applyCoupon = async () => {
+    await updateCart({ couponCode });
+  };
+  
+  return (
+    <div>
+      <div className="flex gap-2">
+        <Input 
+          value={couponCode}
+          onChange={(e) => setCouponCode(e.target.value)}
+          placeholder="Enter coupon code"
+        />
+        <Button onClick={applyCoupon} disabled={loading}>
+          Apply Coupon
+        </Button>
+      </div>
+    </div>
+  );
+}
+```
+
+#### Gift Subscription Example
+
+```typescript
+'use client';
+
+import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
+import { Button } from '@/components/ui/button';
+
+export default function GiftSubscription() {
+  const { addToCart, updateCart } = useSubblyCart();
+  
+  const addGiftSubscription = async (productId: number) => {
+    await addToCart({ productId });
+    
+    await updateCart({
+      giftInfo: {
+        message: 'Happy Birthday! Enjoy your subscription!',
+        numberOfOrders: 6,
+        recipientEmail: 'friend@example.com',
+        startsAt: '2024-03-01'
+      }
+    });
+  };
+  
+  return (
+    <Button onClick={() => addGiftSubscription(123)}>
+      Send as Gift
     </Button>
   );
 }
