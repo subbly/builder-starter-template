@@ -5,7 +5,7 @@ This document explains how to integrate with the Subbly platform to retrieve pro
 ## General Information
 
 - By default you are using `addToCart` method from a `useSubblyCart`, but users sometimes can ask to add a direct link to check. In that case use buyLink from an appropriate object (productVariant, productPlan, product)
-- All prices are defined in decimals, not integers.
+- All prices are defined in integers(cents), not decimals.
 - When creating cart icon or cart counter, use these CSS classes to connect them with Subbly cart: `subbly-cart-product-count`, `subbly-cart`.
 - These classes will automatically toggle cart widget and update cart counter when items are added or removed from the cart.
 - If you see that in the existing code the cart icon or cart counter is not working, check if these classes are used and propose to add them.
