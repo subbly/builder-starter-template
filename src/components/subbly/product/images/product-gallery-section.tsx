@@ -13,9 +13,7 @@ export type ProductGallerySectionProps = HTMLProps<HTMLDivElement> & {
 }
 
 export const ProductGallerySection = (props: ProductGallerySectionProps) => {
-  const { images } = useProductGallery({
-    images: props.images,
-  })
+  const { images } = useProductGallery({ images: props.images })
 
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [emblaMainApi, setEmblaMainApi] = useState<CarouselApi>()
