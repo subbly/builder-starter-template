@@ -1,1 +1,1 @@
-export { TransitionRouterProvider } from "./TransitionRouterProvider";
+export { TransitionRouterProvider } from "./transition-router-provider";

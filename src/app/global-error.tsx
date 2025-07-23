@@ -3,7 +3,7 @@
 import NextError from 'next/error'
 import Script from 'next/script'
 
-export default function GlobalError({ error }: { error: Error & { digest?: string } }) {
+export default function GlobalError() {
   return (
     <html>
       <body>
