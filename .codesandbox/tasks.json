@@ -3,7 +3,7 @@
   "setupTasks": [
     {
       "name": "Install Dependencies",
-      "command": "npm install --legacy-peer-deps"
+      "command": "npm install"
     },
     {
       "name": "Install",
@@ -28,7 +28,7 @@
     },
     "install": {
       "name": "Install Dependencies",
-      "command": "npm install --legacy-peer-deps",
+      "command": "npm install",
       "runAtStart": true,
       "restartOn": {
         "files": ["package.json"]
