@@ -4,8 +4,8 @@ import { useCallback, useState, useEffect, type HTMLProps } from 'react'
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
-import { useProductGallery } from '@/hooks/subbly/use-product-images'
-import { ProductImage } from '@/lib/subbly/types'
+import { useProductImages } from '@subbly/react'
+import type { ProductImage } from '@subbly/react'
 
 export type ProductGallerySectionProps = HTMLProps<HTMLDivElement> & {
   images: ProductImage[]
@@ -13,7 +13,9 @@ export type ProductGallerySectionProps = HTMLProps<HTMLDivElement> & {
 }
 
 export const ProductGallerySection = (props: ProductGallerySectionProps) => {
-  const { images } = useProductGallery({ images: props.images })
+  const { images } = useProductImages({
+    images: props.images
+  })
 
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [emblaMainApi, setEmblaMainApi] = useState<CarouselApi>()
@@ -63,7 +65,7 @@ export const ProductGallerySection = (props: ProductGallerySectionProps) => {
         <>
           <Carousel
             opts={{
-              loop: true,
+              loop: true
             }}
             setApi={setEmblaMainApi}
           >

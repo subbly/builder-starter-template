@@ -6,20 +6,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { formatAmount } from '@/lib/subbly/format-amount'
-import { ProductPlan } from '@/lib/subbly/types'
 import { useState } from 'react'
+import { formatBillingFrequency, useCurrencyFormatter } from '@subbly/react'
+import type { ProductPricing } from '@subbly/react'
 
 export type SubscriptionOptionCardProps = {
-  options: ProductPlan[]
-  value: ProductPlan['id'] | null
+  options: ProductPricing[]
+  value: ProductPricing['id'] | null
   basePrice: number
-  onSelect: (optionId: ProductPlan['id']) => void
-  getOptionPrice: (optionId: ProductPlan['id']) => number
+  onSelect: (optionId: ProductPricing['id']) => void
+  getOptionPrice: (optionId: ProductPricing['id']) => number
 }
 
 export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
-  const [activeOption, setActiveOption] = useState<ProductPlan | null>(props.options[0])
+  const { formatAmount } = useCurrencyFormatter()
+  const [activeOption, setActiveOption] = useState<ProductPricing | null>(props.options[0])
   const hasMultipleOptions = props.options.length > 1
   const selectedOption = props.options.find((option) => option.id === props.value)
 
@@ -61,7 +62,7 @@ export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
               <SelectContent>
                 {props.options.map((option) => (
                   <SelectItem key={option.id} value={`${option.id}`}>
-                    {option.name || option.billingCycleName}
+                    {option.name || formatBillingFrequency(option.frequencyUnit, option.frequencyCount)}
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -2,8 +2,8 @@
 
 import { Button } from '@/components/ui/button'
 import { PropsWithChildren } from 'react'
-import { useSubblyCart } from '@/lib/subbly/use-subbly-cart'
-import { ConfigureItemPayload } from '@/lib/subbly/types'
+import { useSubblyCart } from '@subbly/react'
+import type { ConfigureItemPayload } from '@subbly/react'
 
 export type AddToCartButtonProps = PropsWithChildren<{
   payload: ConfigureItemPayload

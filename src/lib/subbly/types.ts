@@ -1,9 +1,3 @@
-export type CartItemAddPayloadSubscription = {
-  productId: number
-  quantity?: number
-  options?: SurveyOption[]
-}
-
 export type CartItemAddPayloadOneTime = {
   productId: number
   quantity?: number
@@ -27,32 +21,6 @@ export type GiftCardRecipient = {
   message: string | null
 }
 
-export type BundlePayloadItem = {
-  productId: number
-  quantity: number
-}
-
-export type CartItemAddPayloadBundle = {
-  productId: number
-  quantity?: number
-  bundle?: {
-    items: BundlePayloadItem[]
-    preferences: []
-  }
-  options?: SurveyOption[]
-}
-
-export type CartItemAddPayloadBundleConfigure = {
-  productId?: number
-  bundleId: number
-  quantity?: number
-  options?: SurveyOption[]
-}
-
-export type CartItemAddPayloadSurvey = {
-  surveyId: number
-}
-
 export type SurveyAnswer = {
   /**
    * Answer ID - required for select, multiple, quantity question types
@@ -67,18 +35,6 @@ export type SurveyAnswer = {
    */
   quantity?: number
 }
-
-export type SurveyOption = {
-  questionId: number
-  answers: SurveyAnswer[]
-}
-
-export type ConfigureItemPayload =
-  | CartItemAddPayloadSubscription
-  | CartItemAddPayloadOneTime
-  | CartItemAddPayloadBundle
-  | CartItemAddPayloadBundleConfigure
-  | CartItemAddPayloadSurvey
 
 export type UpdateCartPayload = {
   couponCode?: string
@@ -97,17 +53,6 @@ export type UpdateCartPayload = {
     startsAt: string | null
   } | null
   referralId?: number | null
-}
-
-export type ListProductsFilters = {
-  page?: number
-  perPage?: number
-  tags?: string[]
-  type?: ProductType
-  slugs?: string[]
-  digital?: 0 | 1
-  giftCard?: 0 | 1
-  currency?: string
 }
 
 export type ProductImage = {
@@ -364,22 +309,6 @@ export type ProductOption = {
   values: string[]
 }
 
-export type ProductList = {
-  data: Product[]
-  pagination: Pagination
-}
-
-export type ListBundlesFilters = {
-  page?: number
-  perPage?: number
-  tags?: string[]
-  slugs?: string[]
-  ids?: number[]
-  digital?: 0 | 1
-  configurable?: 0 | 1
-  currency?: string
-}
-
 /**
  * Variant means select from a list of product variants
  * Product means that list is grouped by product and you can select multiple product variants from the same bundle group
@@ -397,101 +326,3 @@ export type BundleDiscountType = 'per_item' | 'total' | 'percentage' | null
  */
 export type BundlePriceType = 'per_item' | 'total' | null
 
-export type BundlePriceRange = {
-  amount: number | null
-  range: number
-}
-
-export type BundlePrice = {
-  id: number
-  planId: number
-  rulesetId: number
-  ranges: BundlePriceRange[]
-}
-
-export type BundleDiscountRange = {
-  amountOff: number | null
-  percentOff: number | null
-  range: number
-}
-
-export type BundleDiscount = {
-  id: number
-  rulesetId: number
-  planId: number
-  ranges: BundleDiscountRange[]
-}
-
-export type BundlePlan = {
-  id: number
-  type: 'one_time' | 'subscription'
-  plan: ProductVariant | ProductPlan
-  prices: BundlePrice[]
-  discounts: BundleDiscount[]
-}
-
-export type Bundle = {
-  id: number
-  name: string
-  slug: string
-  description: string | null
-  priceFrom: number
-  images: ProductImage[]
-  plans: BundlePlan[]
-  digital: boolean
-  /**
-   * If true, the customer can select the product variants in the bundle.
-   */
-  configurable: boolean
-  selectionType: BundleSelectionType
-  discountType: BundleDiscountType
-  priceType: BundlePriceType
-}
-
-export type BundleList = {
-  data: Bundle[]
-  pagination: Pagination
-}
-
-export type BundleItem = {
-  id: number
-  varianId: number
-  variant: ProductVariant
-  quantity: number
-  extraPrice: number
-  stockCount: number | null
-}
-
-export type BundleGroup = {
-  id: number
-  items: BundleItem[]
-  maxQuantity: number
-  minQuantity: number
-  productId: number
-  product: Product
-}
-
-export type BundleGroupList = {
-  data: BundleGroup[]
-  pagination: Pagination
-}
-
-export type Pagination = {
-  currentPage: number
-  from: number
-  lastPage: number
-  to: number
-  total: number
-}
-
-export type RequestHeaders = {
-  [key: string]: string
-}
-
-export type BundleHeaders = RequestHeaders & {
-  'x-currency'?: string
-}
-
-export type ProductHeaders = RequestHeaders & {
-  'x-currency'?: string
-}

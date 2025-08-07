@@ -33,7 +33,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
-          <SubblyScript />
+          {process.env.NEXT_PUBLIC_SUBBLY_API_KEY && (
+            <SubblyScript
+              apiKey={process.env.NEXT_PUBLIC_SUBBLY_API_KEY}
+            />
+          )}
           <div className="flex min-h-screen flex-col">
             <div className="relative flex-grow h-full">
               <TransitionRouterProvider>{children}</TransitionRouterProvider>

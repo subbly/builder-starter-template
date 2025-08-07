@@ -1,20 +1,14 @@
 import Script from 'next/script'
-import type { ConfigureItemPayload, UpdateCartPayload } from '@/lib/subbly/types'
 
-declare global {
-  interface Window {
-    subblyCart?: {
-      configureItem: (payload: ConfigureItemPayload) => Promise<void>
-      updateCart: (payload: UpdateCartPayload) => Promise<void>
-    }
-  }
+type SubblyScriptProps = {
+  apiKey: string
 }
 
-export const SubblyScript = () => {
+export const SubblyScript = (props: SubblyScriptProps) => {
   const src = 'https://assets.subbly.co/cart/cart-widget.js'
 
   const subblyConfig = {
-    apiKey: process.env.NEXT_PUBLIC_SUBBLY_API_KEY || '',
+    apiKey: props.apiKey,
     settings: {
       interceptProductLinks: true,
       cartCounterEl: '.subbly-cart-product-count',
