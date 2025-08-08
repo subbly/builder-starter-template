@@ -16,19 +16,12 @@ export const BundleGroupSelect = (props: BundleGroupSelectProps) => {
     images: props.group.product.images,
   })
 
-  const productWithVariants = useMemo(() => {
-    return {
-      ...props.group.product,
-      variants: [
-        ...props.group.items.map((item) => ({
-          ...item.product
-        }))
-      ]
-    }
-  }, [props.group])
+  const variants = useMemo(() => {
+    return props.group.items.map((item) => item.product)
+  }, [props.group.items])
 
   const variantCombinations = useVariantCombinations({
-    product: productWithVariants
+    variants
   })
 
   const handleProductSelected = (combination: ProductVariantCombination) => {
