@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import Image from 'next/image'
 import { VariantSelector } from '../product/variant/variant-selector'
 import { useProductImages, useVariantCombinations } from '@subbly/react'
@@ -15,8 +16,19 @@ export const BundleGroupSelect = (props: BundleGroupSelectProps) => {
     images: props.group.product.images,
   })
 
+  const productWithVariants = useMemo(() => {
+    return {
+      ...props.group.product,
+      variants: [
+        ...props.group.items.map((item) => ({
+          ...item.product
+        }))
+      ]
+    }
+  }, [props.group])
+
   const variantCombinations = useVariantCombinations({
-    product: props.group.product
+    product: productWithVariants
   })
 
   const handleProductSelected = (combination: ProductVariantCombination) => {
