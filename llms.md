@@ -4,7 +4,7 @@ This document explains how to integrate with the Subbly platform to retrieve pro
 
 ## General Information
 
-- By default you are using `addToCart` method from a `useSubblyCart`, but users sometimes can ask to add a direct link to check. In that case use buyLink from an appropriate object (productVariant, productPlan, product)
+- By default you are using `addToCart` method from a `useSubblyCart` hook from the `@subbly/react` package, but users sometimes can ask to add a direct link to check. In that case use `buyLink` from `useBuyLink` hook from the `@subbly/react` package.
 - All prices are defined in integers(cents), not decimals.
 - When creating cart icon or cart counter, use these CSS classes to connect them with Subbly cart: `subbly-cart-product-count`, `subbly-cart`.
 - These classes will automatically toggle cart widget and update cart counter when items are added or removed from the cart.
@@ -13,34 +13,54 @@ This document explains how to integrate with the Subbly platform to retrieve pro
 
 ## Product Integration
 
-This section explains how to integrate with the Subbly platform to retrieve product information. These functions allow you to fetch products and product variants with proper typing for server-side operations.
+This section explains how to integrate with the Subbly platform to retrieve product and bundle information.
+`subblyApi` object provides methods to fetch information from Subbly storefront API.
+`subblyApi` is initialized and exported from `/src/lib/subbly/index.ts`
+`subblyApi` allows you to fetch products and product variants with proper typing for server-side operations.
+
+Here is an example how to use `subblyApi` to fetch a list of products:
+
+```typescript
+// Import 
+import { subblyApi } from '@/lib/subbly'
+
+// Use the API in your component
+subblyApi.product.list({
+   page: 1,
+   perPage: 12,
+   type: 'subscription'
+})
+```
 
 ### Product API Quick Reference
 
 ```typescript
 // Get a paginated list of products with filtering options
-listProducts(params: ListProductsFilters, headers?: ProductHeaders): Promise<ProductList>
-
-// Get a paginated list of bundles with filtering options
-listBundles(params: ListBundlesFilters, headers?: BundleHeaders): Promise<BundleList>
+subblyApi.product.list(params: ProductsListParams, headers?: ProductRequestHeaders): Promise<ProductsListResponse>
 
 // Get a single product by its numeric ID
-productById(id: number, headers?: ProductHeaders): Promise<Product>
+subblyApi.product.byId(id: number, params?: ProductsResourceParams, headers?: ProductRequestHeaders): Promise<ParentProduct>
 
 // Get a product by its URL-friendly slug (returns null if not found)
-productBySlug(slug: string, headers?: ProductHeaders): Promise<Product | null>
-
-// Get a single bundle by its numeric ID
-bundleById(id: number, headers?: BundleHeaders): Promise<Bundle>
-
-// Get a bundle by its URL-friendly slug (returns null if not found)
-bundleBySlug(slug: string, headers?: BundleHeaders): Promise<Bundle | null>
+subblyApi.product.bySlug(slug: string, params?: ProductsListParams, headers?: ProductRequestHeaders): Promise<ParentProduct>
 
 // Get a product variant or subscription product plan by its numeric ID
-variantOrPlanById(id: number, headers?: ProductHeaders): Promise<ProductVariant | ProductPlan>
+subblyApi.product.variantOrPlanById(productId: number, params?: ProductsResourceParams, headers?: ProductRequestHeaders): Promise<ProductVariant | ProductPlan>
+
+// Get a product plan by its numeric ID
+subblyApi.product.planById(productId: number, params?: ProductsResourceParams, headers?: ProductRequestHeaders): Promise<ProductPlan>
+
+// Get a paginated list of bundles with filtering options
+subblyApi.bundle.list(params?: BundleListParams, headers?: BundleRequestHeaders): Promise<BundleListResponse>
+
+// Get a single bundle by its numeric ID
+subblyApi.bundle.byId(bundleId: number, params?: BundleResourceParams, headers?: BundleRequestHeaders): Promise<Bundle>
+
+// Get a bundle by its URL-friendly slug (returns null if not found)
+subblyApi.bundle.bySlug(slug: string, params?: BundleListParams, headers?: BundleHeaders): Promise<Bundle>
 
 // Get bundle groups for a specific bundle
-loadBundleGroups(bundleId: number, headers?: BundleHeaders): Promise<BundleGroupList>
+subblyApi.bundle.listGroups(bundleId: number, params?: BundleGroupsParams, headers?: BundleHeaders): Promise<BundleGroupsResponse>
 ```
 
 ## Cart Integration
@@ -51,7 +71,7 @@ This section explains how to use the Subbly cart integration hook to add product
 
 ```typescript
 // Import the hook
-import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
+import { useSubblyCart } from '@subbly/react';
 
 // Use the hook in your component
 const { addToCart, updateCart } = useSubblyCart();
@@ -709,11 +729,11 @@ Here's how to use these functions in Next.js server components:
 
 ```typescript
 // app/products/page.tsx
-import { listProducts } from '@/lib/subbly/fetch/list-products';
+import { subblyApi } from '@/lib/subbly';
 
 export default async function ProductsPage() {
   // Fetch products on the server
-  const productList = await listProducts({
+  const productList = await subblyApi.product.list({
     page: 1,
     perPage: 20,
     type: 'one_time',
@@ -735,12 +755,12 @@ Using product slug for dynamic routes:
 
 ```typescript
 // app/products/[slug]/page.tsx
-import { productBySlug } from '@/lib/subbly/fetch/product-by-slug';
+import { subblyApi } from '@/lib/subbly';
 import { notFound } from 'next/navigation';
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
   // Fetch product by slug
-  const product = await productBySlug(params.slug);
+  const product = await subblyApi.product.bySlug(params.slug);
   
   // If product not found, show 404 page
   if (!product) {
@@ -761,13 +781,13 @@ Fetching ProductVariant or ProductPlan details in a server component:
 
 ```typescript
 // app/product-items/[id]/page.tsx
-import { variantOrPlanById } from '@/lib/subbly/fetch/variant-or-plan-by-id';
+import { subblyApi } from '@/lib/subbly';
 import { notFound } from 'next/navigation';
 
 export default async function ProductItemPage({ params }: { params: { id: string } }) {
   try {
     // Fetch product item data
-    const productItem = await variantOrPlanById(parseInt(params.id));
+    const productItem = await subblyApi.product.variantOrPlanById(parseInt(params.id));
     
     // Access product item properties
     const { name, description, price, attributes, options } = productItem;
@@ -812,11 +832,11 @@ export default async function ProductItemPage({ params }: { params: { id: string
 
 ```typescript
 // app/bundles/page.tsx
-import { listBundles } from '@/lib/subbly/fetch/list-bundles';
+import { subblyApi } from '@/lib/subbly';
 
 export default async function BundlesPage() {
   // Fetch bundles on the server
-  const bundleList = await listBundles({
+  const bundleList = await subblyApi.bundle.list({
     page: 1,
     perPage: 20,
     digital: 0,       // Only physical bundles
@@ -836,13 +856,13 @@ Fetching a specific bundle by its ID:
 
 ```typescript
 // app/bundles/[id]/page.tsx
-import { bundleById } from '@/lib/subbly/fetch/bundle-by-id';
+import { subblyApi } from '@/lib/subbly';
 import { notFound } from 'next/navigation';
 
 export default async function BundlePage({ params }: { params: { id: string } }) {
   try {
     // Fetch bundle by ID
-    const bundle = await bundleById(parseInt(params.id));
+    const bundle = await subblyApi.bundle.byId(parseInt(params.id));
     
     // Access bundle data
     const { name, description, images, plans, priceFrom } = bundle;
@@ -861,12 +881,12 @@ Using bundle slug for dynamic routes:
 
 ```typescript
 // app/bundles/[slug]/page.tsx
-import { bundleBySlug } from '@/lib/subbly/fetch/bundle-by-slug';
+import { subblyApi } from '@/lib/subbly';
 import { notFound } from 'next/navigation';
 
 export default async function BundlePage({ params }: { params: { slug: string } }) {
   // Fetch bundle by slug
-  const bundle = await bundleBySlug(params.slug);
+  const bundle = await subblyApi.bundle.bySlug(params.slug);
   
   // If bundle not found, show 404 page
   if (!bundle) {
@@ -887,14 +907,14 @@ Fetching bundle groups for a configurable bundle:
 
 ```typescript
 // app/bundles/[id]/configure/page.tsx
-import { bundleById } from '@/lib/subbly/fetch/bundle-by-id';
+import { subblyApi } from '@/lib/subbly';
 import { loadBundleGroups } from '@/lib/subbly/fetch/load-bundle-groups';
 import { notFound } from 'next/navigation';
 
 export default async function BundleConfigurePage({ params }: { params: { id: string } }) {
   try {
     // Fetch bundle by ID
-    const bundle = await bundleById(parseInt(params.id));
+    const bundle = await subblyApi.bundle.byId(parseInt(params.id));
     
     let groups: BundleGroup[] = []
   
@@ -914,7 +934,7 @@ export default async function BundleConfigurePage({ params }: { params: { id: st
 ```typescript
 'use client';
 
-import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
+import { useSubblyCart } from '@subbly/react';
 import { Button } from '@/components/ui/button';
 
 export default function AddToCartButton({ productId }) {
@@ -937,7 +957,7 @@ export default function AddToCartButton({ productId }) {
 ```typescript
 'use client';
 
-import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
+import { useSubblyCart } from '@subbly/react';
 import { Button } from '@/components/ui/button';
 import { SurveyOption } from '@/lib/subbly/types';
 
@@ -986,7 +1006,7 @@ const surveyOptions: SurveyOption[] = [
 ```typescript
 'use client';
 
-import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
+import { useSubblyCart } from '@subbly/react';
 import { Button } from '@/components/ui/button';
 
 export default function AddBundleButton({ productId, bundleId }) {
@@ -1009,7 +1029,7 @@ export default function AddBundleButton({ productId, bundleId }) {
 ```typescript
 'use client';
 
-import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
+import { useSubblyCart } from '@subbly/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
@@ -1045,7 +1065,7 @@ export default function CartUpdater() {
 ```typescript
 'use client';
 
-import { useSubblyCart } from '@/lib/subbly/use-subbly-cart';
+import { useSubblyCart } from '@subbly/react';
 import { Button } from '@/components/ui/button';
 
 export default function GiftSubscription() {
@@ -1119,7 +1139,7 @@ Here's how to implement these components in your product and bundle pages:
 ```typescript
 // Product page example
 export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const product = await productBySlug(params.slug);
+  const product = await subblyApi.product.bySlug(params.slug);
   
   if (!product) {
     notFound();
@@ -1145,7 +1165,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
 
 // Bundle page example
 export default async function BundlePage({ params }: { params: { slug: string } }) {
-  const bundle = await bundleBySlug(params.slug);
+  const bundle = await subblyApi.bundle.bySlug(params.slug);
   let groups = [];
   
   if (bundle?.selectionType === 'single_product') {
@@ -1202,6 +1222,15 @@ By following these guidelines, you ensure that the e-commerce functionality work
 
 Subbly supports multi-currency functionality through request headers. This allows you to display prices in different currencies based on user preferences.
 
+```typescript
+import { useCurrencyFormatter } from '@subbly/react'
+
+// in your react code
+const { formatAmount } = useCurrencyFormatter()
+
+const productPrice = formatAmount(product.price)
+```
+
 ### Currency Headers
 
 All Subbly fetch functions accept an optional headers parameter that can include currency information:
@@ -1211,9 +1240,9 @@ All Subbly fetch functions accept an optional headers parameter that can include
 const headers = { 'x-currency': 'USD' };
 
 // Use headers with any Subbly fetch function
-const products = await listProducts(params, headers);
-const product = await productBySlug(slug, headers);
-const bundle = await bundleById(id, headers);
+const products = await subblyApi.product.list(params, headers);
+const product = await subblyApi.product.bySlug(slug, headers);
+const bundle = await subblyApi.bundle.byId(id, headers);
 ```
 
 ### Currency Header Examples
@@ -1222,17 +1251,17 @@ Here are some examples of how to use currency headers with different API calls:
 
 ```typescript
 // List products with EUR currency
-const euroProducts = await listProducts({
+const euroProducts = await subblyApi.product.list({
   page: 1,
   perPage: 20,
   type: 'one_time'
 }, { 'x-currency': 'EUR' });
 
 // Get a product with GBP currency
-const gbpProduct = await productById(123, { 'x-currency': 'GBP' });
+const gbpProduct = await subblyApi.product.byId(123, { 'x-currency': 'GBP' });
 
 // Get a bundle with USD currency
-const usdBundle = await bundleBySlug('premium-bundle', { 'x-currency': 'USD' });
+const usdBundle = await subblyApi.bundle.bySlug('premium-bundle', { 'x-currency': 'USD' });
 ```
 
 The currency header will affect all price-related fields in the response, including:
