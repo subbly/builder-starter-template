@@ -3,7 +3,7 @@ import { AnimatePresence } from 'motion/react'
 import { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
-export type PricingOptionCardProps = {
+export type PlanOptionCardProps = {
   title: string
   price?: string
   originalPrice?: string | null
@@ -14,7 +14,7 @@ export type PricingOptionCardProps = {
   onSelect: () => void
 }
 
-export const OptionCard = (props: PricingOptionCardProps) => {
+export const OptionCard = (props: PlanOptionCardProps) => {
   return (
     <div
       {...(props.nestedOptions && props.selected

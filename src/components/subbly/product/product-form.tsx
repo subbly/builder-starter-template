@@ -1,105 +1,84 @@
 'use client'
 
-import { Product, ProductPlan, ProductVariant } from '@/lib/subbly/types'
-import { useMemo, useState } from 'react'
-
+import {
+  ProductPlan,
+  useCurrencyFormatter,
+  useProductForm,
+  useVariantCombinations
+} from '@subbly/react'
+import type { ParentProduct, ProductVariant } from '@subbly/react'
+import { useMemo } from 'react'
 import { PlanSelector } from './plans/plan-selector'
 import { VariantSelector } from './variant/variant-selector'
 import { QuantitySelector } from './quantity/quantity-selector'
-import { formatAmount } from '@/lib/subbly/format-amount'
-import { AddToCartButton } from '../add-to-cart-button'
-import { ProductForm as ProductFormType } from '@/types'
+import { Button } from '@/components/ui/button'
 
 export type ProductGroupFormProps = {
-  product: Product
-}
-
-const makeProductForm = ({ product }: { product: Product }): ProductFormType => {
-  if (product.type === 'subscription') {
-    const plan = product.plans.find((plan) => plan.stockCount === null || plan.stockCount > 0)
-
-    return {
-      productId: plan?.id || 0,
-      quantity: 1,
-    }
-  }
-
-  const variant = product.variants.find(
-    (variant) => variant.stockCount === null || variant.stockCount > 0
-  )
-
-  return {
-    productId: variant?.id || 0,
-    quantity: 1,
-  }
+  product: ParentProduct
 }
 
 export const ProductForm = (props: ProductGroupFormProps) => {
   const product = props.product
 
-  const [productForm, setProductForm] = useState<ProductFormType>(makeProductForm({ product }))
+  const { formatAmount } = useCurrencyFormatter()
 
-  const selectedItem = useMemo((): ProductVariant | ProductPlan => {
-    if (product.type === 'one_time') {
-      return product.variants.find(
-        (variant) => variant.id === productForm.productId
-      ) as ProductVariant
-    }
+  let variants: ProductVariant[] = []
 
-    return product.plans.find((plan) => plan.id === productForm.productId) as ProductPlan
-  }, [product, productForm.productId])
+  if (product.type === 'one_time') {
+    variants = product.variants
+  }
+
+  const variantCombinations = useVariantCombinations({
+    variants
+  })
+
+  const { productForm, plans, selectedProduct, priceFrom, setProductForm, selectProduct, addToCart } = useProductForm({
+    product
+  })
 
   const defaultState = useMemo((): Record<string, string> | undefined => {
-    if (product.type !== 'one_time' || !selectedItem) {
+    if (product.type !== 'one_time' || !selectedProduct) {
       return undefined
     }
 
-    return (selectedItem as ProductVariant).options?.reduce(
+    return (selectedProduct as ProductVariant).options?.reduce(
       (acc, option) => ({
         ...acc,
-        [option.name.toLowerCase()]: option.value,
+        [option.name.toLowerCase()]: option.value
       }),
       {}
     )
-  }, [selectedItem, product.type])
+  }, [selectedProduct, product.type])
 
-  const onPricingSelect = (productId: number) => {
-    setProductForm({
-      ...productForm,
-      productId,
-    })
-  }
-
-  const onVariantSelect = (variantId: number) => {
-    setProductForm({
-      ...productForm,
-      productId: variantId,
-    })
+  const onAddToCart = () => {
+    addToCart()
   }
 
   return (
     <div className="grid grid-cols-1 gap-6 md:gap-6">
-      {product.type === 'one_time' && !selectedItem ? (
-        <div>From {formatAmount(product.priceFrom)}</div>
-      ) : product.type === 'one_time' && selectedItem ? (
-        <div>{formatAmount(selectedItem.price * productForm.quantity)}</div>
+      {product.type === 'one_time' && !selectedProduct ? (
+        <div>From {formatAmount(priceFrom)}</div>
+      ) : product.type === 'one_time' && selectedProduct ? (
+        <div>{formatAmount(selectedProduct.price * productForm.quantity)}</div>
       ) : null}
 
-      {product.plans.length > 0 && (
-        <PlanSelector
-          options={product.plans}
-          value={productForm.productId}
-          onSelect={(productId) => onPricingSelect(productId)}
-        />
-      )}
-
-      {product.variants.length > 0 && (
-        <VariantSelector
-          options={product.options}
-          combinations={product.combinations}
-          state={defaultState}
-          onSelect={(combination) => onVariantSelect(combination.id)}
-        />
+      {plans.length > 0 && (
+        <>
+          {product.type === 'one_time' ? (
+            <VariantSelector
+              options={product.options}
+              combinations={variantCombinations}
+              state={defaultState}
+              onSelect={(combination) => selectProduct(combination.id)}
+            />
+          ) : (
+            <PlanSelector
+              options={plans as ProductPlan[]}
+              value={productForm.productId}
+              onSelect={(productId) => selectProduct(productId)}
+            />
+          )}
+        </>
       )}
 
       {product.type === 'one_time' && (
@@ -110,16 +89,16 @@ export const ProductForm = (props: ProductGroupFormProps) => {
             onChange={(quantity) => {
               setProductForm({
                 ...productForm,
-                quantity,
+                quantity
               })
             }}
           />
         </div>
       )}
 
-      <AddToCartButton payload={productForm}>
+      <Button className="h-10 w-full" onClick={() => onAddToCart()}>
         <span className="capitalize">Add to cart</span>
-      </AddToCartButton>
+      </Button>
     </div>
   )
 }

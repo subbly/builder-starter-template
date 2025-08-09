@@ -1,12 +1,12 @@
 'use client'
 
-import { ProductOption, ProductCombination } from '@/lib/subbly/types'
+import { ProductOption, ProductVariantCombination } from '@subbly/react'
 
 export interface VariantSelectorProps {
   options: ProductOption[]
-  combinations?: ProductCombination[]
+  combinations?: ProductVariantCombination[]
   state?: Record<string, string>
-  onSelect?: (combination: ProductCombination) => void
+  onSelect?: (combination: ProductVariantCombination) => void
 }
 
 export function shouldRenderSelector(options: ProductOption[]): boolean {
@@ -21,8 +21,8 @@ export function findCombination(
   optionNameLowerCase: string,
   currentState: Record<string, string>,
   options: ProductOption[],
-  combinations?: ProductCombination[]
-): ProductCombination | undefined {
+  combinations?: ProductVariantCombination[]
+): ProductVariantCombination | undefined {
   const optionParams = { ...currentState, [optionNameLowerCase]: optionValue }
 
   // Filter out invalid state parameters

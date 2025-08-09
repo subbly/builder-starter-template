@@ -1,9 +1,9 @@
 import type { HTMLProps } from 'react'
-import { Product } from '@/lib/subbly/types'
+import type { ParentProduct } from '@subbly/react'
 import { ProductForm } from './product-form'
 
 export type ProductInfoSectionProps = HTMLProps<HTMLDivElement> & {
-  product: Product
+  product: ParentProduct
 }
 
 export const ProductInfoSection = (props: ProductInfoSectionProps) => {
@@ -27,7 +27,9 @@ export const ProductInfoSection = (props: ProductInfoSectionProps) => {
         )}
       </div>
 
-      <ProductForm product={product} />
+      <ProductForm
+        product={product}
+      />
     </div>
   )
 }

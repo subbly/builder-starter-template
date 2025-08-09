@@ -1,9 +1,8 @@
-import { BundleGroup, ProductCombination } from '@/lib/subbly/types'
+import { useMemo } from 'react'
 import Image from 'next/image'
-import { useProductGallery } from '@/hooks/subbly/use-product-images'
-
 import { VariantSelector } from '../product/variant/variant-selector'
-import { SelectedBundleItem } from '@/types'
+import { useProductImages, useVariantCombinations } from '@subbly/react'
+import type { SelectedBundleItem, BundleGroup, ProductVariantCombination } from '@subbly/react'
 
 export type BundleGroupSelectProps = {
   group: BundleGroup
@@ -13,12 +12,20 @@ export type BundleGroupSelectProps = {
 }
 
 export const BundleGroupSelect = (props: BundleGroupSelectProps) => {
-  const { firstImage } = useProductGallery({
+  const { firstImage } = useProductImages({
     images: props.group.product.images,
   })
 
-  const handleProductSelected = (combination: ProductCombination) => {
-    const item = props.group.items.find((item) => item.variant.id === combination.id)
+  const variants = useMemo(() => {
+    return props.group.items.map((item) => item.product)
+  }, [props.group.items])
+
+  const variantCombinations = useVariantCombinations({
+    variants
+  })
+
+  const handleProductSelected = (combination: ProductVariantCombination) => {
+    const item = props.group.items.find((item) => item.product.id === combination.id)
 
     if (!item) {
       return
@@ -30,7 +37,7 @@ export const BundleGroupSelect = (props: BundleGroupSelectProps) => {
     })
   }
 
-  const defaultState = props.selectedItem?.item.variant.options.reduce((acc, option) => {
+  const defaultState = props.selectedItem?.item.product.options.reduce((acc, option) => {
     return {
       ...acc,
       [option.name.toLowerCase()]: option.value,
@@ -62,7 +69,7 @@ export const BundleGroupSelect = (props: BundleGroupSelectProps) => {
       <div className="w-full grid grid-cols-1 gap-2">
         <VariantSelector
           options={props.group.product.options}
-          combinations={props.group.product.combinations}
+          combinations={variantCombinations}
           state={defaultState}
           onSelect={(combination) => handleProductSelected(combination)}
         />

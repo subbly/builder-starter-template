@@ -1,6 +1,6 @@
-import { ProductVariant } from '@/lib/subbly/types'
 import { OptionCard } from '../product/plans/option-card'
-import { formatAmount } from '@/lib/subbly/format-amount'
+import { useCurrencyFormatter } from '@subbly/react'
+import type { ProductVariant } from '@subbly/react'
 
 export type OneTimeOptionCardProps = {
   option: ProductVariant
@@ -11,6 +11,8 @@ export type OneTimeOptionCardProps = {
 }
 
 export const OneTimeOptionCard = (props: OneTimeOptionCardProps) => {
+  const { formatAmount } = useCurrencyFormatter()
+
   return (
     <OptionCard
       selected={props.selected || false}
