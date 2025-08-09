@@ -90,8 +90,8 @@ importers:
         specifier: ^1.2.7
         version: 1.2.7(@types/react-dom@19.1.7(@types/react@19.1.9))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@subbly/react':
-        specifier: ^0.0.6
-        version: 0.0.6
+        specifier: ^0.0.7
+        version: 0.0.7
       '@subbly/sdk':
         specifier: ^0.6.10
         version: 0.6.11
@@ -1136,14 +1136,22 @@ packages:
     resolution: {integrity: sha512-xcmOvBJM2PDCdvQkRScoC18wSviqn07uJPOkU+tEK7cKp3TV0WUPFyhh7KpbF5z/kn7qhNxfBV3TsgIPT2i1jA==}
     engines: {node: '>=16'}
 
-  '@subbly/kit@0.0.6':
-    resolution: {integrity: sha512-sRLL3OA0ehFnpnCec2MVjzs2jwwiJX7imZqMfwCixhuBo6eqYsOSqFnskawGdXjS5ivrzMZ4gvFsgCHImHM7CA==}
+  '@subbly/api-client@0.6.12':
+    resolution: {integrity: sha512-XJg9BRvbM0XY+KA5Pj2qbbGv5yrkl7J7fy2bX1rWSjl76S32No6TB4yZVjUmDckGUQoyCGJflzsrhy34nuelgQ==}
+    engines: {node: '>=16'}
 
-  '@subbly/react@0.0.6':
-    resolution: {integrity: sha512-SulzjCk+Ub7IvUVvZEZoCy1ucOadUNV/Z6v7GmUQE12YLeFsIykLSmL66qgEfgk8Cao3j6myvyopOpxJEdvnhw==}
+  '@subbly/kit@0.0.7':
+    resolution: {integrity: sha512-OaI5sB6QosgQC3xg2ftY6H6QLyfLDTw3Xa2NuAPaydSSIhRZ80/njxkn5UG3Xpr7moTdPUdcgNDLVzOtOoBXfw==}
+
+  '@subbly/react@0.0.7':
+    resolution: {integrity: sha512-uh4KK8N85cGjPYlW7RIWuio3Sw2NaaDfzV2Gn3u6RMChAJy2UsEzcst/asnYf1kAtf63/X1eKV26gr4BDcc/Yg==}
 
   '@subbly/sdk@0.6.11':
     resolution: {integrity: sha512-Kqx7St9pZAF/qi8W3yY/w29mtM03LQOsC4J2p0Wl0RG5u6dgUc+EbdF+3lDmGdZqnNrz+QXVUV/8wpKh7HEhWw==}
+    engines: {node: '>=16'}
+
+  '@subbly/sdk@0.6.12':
+    resolution: {integrity: sha512-+0srDTdIHMBhxALSavp4sEfi4UhfoYWTHFO4XEZm4/7X0n21CTLU7Z2nTRg2Dy+rrzkgUODCzv2Z5O7uI6HP2Q==}
     engines: {node: '>=16'}
 
   '@subbly/swc-plugin-add-element-source@0.1.7':
@@ -3800,15 +3808,21 @@ snapshots:
       qs: 6.14.0
       snakecase-keys: 6.0.0
 
-  '@subbly/kit@0.0.6':
+  '@subbly/api-client@0.6.12':
     dependencies:
-      '@subbly/api-client': 0.6.11
-      '@subbly/sdk': 0.6.11
+      camelcase-keys: 9.1.3
+      qs: 6.14.0
+      snakecase-keys: 6.0.0
 
-  '@subbly/react@0.0.6':
+  '@subbly/kit@0.0.7':
     dependencies:
-      '@subbly/api-client': 0.6.11
-      '@subbly/kit': 0.0.6
+      '@subbly/api-client': 0.6.12
+      '@subbly/sdk': 0.6.12
+
+  '@subbly/react@0.0.7':
+    dependencies:
+      '@subbly/api-client': 0.6.12
+      '@subbly/kit': 0.0.7
       lodash-es: 4.17.21
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
@@ -3816,6 +3830,10 @@ snapshots:
   '@subbly/sdk@0.6.11':
     dependencies:
       '@subbly/api-client': 0.6.11
+
+  '@subbly/sdk@0.6.12':
+    dependencies:
+      '@subbly/api-client': 0.6.12
 
   '@subbly/swc-plugin-add-element-source@0.1.7': {}
 
