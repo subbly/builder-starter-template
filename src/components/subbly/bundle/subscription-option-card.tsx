@@ -8,19 +8,19 @@ import {
 } from '@/components/ui/select'
 import { useState } from 'react'
 import { formatBillingFrequency, useCurrencyFormatter } from '@subbly/react'
-import type { ProductPricing } from '@subbly/react'
+import type { ProductPlan } from '@subbly/react'
 
 export type SubscriptionOptionCardProps = {
-  options: ProductPricing[]
-  value: ProductPricing['id'] | null
+  options: ProductPlan[]
+  value: ProductPlan['id'] | null
   basePrice: number
-  onSelect: (optionId: ProductPricing['id']) => void
-  getOptionPrice: (optionId: ProductPricing['id']) => number
+  onSelect: (optionId: ProductPlan['id']) => void
+  getOptionPrice: (optionId: ProductPlan['id']) => number
 }
 
 export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
   const { formatAmount } = useCurrencyFormatter()
-  const [activeOption, setActiveOption] = useState<ProductPricing | null>(props.options[0])
+  const [activeOption, setActiveOption] = useState<ProductPlan | null>(props.options[0])
   const hasMultipleOptions = props.options.length > 1
   const selectedOption = props.options.find((option) => option.id === props.value)
 

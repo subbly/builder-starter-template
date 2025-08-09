@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  ProductPricing,
+  ProductPlan,
   useCurrencyFormatter,
   useProductForm,
   useVariantCombinations
@@ -73,7 +73,7 @@ export const ProductForm = (props: ProductGroupFormProps) => {
             />
           ) : (
             <PlanSelector
-              options={plans as ProductPricing[]}
+              options={plans as ProductPlan[]}
               value={productForm.productId}
               onSelect={(productId) => selectProduct(productId)}
             />

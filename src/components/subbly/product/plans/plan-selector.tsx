@@ -1,10 +1,10 @@
 import { OptionCard } from './option-card'
 import { useCurrencyFormatter } from '@subbly/react'
 import { formatBillingFrequency } from '@subbly/react'
-import type { ProductPricing } from '@subbly/react'
+import type { ProductPlan } from '@subbly/react'
 
 export type PlanSelectorProps = {
-  options: ProductPricing[]
+  options: ProductPlan[]
   value: number | null
   onSelect: (optionId: number) => void
 }

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { SubscriptionOptionCard } from './subscription-option-card'
 import { OneTimeOptionCard } from './one-time-option-card'
-import type { Product, ProductPricing, ProductVariant, PlanPriceCalculatorMap } from '@subbly/react'
+import type { Product, ProductPlan, ProductVariant, PlanPriceCalculatorMap } from '@subbly/react'
 
 export type PlanSelectorProps = {
   options: Product[]
@@ -13,12 +13,12 @@ export type PlanSelectorProps = {
 
 export const PlanSelector = (props: PlanSelectorProps) => {
   const plans = useMemo(() => {
-    return props.options.reduce<{ oneTime: ProductVariant[]; subscription: ProductPricing[] }>(
-      (acc, pricing) => {
-        if (!!(pricing as ProductPricing).frequencyCount) {
-          acc.subscription.push(pricing as ProductPricing)
+    return props.options.reduce<{ oneTime: ProductVariant[]; subscription: ProductPlan[] }>(
+      (acc, plan) => {
+        if (!!(plan as ProductPlan).frequencyCount) {
+          acc.subscription.push(plan as ProductPlan)
         } else {
-          acc.oneTime.push(pricing as unknown as ProductVariant)
+          acc.oneTime.push(plan as unknown as ProductVariant)
         }
 
         return acc
