@@ -2,7 +2,7 @@
   "setupTasks": [
     {
       "name": "Install Dependencies",
-      "command": "pnpm install --dangerously-allow-all-builds"
+      "command": "pnpm install"
     },
     {
       "name": "Install",
@@ -25,7 +25,7 @@
     },
     "install": {
       "name": "Install Dependencies",
-      "command": "pnpm install --dangerously-allow-all-builds",
+      "command": "pnpm install",
       "runAtStart": true,
       "restartOn": {
         "files": ["package.json"]
