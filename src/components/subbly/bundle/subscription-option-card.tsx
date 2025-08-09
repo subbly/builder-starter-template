@@ -62,7 +62,7 @@ export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
               <SelectContent>
                 {props.options.map((option) => (
                   <SelectItem key={option.id} value={`${option.id}`}>
-                    {option.name || formatBillingFrequency(option.frequencyUnit, option.frequencyCount)}
+                    {option.pricingName || formatBillingFrequency(option.frequencyUnit, option.frequencyCount)}
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -21,7 +21,7 @@ export const PlanSelector = (props: PlanSelectorProps) => {
           {props.options.map((option) => (
             <OptionCard
               key={option.id}
-              title={option.name || formatBillingFrequency(option.frequencyUnit, option.frequencyCount)}
+              title={option.pricingName || formatBillingFrequency(option.frequencyUnit, option.frequencyCount)}
               price={formatAmount(option.price)}
               selected={props.value === option.id}
               description={

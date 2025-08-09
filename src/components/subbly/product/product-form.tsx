@@ -1,9 +1,13 @@
 'use client'
 
-import { ProductPricing, useCurrencyFormatter, useProductForm, useVariantCombinations } from '@subbly/react'
-import type { ParentProduct, ProductVariant, ProductOneTime } from '@subbly/react'
+import {
+  ProductPricing,
+  useCurrencyFormatter,
+  useProductForm,
+  useVariantCombinations
+} from '@subbly/react'
+import type { ParentProduct, ProductVariant } from '@subbly/react'
 import { useMemo } from 'react'
-
 import { PlanSelector } from './plans/plan-selector'
 import { VariantSelector } from './variant/variant-selector'
 import { QuantitySelector } from './quantity/quantity-selector'
@@ -17,8 +21,15 @@ export const ProductForm = (props: ProductGroupFormProps) => {
   const product = props.product
 
   const { formatAmount } = useCurrencyFormatter()
+
+  let variants: ProductVariant[] = []
+
+  if (product.type === 'one_time') {
+    variants = product.variants
+  }
+
   const variantCombinations = useVariantCombinations({
-    product: product as ProductOneTime
+    variants
   })
 
   const { productForm, plans, selectedProduct, priceFrom, setProductForm, selectProduct, addToCart } = useProductForm({
