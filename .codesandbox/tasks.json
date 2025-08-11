@@ -1,12 +1,12 @@
 {
   "setupTasks": [
     {
-      "name": "Install Dependencies",
-      "command": "pnpm install"
+      "name": "Copy gitignore",
+      "command": "cp gitignore.example .gitignore"
     },
     {
-      "name": "Install",
-      "command": "npm install -g netlify-cli"
+      "name": "Install Dependencies",
+      "command": "pnpm install --dangerously-allow-all-builds"
     }
   ],
   "tasks": {
@@ -25,7 +25,7 @@
     },
     "install": {
       "name": "Install Dependencies",
-      "command": "pnpm install",
+      "command": "pnpm install --dangerously-allow-all-builds",
       "runAtStart": true,
       "restartOn": {
         "files": ["package.json"]

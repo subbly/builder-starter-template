@@ -1,6 +1,6 @@
 {
-  "title": "Next.js",
-  "description": "The official Next.js template by the CodeSandbox team",
+  "title": "Subbly Next.js starter template",
+  "description": "The official Subbly Next.js template",
   "iconUrl": "https://raw.githubusercontent.com/codesandbox/sandbox-templates/main/nextjs/.codesandbox/icon.png",
   "tags": [
     "featured",
