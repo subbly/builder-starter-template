@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
           {process.env.NEXT_PUBLIC_SUBBLY_API_KEY && (
@@ -46,7 +46,7 @@ export default function RootLayout({
         </Providers>
         <Script
           id="sandbox-messenger"
-          src="https://abiscuit.io/sandbox-messenger.js"
+          src="https://assets.subbly.co/builder/sandbox-messenger.js"
           type="module"
           strategy="afterInteractive"
         />

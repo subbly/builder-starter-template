@@ -36,6 +36,9 @@ const nextConfig: NextConfig = {
     ...(process.env.NODE_ENV === 'development' && {
       swcPlugins: [['@subbly/swc-plugin-add-element-source', {}]],
     }),
+    browserDebugInfoInTerminal: {
+      showSourceLocation: true
+    }
   },
 }
 

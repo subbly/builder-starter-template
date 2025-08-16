@@ -14,7 +14,7 @@ export default function GlobalError() {
         <NextError statusCode={0} />
         <Script
           id="sandbox-messenger"
-          src="https://abiscuit.io/sandbox-messenger.js"
+          src="https://assets.subbly.co/builder/sandbox-messenger.js"
           type="module"
           strategy="afterInteractive"
         />
