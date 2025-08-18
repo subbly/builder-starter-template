@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import createNextIntlPlugin from 'next-intl/plugin'
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -37,9 +38,11 @@ const nextConfig: NextConfig = {
       swcPlugins: [['@subbly/swc-plugin-add-element-source', {}]],
     }),
     browserDebugInfoInTerminal: {
-      showSourceLocation: true
-    }
+      showSourceLocation: true,
+    },
   },
 }
 
-export default nextConfig
+const withNextIntl = createNextIntlPlugin()
+
+export default withNextIntl(nextConfig)

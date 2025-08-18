@@ -2,7 +2,6 @@
 
 import {
   ProductPlan,
-  useCurrencyFormatter,
   useProductForm,
   useVariantCombinations
 } from '@subbly/react'
@@ -12,6 +11,7 @@ import { PlanSelector } from './plans/plan-selector'
 import { VariantSelector } from './variant/variant-selector'
 import { QuantitySelector } from './quantity/quantity-selector'
 import { Button } from '@/components/ui/button'
+import { useFormatAmount } from '@/hooks/use-format-amount'
 
 export type ProductGroupFormProps = {
   product: ParentProduct
@@ -20,7 +20,7 @@ export type ProductGroupFormProps = {
 export const ProductForm = (props: ProductGroupFormProps) => {
   const product = props.product
 
-  const { formatAmount } = useCurrencyFormatter()
+  const { formatAmount } = useFormatAmount()
 
   let variants: ProductVariant[] = []
 

@@ -29,7 +29,11 @@ cart in your Next.js application.
 - re-shape the data using hooks and helper functions;
 - render formatted data in components;
 
-For detailed instructions on how to use `@subbly/react` package refer to [@subbly/react usage guidelines](/node_modules/@subbly/react/guidelines/subbly-ecommerce-ingetration.md) 
+## Currency Formatting
+
+The application uses a custom `useFormatAmount` hook from `@/hooks/use-format-amount` for currency formatting.
+
+- `formatAmount(amountInCents: number): string` - Formats an integer amount (in cents) to a localized currency string
 
 ## Component Usage Guidelines
 
