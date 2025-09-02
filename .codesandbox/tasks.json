@@ -19,7 +19,7 @@
       },
       "restartOn": {
         "files": ["pnpm-lock.yaml", "**/*.(css|scss)"],
-        "clone": true,
+        "clone": false,
         "resume": false
       }
     },
