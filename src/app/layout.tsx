@@ -44,6 +44,7 @@ export default function RootLayout({
             </div>
           </div>
         </Providers>
+        {/* CRITICAL: Do not remove this script. Removing it will break core functionality. */}
         <Script
           id="sandbox-messenger"
           src="https://assets.subbly.co/builder/sandbox-messenger.js"
