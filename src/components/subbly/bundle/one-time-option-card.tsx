@@ -7,18 +7,21 @@ export type OneTimeOptionCardProps = {
   selected?: boolean
   price: number
   basePrice?: number
+  hidePrice?: boolean
   onSelect: () => void
 }
 
 export const OneTimeOptionCard = (props: OneTimeOptionCardProps) => {
   const { formatAmount } = useFormatAmount()
+  const originalPrice = props.basePrice && props.basePrice !== props.price ? formatAmount(props.basePrice) : undefined
+  const price = !props.hidePrice && props.price > 0 ? formatAmount(props.price) : ''
 
   return (
     <OptionCard
       selected={props.selected || false}
       title={'One-time purchase'}
-      price={formatAmount(props.price)}
-      originalPrice={props.basePrice ? formatAmount(props.basePrice) : undefined}
+      price={price}
+      originalPrice={originalPrice}
       onSelect={() => props.onSelect()}
     />
   )

@@ -15,6 +15,7 @@ export type SubscriptionOptionCardProps = {
   options: ProductPlan[]
   value: ProductPlan['id'] | null
   basePrice: number
+  hidePrice?: boolean
   onSelect: (optionId: ProductPlan['id']) => void
   getOptionPrice: (optionId: ProductPlan['id']) => number
 }
@@ -25,12 +26,12 @@ export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
   const hasMultipleOptions = props.options.length > 1
   const selectedOption = props.options.find((option) => option.id === props.value)
 
-  const price = props.getOptionPrice(activeOption!.id)
-  const showBasePrice = props.basePrice > 0 && price !== props.basePrice
+  const selectedOptionPrice = props.getOptionPrice(activeOption!.id)
+  const showBasePrice = props.basePrice > 0 && selectedOptionPrice !== props.basePrice
   const basePrice = showBasePrice ? formatAmount(props.basePrice) : null
 
   const isSelected = !!selectedOption
-
+  const price = !props.hidePrice && selectedOptionPrice > 0 ? formatAmount(selectedOptionPrice) : ''
   const onFrequencySelect = (value: string) => {
     const option = props.options.find((option) => option.id === +value) || null
     if (!option) {
@@ -39,12 +40,11 @@ export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
     setActiveOption(option)
     props.onSelect(option.id)
   }
-
   return (
     <OptionCard
       title={'Subscribe'}
       selected={isSelected}
-      price={formatAmount(price)}
+      price={price}
       originalPrice={basePrice}
       onSelect={() => onFrequencySelect(`${activeOption!.id}`)}
       nestedOptions={
