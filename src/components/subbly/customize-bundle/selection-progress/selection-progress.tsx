@@ -9,7 +9,7 @@ type SelectionProgressProps = {
 export const SelectionProgress = (props: SelectionProgressProps) => {
   const { formatAmount } = useFormatAmount()
 
-  const trackWidth = `${Math.floor(props.progress.current * 100 / props.progress.max)}%`
+  const trackWidth = props.progress.max ? `${Math.floor(props.progress.current * 100 / props.progress.max)}%` : 0
 
   const makeCta = (breakdown: RulesetPriceBreakdown): string => {
     switch (true) {
