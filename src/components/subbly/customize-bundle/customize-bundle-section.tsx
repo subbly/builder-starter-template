@@ -74,7 +74,7 @@ export const CustomizeBundleSection = (props: CustomizeBundleProps) => {
     form,
     ruleset: selectedRuleset
   })
-  const addItemsDisabled = !autoMatchRuleset && rules.itemsMax.expected && rules.itemsMax.delta > 0
+  const addItemsDisabled = !autoMatchRuleset && !!rules.itemsMax.expected && rules.itemsMax.delta > 0
 
   return (
     <div className="container mx-auto">
