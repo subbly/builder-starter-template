@@ -1,1 +1,0 @@
-export { ProductGroupedItemSelectBlock } from './product-grouped-item-select-block'

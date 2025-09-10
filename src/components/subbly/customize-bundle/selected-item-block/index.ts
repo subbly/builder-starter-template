@@ -1,1 +1,0 @@
-export { SelectedItemBlock } from './selected-item-block'

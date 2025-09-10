@@ -1,1 +1,0 @@
-export { ReceiptBlock } from './receipt-block'

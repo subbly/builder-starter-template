@@ -1,1 +1,0 @@
-export { ConfirmBlock } from './confirm-block'
