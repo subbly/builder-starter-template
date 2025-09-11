@@ -12,24 +12,20 @@
   "tasks": {
     "dev": {
       "name": "Start Dev Server",
-      "command": "pnpm run dev",
+      "command": "nodemon --exec 'pnpm run dev' --ext css,scss --watch src --watch pnpm-lock.yaml",
       "runAtStart": true,
       "preview": {
         "port": 3000
-      },
-      "restartOn": {
-        "files": ["pnpm-lock.yaml", "**/*.(css|scss)"],
-        "clone": true,
-        "resume": false
       }
     },
     "install": {
       "name": "Install Dependencies",
-      "command": "pnpm install --dangerously-allow-all-builds",
-      "runAtStart": true,
-      "restartOn": {
-        "files": ["package.json"]
-      }
+      "command": "pnpm install --dangerously-allow-all-builds"
+    },
+    "watch": {
+      "name": "Watch Dependencies",
+      "command": "export SHELL=/bin/bash; chokidar 'package.json' -c 'pnpm install --dangerously-allow-all-builds'",
+      "runAtStart": true
     }
   }
 }
