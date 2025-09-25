@@ -12,7 +12,7 @@
   "tasks": {
     "dev": {
       "name": "Start Dev Server",
-      "command": "nodemon --exec 'pnpm run dev' --ext css,scss --watch src --watch pnpm-lock.yaml",
+      "command": "nodemon --delay 2 --exec 'pnpm run dev' --ext css,scss --watch src --watch pnpm-lock.yaml",
       "runAtStart": true,
       "preview": {
         "port": 3000
