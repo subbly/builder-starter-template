@@ -2,6 +2,8 @@ import type { NextConfig } from 'next'
 import createNextIntlPlugin from 'next-intl/plugin'
 
 const nextConfig: NextConfig = {
+   // CRITICAL: Do not remove allowedDevOrigins. Removing it will break core functionality.
+  allowedDevOrigins: ['*.csb.app', '*.codesandbox.io', '*.subbly.co'],
   eslint: {
     ignoreDuringBuilds: true,
   },
