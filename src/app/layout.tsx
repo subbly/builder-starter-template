@@ -4,7 +4,6 @@ import './globals.css'
 import { Providers } from './providers'
 import { TransitionRouterProvider } from '@/lib/transition-router/transition-router-provider'
 import { SubblyScript } from '@/lib/subbly/subbly-script'
-import Script from 'next/script'
 import { getLocale } from 'next-intl/server'
 import { NextIntlClientProvider } from 'next-intl'
 
@@ -50,12 +49,6 @@ export default async function RootLayout({
             </div>
           </div>
         </Providers>
-        <Script
-          id="sandbox-messenger"
-          src="https://assets.subbly.co/builder/sandbox-messenger.js"
-          type="module"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   )

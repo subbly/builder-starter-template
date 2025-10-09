@@ -12,12 +12,6 @@ export default function GlobalError() {
         does not expose status codes for errors, we simply pass 0 to render a
         generic error message. */}
         <NextError statusCode={0} />
-        <Script
-          id="sandbox-messenger"
-          src="https://assets.subbly.co/builder/sandbox-messenger.js"
-          type="module"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   )
