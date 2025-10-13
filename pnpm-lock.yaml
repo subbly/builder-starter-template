@@ -90,8 +90,8 @@ importers:
         specifier: ^1.2.7
         version: 1.2.7(@types/react-dom@19.1.7(@types/react@19.1.9))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@subbly/react':
-        specifier: 0.0.12
-        version: 0.0.12
+        specifier: 0.0.13
+        version: 0.0.13
       '@subbly/sdk':
         specifier: ^0.6.19
         version: 0.6.19
@@ -1403,11 +1403,11 @@ packages:
     resolution: {integrity: sha512-2hSQ4wUNUPYSq6jyVZESmY1TYHdsgVAarE5C5jXqZoS2HBX+UykicrMxESBW2B8Z9mEE7hwuXgzUAv1Ix7ljwA==}
     engines: {node: '>=16'}
 
-  '@subbly/kit@0.0.12':
-    resolution: {integrity: sha512-aamVOoVBHLajNBmZeteQjQFSlnaZUJael8JyNotYVqZXJ/z7DErMFXrPRNRT1OjEt9B+50qFapKIkuVyIr3TsA==}
+  '@subbly/kit@0.0.13':
+    resolution: {integrity: sha512-COSBlh06kscjfB9QR5BxLlzaS/2oRw2VNVHRsiesb2H85RDThfnWVQ7/8Z6b4FHbgHwFsiOoOTp+9aNiV39EVg==}
 
-  '@subbly/react@0.0.12':
-    resolution: {integrity: sha512-mwQLSIqMQL0nzQfolkRGouy9mEWyPtgi8W6LQiQH92koeaqFG+EuA936J3/xOtYcJk7z/zfjYYeOqJuY3w89kg==}
+  '@subbly/react@0.0.13':
+    resolution: {integrity: sha512-RK48j6zl9R70sI+8qcqpuAC1Ak0oq3dZr2hW0IiIwbjSXyY+yfYag3ELNuM3scc4Yz9j308MvMLW6HKNvSkExg==}
 
   '@subbly/sdk@0.6.19':
     resolution: {integrity: sha512-t7w+qoI4wLR4XI0FlfCc25eDNgDSCFJyCODmk0eAa9qkZZnZOow8Q1wzv5VWc6iMzX6wJCvuXdQVl9ClpZmw7g==}
@@ -5173,16 +5173,16 @@ snapshots:
       qs: 6.14.0
       snakecase-keys: 6.0.0
 
-  '@subbly/kit@0.0.12':
+  '@subbly/kit@0.0.13':
     dependencies:
       '@subbly/api-client': 0.6.19
       '@subbly/sdk': 0.6.19
       lodash-es: 4.17.21
 
-  '@subbly/react@0.0.12':
+  '@subbly/react@0.0.13':
     dependencies:
       '@subbly/api-client': 0.6.19
-      '@subbly/kit': 0.0.12
+      '@subbly/kit': 0.0.13
       lodash-es: 4.17.21
       react: 19.1.1
       react-dom: 19.2.0(react@19.1.1)
