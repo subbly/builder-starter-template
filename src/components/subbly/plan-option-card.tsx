@@ -14,7 +14,7 @@ export type PlanOptionCardProps = {
   onSelect: () => void
 }
 
-export const OptionCard = (props: PlanOptionCardProps) => {
+export const PlanOptionCard = (props: PlanOptionCardProps) => {
   return (
     <div
       {...(props.nestedOptions && props.selected

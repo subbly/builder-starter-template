@@ -1,4 +1,4 @@
-import { OptionCard } from '@/components/subbly/plan-option-card'
+import { PlanOptionCard } from '@/components/subbly/plan-option-card'
 import {
   Select,
   SelectContent,
@@ -27,7 +27,7 @@ export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
   const selectedOption = props.options.find((option) => option.id === props.value)
 
   const selectedOptionPrice = props.getOptionPrice(activeOption!.id)
-  const showBasePrice = props.basePrice > 0 && selectedOptionPrice !== props.basePrice
+  const showBasePrice = props.basePrice > 0 && props.basePrice > selectedOptionPrice
   const basePrice = showBasePrice ? formatAmount(props.basePrice) : null
 
   const isSelected = !!selectedOption
@@ -41,7 +41,7 @@ export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
     props.onSelect(option.id)
   }
   return (
-    <OptionCard
+    <PlanOptionCard
       title={'Subscribe'}
       selected={isSelected}
       price={price}

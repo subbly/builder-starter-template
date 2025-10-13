@@ -1,4 +1,4 @@
-import { OptionCard } from '@/components/subbly/plan-option-card'
+import { PlanOptionCard } from '@/components/subbly/plan-option-card'
 import type { ProductVariant } from '@subbly/react'
 import { useFormatAmount } from '@/hooks/use-format-amount'
 
@@ -13,11 +13,11 @@ export type OneTimeOptionCardProps = {
 
 export const OneTimeOptionCard = (props: OneTimeOptionCardProps) => {
   const { formatAmount } = useFormatAmount()
-  const originalPrice = props.basePrice && props.basePrice !== props.price ? formatAmount(props.basePrice) : undefined
+  const originalPrice = props.basePrice && props.basePrice > props.price ? formatAmount(props.basePrice) : undefined
   const price = !props.hidePrice && props.price > 0 ? formatAmount(props.price) : ''
 
   return (
-    <OptionCard
+    <PlanOptionCard
       selected={props.selected || false}
       title={'One-time purchase'}
       price={price}

@@ -90,6 +90,7 @@ export const ItemOptionCard = (props: ItemOptionCardProps) => {
               animate={{ opacity: 1 }}
             >
               <Button
+                disabled={props.addDisabled}
                 onClick={() => updateQuantity(1)}
               >
                 Add

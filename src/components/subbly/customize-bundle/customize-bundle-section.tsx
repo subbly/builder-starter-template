@@ -74,7 +74,7 @@ export const CustomizeBundleSection = (props: CustomizeBundleProps) => {
     form,
     ruleset: selectedRuleset
   })
-  const addItemsDisabled = !autoMatchRuleset && !!rules.itemsMax.expected && rules.itemsMax.delta > 0
+  const addItemsDisabled = !autoMatchRuleset && !!rules.itemsMax.expected && rules.itemsMax.delta >= 0
 
   return (
     <div className="container mx-auto">
@@ -178,10 +178,12 @@ export const CustomizeBundleSection = (props: CustomizeBundleProps) => {
             )}
           </div>
 
-          <ReceiptBlock
-            {...bundleReceipt}
-            discountType={bundle.discountType}
-          />
+          {!validation?.invalid && (
+            <ReceiptBlock
+              {...bundleReceipt}
+              discountType={bundle.discountType}
+            />
+          )}
 
           <ConfirmBlock
             validationRule={validation}

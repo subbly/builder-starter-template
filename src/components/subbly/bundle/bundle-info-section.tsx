@@ -30,7 +30,7 @@ export const BundleInfoSection = (props: BundleInfoSectionProps) => {
         )}
       </div>
 
-      {props.groups.length > 0 ? (
+      {props.bundle.configurable && props.groups.length > 0 ? (
         <BundleGroupForm
           bundle={bundle}
           groups={props.groups}
