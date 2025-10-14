@@ -41,6 +41,7 @@ export const CustomizeBundleSection = (props: CustomizeBundleProps) => {
     rulesetStepsPriceBreakdown,
     hideItemQuantity,
     hidePlanPrice,
+    hidePlanBasePrice,
     itemsQuantityChangeDisabled,
     calculateItemPrice,
     selectedRuleset,
@@ -141,6 +142,7 @@ export const CustomizeBundleSection = (props: CustomizeBundleProps) => {
               options={planOptions}
               value={form.productId}
               hidePlanPrice={hidePlanPrice}
+              hideBasePrice={hidePlanBasePrice}
               priceCalculatorMap={planPriceCalculatorMap}
               subtotal={itemsPrice}
               onSelect={(planId) => updateForm({

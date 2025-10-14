@@ -16,6 +16,7 @@ export type SubscriptionOptionCardProps = {
   value: ProductPlan['id'] | null
   basePrice: number
   hidePrice?: boolean
+  hideBasePrice?: boolean
   onSelect: (optionId: ProductPlan['id']) => void
   getOptionPrice: (optionId: ProductPlan['id']) => number
 }
@@ -27,7 +28,7 @@ export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
   const selectedOption = props.options.find((option) => option.id === props.value)
 
   const selectedOptionPrice = props.getOptionPrice(activeOption!.id)
-  const showBasePrice = props.basePrice > 0 && props.basePrice > selectedOptionPrice
+  const showBasePrice = !props.hideBasePrice && props.basePrice > 0 && props.basePrice > selectedOptionPrice
   const basePrice = showBasePrice ? formatAmount(props.basePrice) : null
 
   const isSelected = !!selectedOption

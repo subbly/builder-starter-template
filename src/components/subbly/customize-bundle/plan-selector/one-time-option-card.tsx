@@ -8,12 +8,13 @@ export type OneTimeOptionCardProps = {
   price: number
   basePrice?: number
   hidePrice?: boolean
+  hideBasePrice?: boolean
   onSelect: () => void
 }
 
 export const OneTimeOptionCard = (props: OneTimeOptionCardProps) => {
   const { formatAmount } = useFormatAmount()
-  const originalPrice = props.basePrice && props.basePrice > props.price ? formatAmount(props.basePrice) : undefined
+  const originalPrice = !props.hideBasePrice && props.basePrice && props.basePrice > props.price ? formatAmount(props.basePrice) : undefined
   const price = !props.hidePrice && props.price > 0 ? formatAmount(props.price) : ''
 
   return (

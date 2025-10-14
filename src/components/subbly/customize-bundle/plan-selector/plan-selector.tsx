@@ -10,6 +10,7 @@ export type PlanSelectorProps = {
   priceCalculatorMap?: PlanPriceCalculatorMap
   subtotal: number
   hidePlanPrice?: boolean
+  hideBasePrice?: boolean
 }
 
 export const PlanSelector = (props: PlanSelectorProps) => {
@@ -58,6 +59,7 @@ export const PlanSelector = (props: PlanSelectorProps) => {
               price={getOptionPrice(option.id)}
               basePrice={props.subtotal}
               hidePrice={props.hidePlanPrice}
+              hideBasePrice={props.hideBasePrice}
               onSelect={() => props.onSelect(option.id)}
             />
           ))}
@@ -69,6 +71,7 @@ export const PlanSelector = (props: PlanSelectorProps) => {
           basePrice={props.subtotal}
           getOptionPrice={getOptionPrice}
           hidePrice={props.hidePlanPrice}
+          hideBasePrice={props.hideBasePrice}
           onSelect={(optionId) => props.onSelect(optionId)}
         />
       )}
