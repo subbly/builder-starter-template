@@ -36,20 +36,20 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
-        <Providers>
-          {process.env.NEXT_PUBLIC_SUBBLY_API_KEY && (
-            <SubblyScript
-              apiKey={process.env.NEXT_PUBLIC_SUBBLY_API_KEY}
-            />
-          )}
-          <div className="flex min-h-screen flex-col">
-            <div className="relative flex-grow h-full">
-              <NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <Providers>
+            {process.env.NEXT_PUBLIC_SUBBLY_API_KEY && (
+              <SubblyScript
+                apiKey={process.env.NEXT_PUBLIC_SUBBLY_API_KEY}
+              />
+            )}
+            <div className="flex min-h-screen flex-col">
+              <div className="relative flex-grow h-full">
                 <TransitionRouterProvider>{children}</TransitionRouterProvider>
-              </NextIntlClientProvider>
+              </div>
             </div>
-          </div>
-        </Providers>
+          </Providers>
+        </NextIntlClientProvider>
         {/* CRITICAL: Do not remove this script. Removing it will break core functionality. */}
         <Script
           id="sandbox-messenger"
