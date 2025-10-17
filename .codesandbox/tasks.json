@@ -1,10 +1,6 @@
 {
   "setupTasks": [
     {
-      "name": "Copy gitignore",
-      "command": "cp gitignore.example .gitignore"
-    },
-    {
       "name": "Install Dependencies",
       "command": "pnpm install --dangerously-allow-all-builds"
     }
