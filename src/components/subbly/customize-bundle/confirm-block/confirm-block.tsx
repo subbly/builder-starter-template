@@ -3,8 +3,9 @@ import type { BundleValidationRule } from '@subbly/react'
 import { useFormatAmount } from '@/hooks/use-format-amount'
 
 type ConfirmBlockProps = {
-  validationRule: BundleValidationRule | null
+  validationRule?: BundleValidationRule | null
   onSubmit: () => void
+  buttonText?: string
 }
 
 export const ConfirmBlock = (props: ConfirmBlockProps) => {
@@ -29,7 +30,7 @@ export const ConfirmBlock = (props: ConfirmBlockProps) => {
     }
   }
 
-  const message = getValidationMessage(props.validationRule)
+  const message = props.validationRule ? getValidationMessage(props.validationRule) : null
 
   return (
     <div className="flex flex-col gap-3 bg-background p-4 rounded-xl">
@@ -44,7 +45,7 @@ export const ConfirmBlock = (props: ConfirmBlockProps) => {
         className="w-full"
         onClick={() => props.onSubmit()}
       >
-        Add to cart
+        {props.buttonText || 'Add to cart'}
       </Button>
     </div>
   )

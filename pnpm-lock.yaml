@@ -90,8 +90,8 @@ importers:
         specifier: ^1.2.7
         version: 1.2.7(@types/react-dom@19.1.7(@types/react@19.1.9))(@types/react@19.1.9)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@subbly/react':
-        specifier: 0.0.13
-        version: 0.0.13
+        specifier: 0.0.14
+        version: 0.0.14
       '@subbly/sdk':
         specifier: ^0.6.19
         version: 0.6.19
@@ -1403,11 +1403,11 @@ packages:
     resolution: {integrity: sha512-2hSQ4wUNUPYSq6jyVZESmY1TYHdsgVAarE5C5jXqZoS2HBX+UykicrMxESBW2B8Z9mEE7hwuXgzUAv1Ix7ljwA==}
     engines: {node: '>=16'}
 
-  '@subbly/kit@0.0.13':
-    resolution: {integrity: sha512-COSBlh06kscjfB9QR5BxLlzaS/2oRw2VNVHRsiesb2H85RDThfnWVQ7/8Z6b4FHbgHwFsiOoOTp+9aNiV39EVg==}
+  '@subbly/kit@0.0.14':
+    resolution: {integrity: sha512-CfirgTcyCsFMoMVoHS4s+gj/N+FUd+zbpDRaLD5oZ2p09URarAcmMabzjHnyxzxvX7v3HMsoxAfpgPCxybGsQQ==}
 
-  '@subbly/react@0.0.13':
-    resolution: {integrity: sha512-RK48j6zl9R70sI+8qcqpuAC1Ak0oq3dZr2hW0IiIwbjSXyY+yfYag3ELNuM3scc4Yz9j308MvMLW6HKNvSkExg==}
+  '@subbly/react@0.0.14':
+    resolution: {integrity: sha512-vrnLX+tDplZYkTVV2nrjN4aXyrsjrlKHuLJtGSEYwnaj2vgaQCUJ+B1Lr104MLAQh+cY3CZIEMlVOdAKlDfYWw==}
 
   '@subbly/sdk@0.6.19':
     resolution: {integrity: sha512-t7w+qoI4wLR4XI0FlfCc25eDNgDSCFJyCODmk0eAa9qkZZnZOow8Q1wzv5VWc6iMzX6wJCvuXdQVl9ClpZmw7g==}
@@ -3374,6 +3374,10 @@ packages:
     resolution: {integrity: sha512-w8nqGImo45dmMIfljjMwOGtbmC/mk4CMYhWIicdSflH91J9TyCyczcPFXJzrZ/ZXcgGRFeP6BU0BEJTw6tZdfQ==}
     engines: {node: '>=0.10.0'}
 
+  react@19.2.0:
+    resolution: {integrity: sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==}
+    engines: {node: '>=0.10.0'}
+
   recast@0.23.11:
     resolution: {integrity: sha512-YTUo+Flmw4ZXiWfQKGcwwc11KnoRAYgzAE2E7mXKCjSviTKShtxBsN6YUUBB2gtaBzKzeKunxhUwNHQuRryhWA==}
     engines: {node: '>= 4'}
@@ -5173,19 +5177,19 @@ snapshots:
       qs: 6.14.0
       snakecase-keys: 6.0.0
 
-  '@subbly/kit@0.0.13':
+  '@subbly/kit@0.0.14':
     dependencies:
       '@subbly/api-client': 0.6.19
       '@subbly/sdk': 0.6.19
       lodash-es: 4.17.21
 
-  '@subbly/react@0.0.13':
+  '@subbly/react@0.0.14':
     dependencies:
       '@subbly/api-client': 0.6.19
-      '@subbly/kit': 0.0.13
+      '@subbly/kit': 0.0.14
       lodash-es: 4.17.21
-      react: 19.1.1
-      react-dom: 19.2.0(react@19.1.1)
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
 
   '@subbly/sdk@0.6.19':
     dependencies:
@@ -7198,9 +7202,9 @@ snapshots:
       react: 19.1.1
       scheduler: 0.26.0
 
-  react-dom@19.2.0(react@19.1.1):
+  react-dom@19.2.0(react@19.2.0):
     dependencies:
-      react: 19.1.1
+      react: 19.2.0
       scheduler: 0.27.0
 
   react-hook-form@7.62.0(react@19.1.1):
@@ -7242,6 +7246,8 @@ snapshots:
       '@types/react': 19.1.9
 
   react@19.1.1: {}
+
+  react@19.2.0: {}
 
   recast@0.23.11:
     dependencies:

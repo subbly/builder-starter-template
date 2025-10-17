@@ -24,7 +24,7 @@ export const PlanOptionCard = (props: PlanOptionCardProps) => {
             'aria-checked': props.selected,
           })}
       className={cn(
-        'w-full grid grid-cols-1 bg-background border rounded-[8px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-950 ring-1 ring-transparent cursor-pointer',
+        'w-full grid grid-cols-1 bg-background border border-transparent rounded-[8px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-950 ring-1 ring-transparent cursor-pointer',
         props.selected && 'ring-1 ring-primary',
         props.nestedOptions && props.selected && 'cursor-default'
       )}
