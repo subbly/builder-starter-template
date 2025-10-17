@@ -9,7 +9,7 @@ module.exports = {
       watch: ['src/**/*.css', 'src/**/*.scss', 'pnpm-lock.yaml'],
       watch_delay: 1000,
       ignore_watch: ['node_modules', '.git', '.next', '.subbly/logs'],
-      autorestart: false,
+      exp_backoff_restart_delay: 100,
       log_file: './.subbly/logs/output.log',
       merge_logs: true,
       log_date_format: 'YYYY-MM-DDTHH:mm:ss.SSS',
