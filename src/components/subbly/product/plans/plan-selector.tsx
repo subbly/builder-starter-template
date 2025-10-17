@@ -1,5 +1,5 @@
-import { OptionCard } from './option-card'
-import { useCurrencyFormatter } from '@subbly/react'
+import { PlanOptionCard } from '@/components/subbly/plan-option-card'
+import { useFormatAmount } from '@/hooks/use-format-amount'
 import { formatBillingFrequency } from '@subbly/react'
 import type { ProductPlan } from '@subbly/react'
 
@@ -10,7 +10,7 @@ export type PlanSelectorProps = {
 }
 
 export const PlanSelector = (props: PlanSelectorProps) => {
-  const { formatAmount } = useCurrencyFormatter()
+  const { formatAmount } = useFormatAmount()
 
   return (
     <div className="flex flex-col gap-3 w-full">
@@ -19,7 +19,7 @@ export const PlanSelector = (props: PlanSelectorProps) => {
       {props.options.length === 0 ? null : (
         <div className="flex flex-col gap-2">
           {props.options.map((option) => (
-            <OptionCard
+            <PlanOptionCard
               key={option.id}
               title={option.pricingName || formatBillingFrequency(option.frequencyUnit, option.frequencyCount)}
               price={formatAmount(option.price)}

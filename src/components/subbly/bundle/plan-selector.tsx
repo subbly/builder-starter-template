@@ -7,8 +7,9 @@ export type PlanSelectorProps = {
   options: Product[]
   value: number
   onSelect: (optionId: number) => void
-  priceCalculatorMap: PlanPriceCalculatorMap
+  priceCalculatorMap?: PlanPriceCalculatorMap
   subtotal: number
+  hidePlanPrice?: boolean
 }
 
 export const PlanSelector = (props: PlanSelectorProps) => {
@@ -39,7 +40,7 @@ export const PlanSelector = (props: PlanSelectorProps) => {
   }, [plans.oneTime, isOptionSelected])
 
   const getOptionPrice = (optionId: number): number => {
-    const priceFn = props.priceCalculatorMap.get(optionId)
+    const priceFn = props.priceCalculatorMap?.get(optionId)
     return priceFn ? priceFn(props.subtotal) : props.subtotal
   }
 
@@ -56,6 +57,7 @@ export const PlanSelector = (props: PlanSelectorProps) => {
               selected={isOptionSelected(option.id)}
               price={getOptionPrice(option.id)}
               basePrice={props.subtotal}
+              hidePrice={props.hidePlanPrice}
               onSelect={() => props.onSelect(option.id)}
             />
           ))}
@@ -66,6 +68,7 @@ export const PlanSelector = (props: PlanSelectorProps) => {
           value={!isOneTimeSelected ? props.value : null}
           basePrice={props.subtotal}
           getOptionPrice={getOptionPrice}
+          hidePrice={props.hidePlanPrice}
           onSelect={(optionId) => props.onSelect(optionId)}
         />
       )}

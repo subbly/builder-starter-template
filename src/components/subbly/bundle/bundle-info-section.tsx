@@ -2,7 +2,7 @@ import type { HTMLProps } from 'react'
 import { findSelectableBundlePlanId } from '@subbly/react'
 import type { Bundle, BundleGroup } from '@subbly/react'
 import { BundleGroupForm } from './bundle-group-form'
-import { AddToCartButton } from '../add-to-cart-button'
+import { AddToCartButton } from '@/components/subbly/add-to-cart-button'
 
 export type BundleInfoSectionProps = HTMLProps<HTMLDivElement> & {
   bundle: Bundle
@@ -30,7 +30,7 @@ export const BundleInfoSection = (props: BundleInfoSectionProps) => {
         )}
       </div>
 
-      {props.groups.length > 0 ? (
+      {props.bundle.configurable && props.groups.length > 0 ? (
         <BundleGroupForm
           bundle={bundle}
           groups={props.groups}

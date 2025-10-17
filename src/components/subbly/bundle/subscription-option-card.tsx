@@ -1,4 +1,4 @@
-import { OptionCard } from '../product/plans/option-card'
+import { PlanOptionCard } from '@/components/subbly/plan-option-card'
 import {
   Select,
   SelectContent,
@@ -7,29 +7,31 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useState } from 'react'
-import { formatBillingFrequency, useCurrencyFormatter } from '@subbly/react'
+import { formatBillingFrequency } from '@subbly/react'
 import type { ProductPlan } from '@subbly/react'
+import { useFormatAmount } from '@/hooks/use-format-amount'
 
 export type SubscriptionOptionCardProps = {
   options: ProductPlan[]
   value: ProductPlan['id'] | null
   basePrice: number
+  hidePrice?: boolean
   onSelect: (optionId: ProductPlan['id']) => void
   getOptionPrice: (optionId: ProductPlan['id']) => number
 }
 
 export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
-  const { formatAmount } = useCurrencyFormatter()
+  const { formatAmount } = useFormatAmount()
   const [activeOption, setActiveOption] = useState<ProductPlan | null>(props.options[0])
   const hasMultipleOptions = props.options.length > 1
   const selectedOption = props.options.find((option) => option.id === props.value)
 
-  const price = props.getOptionPrice(activeOption!.id)
-  const showBasePrice = props.basePrice > 0 && price !== props.basePrice
+  const selectedOptionPrice = props.getOptionPrice(activeOption!.id)
+  const showBasePrice = props.basePrice > 0 && props.basePrice > selectedOptionPrice
   const basePrice = showBasePrice ? formatAmount(props.basePrice) : null
 
   const isSelected = !!selectedOption
-
+  const price = !props.hidePrice && selectedOptionPrice > 0 ? formatAmount(selectedOptionPrice) : ''
   const onFrequencySelect = (value: string) => {
     const option = props.options.find((option) => option.id === +value) || null
     if (!option) {
@@ -38,12 +40,11 @@ export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
     setActiveOption(option)
     props.onSelect(option.id)
   }
-
   return (
-    <OptionCard
+    <PlanOptionCard
       title={'Subscribe'}
       selected={isSelected}
-      price={formatAmount(price)}
+      price={price}
       originalPrice={basePrice}
       onSelect={() => onFrequencySelect(`${activeOption!.id}`)}
       nestedOptions={

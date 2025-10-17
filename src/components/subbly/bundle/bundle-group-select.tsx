@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import Image from 'next/image'
-import { VariantSelector } from '../product/variant/variant-selector'
+import { VariantSelector } from '@/components/subbly/variant/variant-selector'
 import { useProductImages, useVariantCombinations } from '@subbly/react'
 import type { SelectedBundleItem, BundleGroup, ProductVariantCombination } from '@subbly/react'
 

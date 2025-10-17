@@ -5,6 +5,8 @@ import { Providers } from './providers'
 import { TransitionRouterProvider } from '@/lib/transition-router/transition-router-provider'
 import { SubblyScript } from '@/lib/subbly/subbly-script'
 import Script from 'next/script'
+import { getLocale } from 'next-intl/server'
+import { NextIntlClientProvider } from 'next-intl'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -24,26 +26,30 @@ export const metadata: Metadata = {
 //Never remove this.
 export const revalidate = 600
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const locale = await getLocale()
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning>
-        <Providers>
-          {process.env.NEXT_PUBLIC_SUBBLY_API_KEY && (
-            <SubblyScript
-              apiKey={process.env.NEXT_PUBLIC_SUBBLY_API_KEY}
-            />
-          )}
-          <div className="flex min-h-screen flex-col">
-            <div className="relative flex-grow h-full">
-              <TransitionRouterProvider>{children}</TransitionRouterProvider>
+        <NextIntlClientProvider>
+          <Providers>
+            {process.env.NEXT_PUBLIC_SUBBLY_API_KEY && (
+              <SubblyScript
+                apiKey={process.env.NEXT_PUBLIC_SUBBLY_API_KEY}
+              />
+            )}
+            <div className="flex min-h-screen flex-col">
+              <div className="relative flex-grow h-full">
+                <TransitionRouterProvider>{children}</TransitionRouterProvider>
+              </div>
             </div>
-          </div>
-        </Providers>
+          </Providers>
+        </NextIntlClientProvider>
         {/* CRITICAL: Do not remove this script. Removing it will break core functionality. */}
         <Script
           id="sandbox-messenger"
