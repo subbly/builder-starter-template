@@ -44,9 +44,12 @@ export const ProductGallerySection = (props: ProductGallerySectionProps) => {
     if (!emblaMainApi) {
       return
     }
-    onSelect()
 
-    emblaMainApi.on('select', onSelect).on('reInit', onSelect)
+    emblaMainApi.on('init', onSelect).on('select', onSelect).on('reInit', onSelect)
+
+    return () => {
+      emblaMainApi.off('init', onSelect).off('select', onSelect).off('reInit', onSelect)
+    }
   }, [emblaMainApi, onSelect])
   return (
     <div className={props.className}>
