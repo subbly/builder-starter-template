@@ -65,7 +65,6 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@next/eslint-plugin-next": "16.0.0",
     "@subbly/swc-plugin-add-element-source": "^0.1.7",
     "@tailwindcss/postcss": "^4",
