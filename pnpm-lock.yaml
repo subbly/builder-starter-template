@@ -179,8 +179,8 @@ importers:
         specifier: 16.0.0
         version: 16.0.0
       '@subbly/swc-plugin-add-element-source':
-        specifier: ^0.1.7
-        version: 0.1.7
+        specifier: ^0.1.8
+        version: 0.1.8
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.11
@@ -1421,8 +1421,8 @@ packages:
     resolution: {integrity: sha512-t7w+qoI4wLR4XI0FlfCc25eDNgDSCFJyCODmk0eAa9qkZZnZOow8Q1wzv5VWc6iMzX6wJCvuXdQVl9ClpZmw7g==}
     engines: {node: '>=16'}
 
-  '@subbly/swc-plugin-add-element-source@0.1.7':
-    resolution: {integrity: sha512-qmTdhBQQm+itvyzgKE39SDY3WFKYK8CwriTxl+r8U1JC5N2cJ1PfbRmQWzQlzRbRRcck/UicI62CF7bY3C5rNQ==}
+  '@subbly/swc-plugin-add-element-source@0.1.8':
+    resolution: {integrity: sha512-FE5F2ERoqdoZtV7rGIfZpccQR1JqsJRLXA+Ssu/nd6+K9KZh7ZIE7NzLN3a0uv+1xU26fG+iLpYtrmqzxnhxGQ==}
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
@@ -5210,7 +5210,7 @@ snapshots:
     dependencies:
       '@subbly/api-client': 0.6.20
 
-  '@subbly/swc-plugin-add-element-source@0.1.7': {}
+  '@subbly/swc-plugin-add-element-source@0.1.8': {}
 
   '@swc/helpers@0.5.15':
     dependencies:

@@ -66,7 +66,7 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "16.0.0",
-    "@subbly/swc-plugin-add-element-source": "^0.1.7",
+    "@subbly/swc-plugin-add-element-source": "^0.1.8",
     "@tailwindcss/postcss": "^4",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^20",
