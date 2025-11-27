@@ -1,6 +1,6 @@
 'use client'
 
-import { useBundleForm, useBundleReceipt, useBundleValidation } from '@subbly/react'
+import { useBundleForm, useBundleReceipt, useBundleValidation, useBundleProductGroupedItemsForm } from '@subbly/react'
 import type { Bundle } from '@subbly/react'
 import { QuantitySelectBlock } from './quantity-select-block'
 import { SizeSelectBlock } from './size-select-block'
@@ -13,9 +13,15 @@ import { PlanSelector } from './plan-selector'
 import { SelectedItemBlock } from './selected-item-block'
 import { SelectionProgress } from './selection-progress'
 import { useBundleQuoteQuery } from '@/lib/subbly/queries/use-bundle-quote-query'
+import { useBundleGroupsQuery } from '@/lib/subbly/queries/use-bundle-groups-query'
 import { OneStepLayout } from './layouts/one-step-layout'
 import { TwoStepLayout } from './layouts/two-step-layout'
+import { FixedLayout } from './layouts/fixed-layout'
+import { SingleProductLayout } from './layouts/single-product-layout'
 import type { BundleLayoutProps } from './layouts/layout-props'
+import { Button } from '@/components/ui/button'
+
+type BundleMode = 'fixed' | 'single-product' | 'multi-product'
 
 type CustomizeBundleProps = {
   bundle: Bundle
@@ -23,7 +29,133 @@ type CustomizeBundleProps = {
   allowMultipleItemsInGroup?: boolean
 }
 
+function detectBundleMode(bundle: Bundle): BundleMode {
+  if (!bundle.configurable) return 'fixed'
+  if (bundle.selectionType === 'single_product') return 'single-product'
+  return 'multi-product'
+}
+
 export const CustomizeBundleSection = (props: CustomizeBundleProps) => {
+  const { bundle, groupItemsByProduct, allowMultipleItemsInGroup } = props
+  const mode = detectBundleMode(bundle)
+
+  if (mode === 'fixed') {
+    return <FixedBundleMode bundle={bundle} />
+  }
+
+  if (mode === 'single-product') {
+    return <SingleProductBundleMode bundle={bundle} />
+  }
+
+  return <MultiProductBundleMode bundle={bundle} groupItemsByProduct={groupItemsByProduct} allowMultipleItemsInGroup={allowMultipleItemsInGroup} />
+}
+
+function FixedBundleMode({ bundle }: { bundle: Bundle }) {
+  const {
+    form,
+    updateForm,
+    planOptions,
+    planPriceCalculatorMap,
+    addToCart,
+  } = useBundleForm({
+    bundle
+  })
+
+  const planSelectBlock = planOptions.length > 0 ? (
+    <div className="bg-background p-4 rounded-xl">
+      <PlanSelector
+        subtotal={0}
+        options={planOptions}
+        value={form.productId}
+        priceCalculatorMap={planPriceCalculatorMap}
+        onSelect={(productId) => updateForm({ productId })}
+      />
+    </div>
+  ) : null
+
+  const confirmBlock = (
+    <Button className="h-10 w-full" onClick={() => addToCart()}>
+      <span className="capitalize">Add to cart</span>
+    </Button>
+  )
+
+  return (
+    <div className="container mx-auto">
+      <FixedLayout
+        planSelectBlock={planSelectBlock}
+        confirmBlock={confirmBlock}
+      />
+    </div>
+  )
+}
+
+function SingleProductBundleMode({ bundle }: { bundle: Bundle }) {
+  const { data: groupsResponse } = useBundleGroupsQuery({
+    bundleId: bundle.id
+  })
+
+  const groups = groupsResponse?.data || []
+
+  const {
+    form,
+    updateForm,
+    planOptions,
+    planPriceCalculatorMap,
+    itemsPrice,
+    addToCart,
+  } = useBundleForm({
+    bundle
+  })
+
+  const {
+    getSelectedItemForProduct,
+    selectItem,
+  } = useBundleProductGroupedItemsForm({
+    bundle,
+    selectedItems: form.items,
+    onItemsChange: (items) => updateForm({ items }),
+    allowMultipleItemsInGroup: false
+  })
+
+  const showGroupProduct = groups.length > 1
+
+  const planSelectBlock = planOptions.length > 0 ? (
+    <div className="bg-background p-4 rounded-xl">
+      <PlanSelector
+        subtotal={itemsPrice}
+        options={planOptions}
+        value={form.productId}
+        priceCalculatorMap={planPriceCalculatorMap}
+        onSelect={(productId) => updateForm({ productId })}
+      />
+    </div>
+  ) : null
+
+  const confirmBlock = (
+    <Button className="h-10 w-full" onClick={() => addToCart()}>
+      <span className="capitalize">Add to cart</span>
+    </Button>
+  )
+
+  return (
+    <div className="container mx-auto">
+      <SingleProductLayout
+        groups={groups}
+        showGroupProduct={showGroupProduct}
+        getSelectedItem={(groupId) => {
+          const group = groups.find(g => g.id === groupId)
+          if (!group) return null
+          return getSelectedItemForProduct(group.productId)
+        }}
+        selectItem={(item) => selectItem(item.item)}
+        planSelectBlock={planSelectBlock}
+        confirmBlock={confirmBlock}
+      />
+    </div>
+  )
+}
+
+function MultiProductBundleMode(props: CustomizeBundleProps) {
   const { bundle } = props
 
   const {
@@ -93,6 +225,7 @@ export const CustomizeBundleSection = (props: CustomizeBundleProps) => {
       className={isTwoColumnLayout && 'xl:grid-cols-1 xl:gap-3'}
     />
   ) : null
+
   const sizeSelectBlock = !autoMatchRuleset ? (
     <SizeSelectBlock
       options={rulesetOptions}
