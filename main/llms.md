@@ -47,31 +47,34 @@ The application uses a custom `useFormatAmount` hook from `@/hooks/use-format-am
     - **Props**: `images: ProductImage[]`, `productName: string`
     - **Customization**: You can style the gallery appearance, but the carousel functionality must remain intact
 
-3. **BundleInfoSection**: Displays bundle name, description, and bundle form for non-customizable or single-product bundles
-    - **Required for**: Bundle detail pages when bundle is NOT customizable OR when `bundle.selectionType === 'single_product'`
-    - **When to use**:
-        - Use when `!bundle.configurable` (non-customizable bundles)
-        - Use when `bundle.selectionType === 'single_product'` (single product selection bundles)
-    - **Props**: `bundle: Bundle`, `groups: BundleGroup[]`
-    - **Customization**: You can style the container and typography, but the component logic must remain intact
+3. **CustomizeBundleSection**: Unified bundle component that handles ALL bundle types with automatic mode detection
 
-4. **CustomizeBundleSection**: Displays complete bundle customization interface with item selection, quantity controls, and checkout
-    - **Required for**: Customizable bundle pages (except single-product selection bundles)
-    - **When to use**:
-        - Use when `bundle.configurable === true` AND `bundle.selectionType !== 'single_product'`
-        - This handles multi-item selection bundles with full customization features
-    - **Props**:
-        - `bundle: Bundle` (required) - The bundle data object from Subbly API
-        - `groupItemsByProduct?: boolean` - Groups items by their parent product instead of showing a flat list. When true, displays items organized under product cards with variant selectors
-        - `allowMultipleItemsInGroup?: boolean` - Controls whether users can select multiple variants from the same product group. When false, selecting a new variant replaces the previous selection from that product
-    - **Behavior consequences**:
-        - Setting `groupItemsByProduct: true` switches from flat item list to product-grouped display
-        - Setting `allowMultipleItemsInGroup: false` enforces single variant selection per product, preventing duplicate product types in the bundle
-        - The component automatically uses grouped display when `bundle.selectionType` is `'single_product'`, regardless of the `groupItemsByProduct` prop
-    - **Placement**: Full-width component with product grid and sidebar. Has built-in `container mx-auto`. Place it in your main content container, not in narrow sections or nested columns.
-    - **Customization**: You can style the container and grid layout, but the bundle configuration logic, validation rules, and cart integration must remain intact
+   - **Location**: `src/components/subbly/bundle/customize-bundle-section.tsx`
+   - **Required for**: All bundle detail pages
+   - **Automatic Mode Detection**: Component automatically detects bundle type and renders appropriate UI:
+     - **Fixed Mode** (`bundle.selectionType === null`): Non-customizable bundles with direct add to cart and optional plan selection
+     - **Single-Product Mode** (`bundle.selectionType === 'single_product'`): Group-based selection with one variant per product group, uses VariantSelector for better UX
+     - **Multi-Product Mode** (`bundle.selectionType === 'variant' or 'product'`): Full customization with item selection, quantity controls, preferences, receipt, and validation
+   - **Props**:
+     - `bundle: Bundle` (required) - The bundle data object from Subbly API
+     - `groupItemsByProduct?: boolean` - Only applies to Multi-Product mode. Groups items by their parent product instead of showing a flat list
+     - `allowMultipleItemsInGroup?: boolean` - Only applies to Multi-Product mode and when `groupItemsByProduct` enabled. Controls whether users can select multiple variants from the same product.
+   - **Mode Behaviors**:
+     - **Fixed Mode**: Shows plan selector (if multiple plans exist) and add to cart button. Uses `useBundleForm` hook
+     - **Single-Product Mode**: Shows group selection with VariantSelector (radio or dropdown), preferences, plan selector, and add to cart. Uses `useBundleForm` + `useBundleProductGroupedItemsForm` hooks. Renders single-column layout similar to product detail pages
+     - **Multi-Product Mode**: Full customization interface with size selection, preferences, item selection, selected items sidebar, receipt, and validation. Uses `useBundleForm` + `useBundleReceipt` + `useBundleValidation` hooks. Renders one-step or two-step layout based on `bundle.appearanceType`
+   - **Appearance Type Support** (Multi-Product mode only):
+     - `one_step`: All options visible in two-column layout (items left, summary right)
+     - `two_step`: Progressive disclosure (Step 1: preferences/size/plan, Step 2: item selection)
+     - `after_checkout`: Items selected after checkout
+     - `without_ruleset`: No size selection, auto-match ruleset
+   - **Customization**: The component uses internal layouts (FixedLayout, SingleProductLayout, OneStepLayout, TwoStepLayout) that can be styled, but core logic must remain intact
+   - **ProductGallerySection Rendering**: On bundle detail pages, render `ProductGallerySection` alongside `CustomizeBundleSection` only when:
+     - `bundle.selectionType === null` (Fixed Mode) - shows bundle images in gallery format
+     - `bundle.selectionType === 'single_product'` (Single-Product Mode) - shows bundle images in gallery format
+     - Do NOT render `ProductGallerySection` for Multi-Product mode (`selectionType === 'variant'` or `'product'`) as items have their own images in the selection UI
 
-5. **AddToCartButton**: Handles adding products or bundles to the cart
-    - **Required for**: Any page with add-to-cart functionality
-    - **Props**: `payload: ConfigureItemPayload`
-    - **Customization**: You can style the button appearance and provide custom children, but the cart logic must remain intact
+4. **AddToCartButton**: Handles adding products or bundles to the cart
+   - **Required for**: Any page with add-to-cart functionality
+   - **Props**: `payload: ConfigureItemPayload`
+   - **Customization**: You can style the button appearance and provide custom children, but the cart logic must remain intact
