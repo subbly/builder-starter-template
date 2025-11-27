@@ -10,3 +10,6 @@ export type BundleLayoutProps = {
   receiptBlock?: ReactNode | null
   confirmBlock: ReactNode | null
 }
+
+export type { FixedLayoutProps } from './fixed-layout'
+export type { SingleProductLayoutProps } from './single-product-layout'

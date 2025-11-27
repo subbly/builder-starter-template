@@ -1,6 +1,6 @@
 import type { BundleLayoutProps } from './layout-props'
 import { Button } from '@/components/ui/button'
-import { ConfirmBlock } from '@/components/subbly/customize-bundle/confirm-block/confirm-block'
+import { ConfirmBlock } from '../confirm-block'
 import { useState } from 'react'
 import { MoveLeft } from 'lucide-react'
 
