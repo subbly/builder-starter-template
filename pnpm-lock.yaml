@@ -97,11 +97,11 @@ importers:
         specifier: ^0.6.20
         version: 0.6.20
       '@subbly/kit':
-        specifier: ^0.0.19
-        version: 0.0.19
+        specifier: ^0.0.20
+        version: 0.0.20
       '@subbly/react':
-        specifier: ^0.0.19
-        version: 0.0.19
+        specifier: ^0.0.20
+        version: 0.0.20
       '@subbly/sdk':
         specifier: ^0.6.20
         version: 0.6.20
@@ -306,6 +306,10 @@ packages:
     resolution: {integrity: sha512-D2hP9eA+Sqx1kBZgzxZh0y1trbuU+JoDkiEwqhQ36nodYqJwyEIhPSdMNd7lOm/4io72luTPWH20Yda0xOuUow==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/helper-validator-identifier@7.28.5':
+    resolution: {integrity: sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/helper-validator-option@7.27.1':
     resolution: {integrity: sha512-YvjJow9FxbhFFKDSuFnVCe2WxXk1zWc22fFePVNEaWJEu8IrZVlda6N0uHwzZrUM1il7NC9Mlp4MaJYbYd9JSg==}
     engines: {node: '>=6.9.0'}
@@ -359,6 +363,10 @@ packages:
 
   '@babel/types@7.28.4':
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/types@7.28.5':
+    resolution: {integrity: sha512-qQ5m48eI/MFLQ5PxQj4PFaprjyCTLI37ElWMmNs0K8Lk3dVeOdNpB3ks8jc7yM5CDmVC73eMVk/trk3fgmrUpA==}
     engines: {node: '>=6.9.0'}
 
   '@bundled-es-modules/cookie@2.0.1':
@@ -1408,11 +1416,11 @@ packages:
     resolution: {integrity: sha512-8QKmgMctzAgxEzR2K8cV5M6lwxhvMscFUWQSaFqHcIEirjLMReDV1VKCwbCCYAk0zDNZR4DV6MM1CieOQOVfgw==}
     engines: {node: '>=16'}
 
-  '@subbly/kit@0.0.19':
-    resolution: {integrity: sha512-pe/0FvcgKg6No8F+/PezBfcfOzAGlw0kRavgd+aFC4YXLyY775L/shjurE/L/UQ6uIDIbsUZJ8qvJtPk4tdBrg==}
+  '@subbly/kit@0.0.20':
+    resolution: {integrity: sha512-aQC1PTmLiY4/YXSe90mdpwHK05PpoE6biICCMNeoCvh3ZrWS2IKhBmwoKEraFZJURJ6SwEuBC+vjgzAdcquLUA==}
 
-  '@subbly/react@0.0.19':
-    resolution: {integrity: sha512-cimKbVRQ6+kN6pAPL/GZEPYiCzKXGaVcqxJnZ+mcwkYdqkkFrzTw9TeE3ls5s4F5OuJYw53VwXH3ajz1VkxhyQ==}
+  '@subbly/react@0.0.20':
+    resolution: {integrity: sha512-MGLiEeOl6TNW1j3OkG5aoofhijZiiuiUlyb31mMxo+/t0qowjMpVPtmGZkJqsC4FsIX+a5Plhvy/8rfkV17PwQ==}
 
   '@subbly/sdk@0.6.20':
     resolution: {integrity: sha512-7fKZTPQONk3UnqEyooyTVrkD9hfseSydcCQgb0p7+emv7EDi2lMXqap0swXZRkjAp3nHusnBk/bCVKIAhRxq5Q==}
@@ -4056,6 +4064,9 @@ snapshots:
 
   '@babel/helper-validator-identifier@7.27.1': {}
 
+  '@babel/helper-validator-identifier@7.28.5':
+    optional: true
+
   '@babel/helper-validator-option@7.27.1': {}
 
   '@babel/helpers@7.28.4':
@@ -4129,6 +4140,12 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
+
+  '@babel/types@7.28.5':
+    dependencies:
+      '@babel/helper-string-parser': 7.27.1
+      '@babel/helper-validator-identifier': 7.28.5
+    optional: true
 
   '@bundled-es-modules/cookie@2.0.1':
     dependencies:
@@ -5190,17 +5207,17 @@ snapshots:
       qs: 6.14.0
       snakecase-keys: 6.0.0
 
-  '@subbly/kit@0.0.19':
+  '@subbly/kit@0.0.20':
     dependencies:
       '@subbly/api-client': 0.6.20
       '@subbly/sdk': 0.6.20
       lodash-es: 4.17.21
       tiny-typed-emitter: 2.1.0
 
-  '@subbly/react@0.0.19':
+  '@subbly/react@0.0.20':
     dependencies:
       '@subbly/api-client': 0.6.20
-      '@subbly/kit': 0.0.19
+      '@subbly/kit': 0.0.20
       lodash-es: 4.17.21
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
@@ -5608,7 +5625,7 @@ snapshots:
 
   babel-plugin-react-compiler@1.0.0:
     dependencies:
-      '@babel/types': 7.28.4
+      '@babel/types': 7.28.5
     optional: true
 
   balanced-match@1.0.2: {}
