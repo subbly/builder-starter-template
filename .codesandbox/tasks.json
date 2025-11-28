@@ -2,13 +2,13 @@
   "setupTasks": [
     {
       "name": "Install Dependencies",
-      "command": "pnpm install --dangerously-allow-all-builds"
+      "command": "cd main && pnpm install --dangerously-allow-all-builds"
     }
   ],
   "tasks": {
     "dev": {
       "name": "Start Dev Server",
-      "command": "pm2 delete subbly-dev -s || true && pm2 start ecosystem.config.js --attach -s",
+      "command": "cd main && (pm2 delete subbly-dev -s || true) && pm2 start ecosystem.config.js --attach -s",
       "runAtStart": true,
       "preview": {
         "port": 3000
@@ -16,11 +16,11 @@
     },
     "install": {
       "name": "Install Dependencies",
-      "command": "pnpm install --dangerously-allow-all-builds"
+      "command": "cd main && pnpm install --dangerously-allow-all-builds"
     },
     "watch": {
       "name": "Watch Dependencies",
-      "command": "export SHELL=/bin/bash; chokidar 'package.json' -c 'pnpm install --dangerously-allow-all-builds'",
+      "command": "cd main && export SHELL=/bin/bash; chokidar 'package.json' -c 'cd main && pnpm install --dangerously-allow-all-builds'",
       "runAtStart": true
     }
   }
