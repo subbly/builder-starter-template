@@ -43,6 +43,7 @@ const nextConfig: NextConfig = {
     },
     // CRITICAL: Do not remove turbopackFileSystemCacheForDev. Removing it will slow down core functionality.
     turbopackFileSystemCacheForDev: true,
+    viewTransition: true,
   },
 }
 
