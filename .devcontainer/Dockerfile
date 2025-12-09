@@ -1,4 +1,4 @@
-FROM ghcr.io/codesandbox/devcontainers/typescript-node:0.5
+FROM ghcr.io/codesandbox/devcontainers/typescript-node:22
 
 RUN apt-get update && apt-get install -y ripgrep && apt-get clean
 
