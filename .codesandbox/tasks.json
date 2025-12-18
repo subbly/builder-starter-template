@@ -20,7 +20,7 @@
     },
     "watch": {
       "name": "Watch Dependencies",
-      "command": "cd main && export SHELL=/bin/bash; chokidar 'package.json' -c 'cd main && pnpm install --dangerously-allow-all-builds'",
+      "command": "cd main && export SHELL=/bin/bash; chokidar 'package.json' -c 'pnpm install --dangerously-allow-all-builds'",
       "runAtStart": true
     }
   }

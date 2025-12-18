@@ -6,7 +6,7 @@ module.exports = {
       args: 'run dev',
       cwd: './',
       interpreter: 'none',
-      watch: ['src/**/*.css', 'src/**/*.scss', 'pnpm-lock.yaml'],
+      watch: ['src/**/*.css', 'src/**/*.scss', './pnpm-lock.yaml'],
       watch_delay: 1000,
       ignore_watch: ['node_modules', '.git', '.next', '.subbly/logs'],
       exp_backoff_restart_delay: 100,
