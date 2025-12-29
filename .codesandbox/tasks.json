@@ -8,7 +8,7 @@
   "tasks": {
     "dev": {
       "name": "Start Dev Server",
-      "command": "cd main && (pm2 delete subbly-dev -s || true) && pm2 start ecosystem.config.js --attach -s",
+      "command": "cd main && (pm2 delete subbly-dev -s || true) && pm2 start /project/workspace/main/ecosystem.config.js --attach -s",
       "runAtStart": true,
       "preview": {
         "port": 3000
