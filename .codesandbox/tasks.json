@@ -3,6 +3,10 @@
     {
       "name": "Install Dependencies",
       "command": "cd main && pnpm install --dangerously-allow-all-builds"
+    },
+    {
+      "name": "Install API Dependencies",
+      "command": "cd subbly-api && pnpm install"
     }
   ],
   "tasks": {

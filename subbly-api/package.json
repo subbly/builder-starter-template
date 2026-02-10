@@ -1,0 +1,14 @@
+{
+  "name": "subbly-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "run": "node"
+  },
+  "dependencies": {
+    "@subbly/private-api-client": "^0.0.15",
+    "dotenv": "^17.2.4"
+  },
+  "packageManager": "pnpm@10.20.0"
+}
