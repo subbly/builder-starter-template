@@ -1,0 +1,851 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "single_line_string"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "multi_line_text"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "not": {}
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "rich_text"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "not": {}
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "integer"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "decimal"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "datetime"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "date"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "time"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "volume"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType",
+        "unit"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "weight"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType",
+        "unit"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "boolean"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "not": {}
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "color"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "rating"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "url"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "not": {}
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "money"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ]
+        },
+        "dataType": {
+          "type": "string",
+          "const": "json"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "not": {}
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}
