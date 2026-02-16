@@ -1,5 +1,6 @@
 .idea
 .claude
+.subbly
 
 # misc
 .DS_Store
@@ -7,3 +8,5 @@
 
 # env files (can opt-in for committing if needed)
 .env*
+
+
