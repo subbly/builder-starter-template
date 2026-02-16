@@ -91,6 +91,7 @@ async function uploadArchive(
       Key: key,
       Body: body,
       ContentType: 'application/gzip',
+      CacheControl: 'no-cache',
       ACL: 'public-read',
     })
   )
