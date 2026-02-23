@@ -1,0 +1,918 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "single_line_string",
+          "description": "Single line text input field"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "multi_line_text",
+          "description": "Multi-line text area"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "not": {}
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "rich_text",
+          "description": "Rich text editor"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "not": {}
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "integer",
+          "description": "Whole number field"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "decimal",
+          "description": "Decimal number field"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "datetime",
+          "description": "Date and time field"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "date",
+          "description": "Date field"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "time",
+          "description": "Time field"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "volume",
+          "description": "Volume measurement"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unit label (e.g., liters, gallons)"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType",
+        "unit"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "weight",
+          "description": "Weight measurement"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unit label (e.g., kg, pounds)"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType",
+        "unit"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "boolean",
+          "description": "True/false toggle"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "not": {}
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "color",
+          "description": "Color picker"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "rating",
+          "description": "Rating selector"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "url",
+          "description": "URL input"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "not": {}
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "money",
+          "description": "Monetary amount"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metafield name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description explaining the metafield purpose"
+        },
+        "accessLevel": {
+          "type": "string",
+          "enum": [
+            "storefront",
+            "private"
+          ],
+          "description": "Visibility level: storefront = visible on site/checkout, private = only via private API/admin"
+        },
+        "dataType": {
+          "type": "string",
+          "const": "json",
+          "description": "Structured JSON data"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "preset": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "unit": {
+          "not": {}
+        },
+        "values": {
+          "not": {}
+        }
+      },
+      "required": [
+        "name",
+        "accessLevel",
+        "dataType"
+      ],
+      "additionalProperties": false
+    }
+  ],
+  "description": "Create a metafield. Fields: multiple (0/1) - allow multiple values per entity; preset (0/1) - restrict to predefined values (requires values array); values - list of allowed values when preset=1"
+}

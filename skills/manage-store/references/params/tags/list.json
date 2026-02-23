@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "perPage": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "sort": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": [
+            "id",
+            "name"
+          ],
+          "description": "Sort field: id (incremental, sorts by creation order), name (alphabetical)"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        }
+      },
+      "required": [
+        "field",
+        "direction"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

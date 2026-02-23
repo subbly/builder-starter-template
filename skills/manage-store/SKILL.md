@@ -1,28 +1,17 @@
 ---
 name: manage-store
-description: >
-  Typed client for querying and manipulating Subbly store data. Use when you need to fetch or modify products, bundles, tags, surveys, or metafields via Subbly Private API. Use pre-built scripts or create custom ones to interact with data. Resources: products (list, get, getVariant, getPlan), bundles (list, get, listItems, getItem, listGroups), tags (list), surveys (get), metafields (list, create, update).
+description: "Typed client for querying and manipulating Subbly store data. Use when you need to fetch or modify products, bundles, tags, surveys, or metafields via Subbly Private API. Use pre-built scripts or create custom ones to interact with data. Resources: products (list, get), products.oneTime (create, update, publish, unpublish, archive, metadata), products.subscription (create, update, publish, unpublish, archive, metadata), products.variants (get, create, update, archive, batch), products.plans (get, create, update, archive), bundles (list, get, listItems, getItem, listGroups), tags (list), surveys (get), metafields (list, create, update)."
 ---
 
 # Manage Store
 
 The `/project/workspace/store-actions/` workspace provides pre-built scripts for querying and modifying Subbly store data via the `@subbly/private-api-client` package. All scripts output JSON to stdout.
 
-## Workflow
+## Instructions
 
-ALWAYS follow these steps in order. Reading params and response types first prevents incorrect arguments and wasted API calls.
-
-1. Choose a script or action from Available Scripts, or plan a custom one
-2. Use `read` tool to read input params from `references/params/`
-3. Use `read` tool to read response types from `references/responses/`
-4. Execute the script, pipe output through `jq` to extract only needed fields
-
-## References
-
-References are located at base directory for this skill.
-
-- Input params: `references/params/{resource}-{method}-params.json` — e.g. `products-list-params.json` for `client.products.list()`
-- Response types: `references/responses/{entity}-response.md` — e.g. `product-response.md` for `Product`. All list methods wrap in `PaginatedResponse<T>` (see `paginated-response.md`).
+- Read ALL related params and responses for every planned step before executing any code (e.g., for creating a product with variants and publishing: read references/params/products/onetime/create.json, references/responses/products/response.md, references/params/products/variants/create.json, references/responses/products/variants/response.md, references/params/products/onetime/publish.json).
+- Execute scripts in sequence, pipe output through `jq`. Use response data from earlier steps as input to later steps.
+- Never hard-code API keys or URLs. Never read or search for `.env` or `.env.example`. Credentials are auto-injected via `store-actions/lib/client.js`.
 
 ## Minimizing Output
 
@@ -35,35 +24,67 @@ IMPORTANT: API responses can be large. NEVER output a full response object. Inst
 
 ## Available Scripts
 
-All scripts run from project root: `node /project/workspace/store-actions/scripts/<script>.js`
+All scripts run from project root: `node /project/workspace/store-actions/scripts/<path>`
 
-Products:
+### Products
 
-- `list-products.js` — list products (perPage: 10, sorted by id desc)
-- `get-product.js <id>` — get a single product
-- `get-variant.js <id>` — get a product variant
-- `get-plan.js <id>` — get a subscription plan
+- `products/list.js` — list products (perPage: 10, sorted by id desc)
+- `products/get.js <id>` — get a single product
 
-Bundles:
+#### One-Time Products
 
-- `list-bundles.js` — list bundles (perPage: 10, sorted by id desc)
-- `get-bundle.js <id>` — get a single bundle
-- `list-bundle-items.js <bundleId>` — list items in a bundle
-- `list-bundle-groups.js <bundleId>` — list groups in a bundle
+- `products/onetime/create.js '<json>'` — create a one-time product
+- `products/onetime/update.js '<json>'` — update a one-time product
+- `products/onetime/publish.js <id>` — publish a one-time product
+- `products/onetime/unpublish.js <id>` — unpublish a one-time product
+- `products/onetime/archive.js <id>` — archive a one-time product
+- `products/onetime/metadata.js '<json>'` — sync metadata on a one-time product
 
-Tags:
+#### Subscription Products
 
-- `list-tags.js` — list tags (perPage: 50, sorted by id desc)
+- `products/subscription/create.js '<json>'` — create a subscription product
+- `products/subscription/update.js '<json>'` — update a subscription product
+- `products/subscription/publish.js <id>` — publish a subscription product
+- `products/subscription/unpublish.js <id>` — unpublish a subscription product
+- `products/subscription/archive.js <id>` — archive a subscription product
+- `products/subscription/metadata.js '<json>'` — sync metadata on a subscription product
 
-Surveys:
+#### Variants
 
-- `get-survey.js <id>` — get a survey
+- `products/variants/get.js <id>` — get a product variant
+- `products/variants/create.js '<json>'` — create a variant
+- `products/variants/update.js '<json>'` — update a variant
+- `products/variants/archive.js <id>` — archive a variant
+- `products/variants/batch.js '<json>'` — batch create/update/archive variants
 
-Metafields:
+#### Plans
 
-- `list-metafields.js` — list metafields (perPage: 50, sorted by id desc)
-- `create-metafield.js '<json>'` — create a metafield
-- `update-metafield.js '<json>'` — update a metafield (requires slug + dataType)
+- `products/plans/get.js <id>` — get a subscription plan
+- `products/plans/create.js '<json>'` — create a plan
+- `products/plans/update.js '<json>'` — update a plan
+- `products/plans/archive.js <id>` — archive a plan
+
+### Bundles
+
+- `bundles/list.js` — list bundles (perPage: 10, sorted by id desc)
+- `bundles/get.js <id>` — get a single bundle
+- `bundles/list-items.js <bundleId>` — list items in a bundle
+- `bundles/get-item.js <bundleId> <itemId>` — get a single bundle item
+- `bundles/list-groups.js <bundleId>` — list groups in a bundle
+
+### Tags
+
+- `tags/list.js` — list tags (perPage: 50, sorted by id desc)
+
+### Surveys
+
+- `surveys/get.js <id>` — get a survey
+
+### Metafields
+
+- `metafields/list.js` — list metafields (perPage: 50, sorted by id desc)
+- `metafields/create.js '<json>'` — create a metafield
+- `metafields/update.js '<json>'` — update a metafield (requires slug + dataType)
 
 ## Custom Scripts
 
@@ -84,3 +105,24 @@ Run with: `node /project/workspace/store-actions/tmp/my-script.js`
 
 For detailed type information beyond what the references provide, use the Grep tool to search the package type definitions at `/project/workspace/store-actions/node_modules/@subbly/private-api-client/dist/index.d.ts`.
 
+## References
+
+|root: ./references
+|IMPORTANT: Read params BEFORE executing scripts. Read response types to understand output shape.
+|params/products:{list.json,get.json}
+|params/products/onetime:{create.json,update.json,publish.json,unpublish.json,archive.json,metadata.json}
+|params/products/subscription:{create.json,update.json,publish.json,unpublish.json,archive.json,metadata.json}
+|params/products/variants:{get.json,create.json,update.json,batch.json}
+|params/products/plans:{get.json,create.json,update.json}
+|params/bundles:{list.json,get.json,list-items.json,get-item.json,list-groups.json}
+|params/tags:{list.json}
+|params/surveys:{get.json}
+|params/metafields:{list.json,create.json,update.json}
+|responses/products:{response.md,variants/response.md,plans/response.md}
+|responses/bundles:{response.md,item-response.md,group-response.md}
+|responses/tags:{response.md}
+|responses/surveys:{response.md}
+|responses/metafields:{response.md}
+|responses:{paginated-response.md}
+
+All list methods wrap responses in `PaginatedResponse<T>` (see `responses/paginated-response.md`).

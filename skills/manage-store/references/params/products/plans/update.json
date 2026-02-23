@@ -1,0 +1,292 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "switchActiveSubscribers": {
+      "type": "boolean"
+    },
+    "frequencyUnit": {
+      "type": "string",
+      "enum": [
+        "day",
+        "week",
+        "month"
+      ]
+    },
+    "frequencyCount": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 365
+    },
+    "name": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 255
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "price": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "anchorDate": {
+      "anyOf": [
+        {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            {
+              "type": "string",
+              "const": "today"
+            }
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Pins all subscribers to the same billing period boundaries. Required for anchored billing with daily frequency. Pass \"today\" to use the current date. Must fall between tomorrow and today + one billing cycle. Prohibited for digital products and adhoc plans without anchored shipping"
+    },
+    "rebillingDay": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Fixed rebilling marker for daily frequency (must be 1). Mutually exclusive with rebillingDayOfMonth/rebillingDayOfWeek. Presence of any rebillingDay* field switches the plan to anchored billing. Prohibited for digital products"
+    },
+    "rebillingDayOfMonth": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Day of month to rebill on (1–31) for monthly frequency. Must match anchorDate day-of-month when anchorDate is set. Mutually exclusive with rebillingDay/rebillingDayOfWeek. Prohibited for digital products"
+    },
+    "rebillingDayOfWeek": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 7
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "ISO day of week to rebill on (1=Monday–7=Sunday) for weekly frequency. Must match anchorDate weekday when anchorDate is set. Mutually exclusive with rebillingDay/rebillingDayOfMonth. Prohibited for digital products"
+    },
+    "cutOffDays": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Number of days before the first shipment date that acts as a preparation deadline. For adhoc plans with anchored shipping, shipments within the cutoff window are rolled forward individually. For anchored billing, if a subscriber signs up after the cutoff, the entire billing cycle defers. Max value equals the number of days in one billing cycle. Required for anchored billing plans"
+    },
+    "cutOffTime": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Time-of-day deadline for the cutoff (HH:MM:SS format). Defaults to 23:59:00 on the server if cutOffDays is set but cutOffTime is omitted. Prohibited for digital products"
+    },
+    "chargeImmediately": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Whether to charge the subscriber on signup (1) or defer to the next billing date (0). Forced to 1 for adhoc plans. Prohibited for digital products"
+    },
+    "shipImmediately": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Whether to ship immediately on signup (1) or wait for the next scheduled shipment (0). Cannot be 1 when chargeImmediately is 0"
+    },
+    "bufferDays": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Number of days after signup before the first shipment is dispatched. Only allowed when shipImmediately is true. Max value equals the full billing cycle length in days. Prohibited for digital products"
+    },
+    "trialPrice": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Price for the trial period. Prohibited for anchored billing plans"
+    },
+    "trialLengthDays": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Duration of the trial period in days. Prohibited for anchored billing plans"
+    },
+    "trialSingleOrder": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Whether the trial is a single order (1) or a recurring trial (0). Only available for adhoc physical plans. Prohibited for digital products and anchored billing plans"
+    },
+    "commitmentBillingCount": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Minimum number of billing cycles a subscriber must complete before cancellation is allowed. Not applied to gift subscriptions"
+    },
+    "chargesLimit": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Maximum number of successful charges before the subscription is automatically expired. Once paid invoice count reaches this limit, the subscription expires after the next payment"
+    },
+    "shipmentSchedule": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "addUnit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "day",
+                  "month",
+                  "year"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Buffered format: time unit to offset shipment from billing start (day/week/month, limited by frequencyUnit). Mutually exclusive with unitDay/unitOffset. Only available for adhoc billing"
+          },
+          "addCount": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Buffered format: number of addUnit intervals to offset from billing start. Use -1 to ship the day before the next billing cycle. Mutually exclusive with unitDay/unitOffset"
+          },
+          "unitDay": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Anchored format: day within the frequency unit to ship on (1–31 for monthly, 1–7 ISO for weekly). Mutually exclusive with addUnit/addCount. Required for anchored billing or adhoc with anchored shipping"
+          },
+          "unitOffset": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Anchored format: which iteration within the billing period this shipment belongs to (0 to frequencyCount-1). Mutually exclusive with addUnit/addCount"
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "Ordered list of shipment dates within each billing cycle. Required for physical products, prohibited for digital. All entries must use the same format: either buffered (addUnit/addCount) for adhoc billing, or anchored (unitDay/unitOffset) for anchored billing or adhoc with anchored shipping"
+    },
+    "surveyId": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": false
+}
