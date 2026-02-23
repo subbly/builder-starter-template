@@ -4,7 +4,7 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 
 const WORKSPACE_ROOT = '/var/www/subbly-builder-default'
 
-const REQUIRED_ENV_VARS = [ 
+const REQUIRED_ENV_VARS = [
   'DO_SPACES_KEY',
   'DO_SPACES_SECRET',
   'DO_SPACES_ENDPOINT',
@@ -16,13 +16,13 @@ function getVersion(): string {
   const version = process.argv[2]
 
   if (!version) {
-    console.error('Usage: pnpm build:migration <version>')
-    console.error('Example: pnpm build:migration 1.1.0')
+    console.error('Usage: pnpm publish:upgrade <version>')
+    console.error('Example: pnpm publish:upgrade 1.2.0')
     process.exit(1)
   }
 
   if (!/^\d+\.\d+\.\d+$/.test(version)) {
-    console.error(`Invalid version format: ${version}. Expected semver (e.g., 1.1.0)`)
+    console.error(`Invalid version format: ${version}. Expected semver (e.g., 1.2.0)`)
     process.exit(1)
   }
 
@@ -112,6 +112,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('Failed to build migration archive:', error)
+  console.error('Failed to publish upgrade archive:', error)
   process.exit(1)
 })
