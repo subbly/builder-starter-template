@@ -19,6 +19,8 @@ One-time products use variants for pricing. Every one-time product needs at leas
 
 Can be physical or digital. Physical products collect a shipping address at checkout, digital products skip shipping.
 
+If all variants on a one-time product are archived, the system automatically creates a default variant with no options (just a price). This means a product always remains purchasable as long as it is published.
+
 ### Gift Cards (Gift Vouchers)
 
 A gift card is a one-time digital product with `giftCard.enabled: 1`. It is always digital.
@@ -85,13 +87,15 @@ Before calling the creation scripts, gather these from the user. Ask questions w
 
 - Billing frequency: `frequencyUnit` (day, week, month) and `frequencyCount` (how many units per cycle)
 - Plan price: in cents, per billing cycle
-- Billing type (physical only): independent (adhoc) or synchronized (anchored). See `references/subscription-scheduling.md`.
-- Shipment frequency (physical only): coherent (one shipment per cycle) or incoherent/prepaid (multiple shipments per cycle)
-- Setup fee: optional one-time fee on first order, in cents
-- Whether pause is enabled: lets subscribers pause and resume
-- Trial: optional trial price and duration in days. Not available with anchored billing.
-- Commitment (`commitmentBillingCount`): minimum number of billing cycles the subscriber must complete before they can cancel. This is not related to prepaid/shipment frequency, it only controls cancellation eligibility.
-- Charges limit (`chargesLimit`): optional maximum number of billing cycles (subscription auto-expires after this)
+- Billing type (physical only): independent cycles (adhoc) where each subscriber bills from their signup date, or synchronized cycles (anchored) where all subscribers bill on a fixed calendar day. See `references/subscription-scheduling.md`.
+- Shipping schedule (physical only): how often do shipments go out? Same as billing (coherent, one shipment per cycle) or more frequently (incoherent/prepaid, multiple shipments per cycle). For example billing every 3 months but shipping monthly means 3 shipments per billing cycle.
+- Anchored shipping or billing (physical only): should billing or shipping be pinned to a specific calendar day (e.g. always bill on the 1st, always ship on the 15th)? Determines whether to use `rebillingDay*` fields or anchored `shipmentSchedule` entries with `unitDay`.
+- Cut-off window (physical only, when using anchored shipping or anchored billing): how many days before the first shipment date is the deadline for new signups or renewals to be included in the current cycle (`cutOffDays`). Required with anchored billing, available with anchored shipping in adhoc billing.
+- Pause: enabled by default. Only ask if the merchant wants to disable pausing (`pauseEnabled: 0`).
+- Setup fee (optional): one-time fee on first order, in cents
+- Trial (optional): trial price and duration in days. Not available with anchored billing.
+- Commitment (optional): `commitmentBillingCount`, minimum number of billing cycles the subscriber must complete before they can cancel. Not related to prepaid/shipment frequency, only controls cancellation eligibility.
+- Charges limit (optional): `chargesLimit`, maximum number of billing cycles (subscription auto-expires after this)
 
 ## Creating the Product
 
