@@ -1,8 +1,21 @@
 import { client } from '../../lib/client.js';
 
-const bundleId = Number(process.argv[2]);
-const itemId = Number(process.argv[3]);
-if (!bundleId || !itemId) { console.error('Usage: node scripts/get-bundle-item.js <bundleId> <itemId>'); process.exit(1); }
+// Usage: node scripts/bundles/get-item.js '{"bundleId":123,"itemId":456}'
+// Or pipe JSON via stdin
 
-const result = await client.bundles.getItem({ bundleId, itemId, expand: ['variant.metadata'] });
+let input = process.argv[2];
+
+if (!input) {
+  const chunks = [];
+  for await (const chunk of process.stdin) chunks.push(chunk);
+  input = Buffer.concat(chunks).toString();
+}
+
+if (!input) {
+  console.error('No input provided.');
+  process.exit(1);
+}
+
+const params = JSON.parse(input);
+const result = await client.bundles.getItem({ expand: ['variant.metadata'], ...params });
 console.log(JSON.stringify(result, null, 2));
