@@ -36,7 +36,6 @@ interface Plan {
   commitmentBillingCount: number;
   chargesLimit?: number | null;
   published: boolean;
-  archived: boolean;
   createdAt: string;
   updatedAt: string;
 }

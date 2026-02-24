@@ -21,7 +21,6 @@ interface Product {
   images?: ProductImage[];
   tags: string[];
   published: boolean;
-  archived: boolean;
   metadata?: Metadata[] | null;
   createdAt: string;
   updatedAt: string;

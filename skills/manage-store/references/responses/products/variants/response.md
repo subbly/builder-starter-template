@@ -20,7 +20,6 @@ interface Variant {
   options?: ProductOption[];
   stockCount?: number | null;
   published: boolean;
-  archived: boolean;
   inventoryItemId?: number | null;
   createdAt: string;
   updatedAt: string;
