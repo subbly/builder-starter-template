@@ -1,6 +1,6 @@
 import { client } from '../../../lib/client.js';
 
-// Usage: node scripts/create-plan.js '{"productId":1,"frequencyUnit":"month","frequencyCount":1}'
+// Usage: node scripts/products/plans/create.js '{"productId":1,"frequencyUnit":"month","frequencyCount":1}'
 // Or pipe JSON via stdin
 
 let input = process.argv[2];
@@ -12,7 +12,7 @@ if (!input) {
 }
 
 if (!input) {
-  console.error('No input provided. Run: node scripts/get-types.js products.createPlan');
+  console.error('No input provided.');
   process.exit(1);
 }
 

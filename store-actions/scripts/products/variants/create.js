@@ -1,6 +1,6 @@
 import { client } from '../../../lib/client.js';
 
-// Usage: node scripts/create-variant.js '{"productId":1,"price":9.99}'
+// Usage: node scripts/products/variants/create.js '{"productId":1,"price":9.99}'
 // Or pipe JSON via stdin
 
 let input = process.argv[2];
@@ -12,7 +12,7 @@ if (!input) {
 }
 
 if (!input) {
-  console.error('No input provided. Run: node scripts/get-types.js products.createVariant');
+  console.error('No input provided.');
   process.exit(1);
 }
 

@@ -12,7 +12,7 @@ if (!input) {
 }
 
 if (!input) {
-  console.error('No input provided. Run: node scripts/get-types.js products.metadata');
+  console.error('No input provided.');
   process.exit(1);
 }
 

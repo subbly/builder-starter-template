@@ -1,6 +1,6 @@
 import { client } from '../../../lib/client.js';
 
-// Usage: node scripts/create-onetime-product.js '{"name":"My Product","slug":"my-product","digital":0}'
+// Usage: node scripts/products/onetime/create.js '{"name":"My Product","slug":"my-product","digital":0}'
 // Or pipe JSON via stdin
 
 let input = process.argv[2];
@@ -12,7 +12,7 @@ if (!input) {
 }
 
 if (!input) {
-  console.error('No input provided. Run: node scripts/get-types.js products.createOneTime');
+  console.error('No input provided.');
   process.exit(1);
 }
 

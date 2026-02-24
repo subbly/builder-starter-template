@@ -1,6 +1,6 @@
 import { client } from '../../../lib/client.js';
 
-// Usage: node scripts/update-subscription-product.js '{"id":1,"name":"Updated Name"}'
+// Usage: node scripts/products/subscription/update.js '{"id":1,"name":"Updated Name"}'
 // Or pipe JSON via stdin
 
 let input = process.argv[2];
@@ -12,7 +12,7 @@ if (!input) {
 }
 
 if (!input) {
-  console.error('No input provided. Run: node scripts/get-types.js products.updateSubscription');
+  console.error('No input provided.');
   process.exit(1);
 }
 

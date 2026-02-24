@@ -1,7 +1,7 @@
 import { client } from '../../lib/client.js';
 
-// Usage: echo '{"name":"My Field","dataType":"single_line_string","accessLevel":"storefront"}' | node scripts/create-metafield.js
-// Or pass inline: node scripts/create-metafield.js '{"name":"My Field","dataType":"single_line_string","accessLevel":"storefront"}'
+// Usage: node scripts/metafields/create.js '{"name":"My Field","dataType":"single_line_string","accessLevel":"storefront"}'
+// Or pipe JSON via stdin
 
 let input = process.argv[2];
 
@@ -12,7 +12,7 @@ if (!input) {
 }
 
 if (!input) {
-  console.error('No input provided. See references/params/metafields-create-params.json for input schema.');
+  console.error('No input provided.');
   process.exit(1);
 }
 

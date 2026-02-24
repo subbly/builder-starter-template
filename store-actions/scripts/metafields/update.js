@@ -1,6 +1,6 @@
 import { client } from '../../lib/client.js';
 
-// Usage: node scripts/update-metafield.js '{"slug":"my-field","dataType":"single_line_string","name":"New Name"}'
+// Usage: node scripts/metafields/update.js '{"slug":"my-field","dataType":"single_line_string","name":"New Name"}'
 // Or pipe JSON via stdin
 
 let input = process.argv[2];
@@ -12,7 +12,7 @@ if (!input) {
 }
 
 if (!input) {
-  console.error('No input provided. See references/params/metafields-update-params.json for input schema.');
+  console.error('No input provided.');
   process.exit(1);
 }
 

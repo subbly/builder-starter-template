@@ -1,6 +1,6 @@
 import { client } from '../../../lib/client.js';
 
-// Usage: node scripts/batch-variants.js '{"productId":1,"variants":{"create":[{"price":9.99}]}}'
+// Usage: node scripts/products/variants/batch.js '{"productId":1,"variants":{"create":[{"price":9.99}]}}'
 // Or pipe JSON via stdin
 
 let input = process.argv[2];
@@ -12,7 +12,7 @@ if (!input) {
 }
 
 if (!input) {
-  console.error('No input provided. Run: node scripts/get-types.js products.batchVariants');
+  console.error('No input provided.');
   process.exit(1);
 }
 
