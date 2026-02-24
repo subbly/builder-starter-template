@@ -1,183 +1,153 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "anyOf": [
-    {
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "slug": {
+      "type": "string",
+      "maxLength": 80,
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "digital": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Prohibited when giftCard is set. Gift cards are implicitly digital"
+    },
+    "giftCard": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string",
-          "maxLength": 255
-        },
-        "slug": {
-          "type": "string",
-          "maxLength": 80,
-          "pattern": "^[a-zA-Z0-9_-]+$"
-        },
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "tags": {
-          "type": "object",
-          "properties": {
-            "create": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string",
-                    "maxLength": 255
-                  }
-                },
-                "required": [
-                  "value"
-                ],
-                "additionalProperties": false
-              }
-            }
-          },
-          "additionalProperties": false
-        },
-        "funnelId": {
+        "expiration": {
           "anyOf": [
             {
               "type": "integer",
-              "exclusiveMinimum": 0,
-              "maximum": 9007199254740991
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "taxProductCode": {
-          "anyOf": [
-            {
-              "type": "string",
-              "maxLength": 30
+              "minimum": 1,
+              "maximum": 36
             },
             {
               "type": "null"
             }
           ],
-          "description": "Only available for US-based shops."
-        },
-        "images": {
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "create": {
-                  "maxItems": 5,
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "url": {
-                        "type": "string",
-                        "maxLength": 255,
-                        "format": "uri"
-                      },
-                      "order": {
-                        "anyOf": [
-                          {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 9007199254740991
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "url"
-                    ],
-                    "additionalProperties": false
-                  }
-                }
-              },
-              "additionalProperties": false
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "digital": {
-          "type": "number",
-          "const": 0
-        },
-        "deliveryInfo": {
-          "anyOf": [
-            {
-              "type": "string",
-              "maxLength": 500
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Shipping or delivery instructions shown to customers."
-        },
-        "giftingEnabled": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 1
+          "description": "Expiration in months."
         }
       },
-      "required": [
-        "name",
-        "slug",
-        "digital"
+      "additionalProperties": false,
+      "description": "Gift card configuration. Prohibited when digital is set"
+    },
+    "deliveryInfo": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
       ],
+      "description": "Shipping or delivery instructions shown to customers. Prohibited for digital and gift card products"
+    },
+    "giftingEnabled": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Prohibited for digital and gift card products"
+    },
+    "collectShippingAddress": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "1 = collect shipping address at checkout. Only for digital products"
+    },
+    "tags": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "maxLength": 255
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
       "additionalProperties": false
     },
-    {
-      "type": "object",
-      "properties": {
-        "name": {
+    "funnelId": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "taxProductCode": {
+      "anyOf": [
+        {
           "type": "string",
-          "maxLength": 255
+          "maxLength": 30
         },
-        "slug": {
-          "type": "string",
-          "maxLength": 80,
-          "pattern": "^[a-zA-Z0-9_-]+$"
-        },
-        "description": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "tags": {
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Only available for US-based shops."
+    },
+    "images": {
+      "anyOf": [
+        {
           "type": "object",
           "properties": {
             "create": {
+              "maxItems": 5,
               "type": "array",
               "items": {
                 "type": "object",
                 "properties": {
-                  "value": {
+                  "url": {
                     "type": "string",
-                    "maxLength": 255
+                    "maxLength": 255,
+                    "format": "uri"
+                  },
+                  "order": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   }
                 },
                 "required": [
-                  "value"
+                  "url"
                 ],
                 "additionalProperties": false
               }
@@ -185,113 +155,15 @@
           },
           "additionalProperties": false
         },
-        "funnelId": {
-          "anyOf": [
-            {
-              "type": "integer",
-              "exclusiveMinimum": 0,
-              "maximum": 9007199254740991
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "taxProductCode": {
-          "anyOf": [
-            {
-              "type": "string",
-              "maxLength": 30
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Only available for US-based shops."
-        },
-        "images": {
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "create": {
-                  "maxItems": 5,
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "url": {
-                        "type": "string",
-                        "maxLength": 255,
-                        "format": "uri"
-                      },
-                      "order": {
-                        "anyOf": [
-                          {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 9007199254740991
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
-                      }
-                    },
-                    "required": [
-                      "url"
-                    ],
-                    "additionalProperties": false
-                  }
-                }
-              },
-              "additionalProperties": false
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "digital": {
-          "type": "number",
-          "const": 1
-        },
-        "giftCard": {
-          "type": "object",
-          "properties": {
-            "enabled": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 1,
-              "description": "1 = gift card product, 0 = regular digital product."
-            },
-            "expiration": {
-              "anyOf": [
-                {
-                  "type": "integer",
-                  "minimum": 1,
-                  "maximum": 36
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "description": "Expiration in months. Only when enabled is 1."
-            }
-          },
-          "required": [
-            "enabled"
-          ],
-          "additionalProperties": false,
-          "description": "Gift card configuration. Omit for a regular digital product."
+        {
+          "type": "null"
         }
-      },
-      "required": [
-        "name",
-        "slug",
-        "digital"
-      ],
-      "additionalProperties": false
+      ]
     }
-  ]
+  },
+  "required": [
+    "name",
+    "slug"
+  ],
+  "additionalProperties": false
 }

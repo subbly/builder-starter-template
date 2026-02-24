@@ -58,7 +58,7 @@
               "type": "null"
             }
           ],
-          "description": "Expiration in months. Only when enabled is 1."
+          "description": "Expiration in months."
         }
       },
       "additionalProperties": false,
