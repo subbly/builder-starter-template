@@ -29,48 +29,48 @@ All scripts run from project root: `node /project/workspace/store-actions/script
 ### Products
 
 - `products/list.js` — list products (perPage: 10, sorted by id desc)
-- `products/get.js <id>` — get a single product
+- `products/get.js '<json>'` — get a single product
 
 #### One-Time Products
 
 - `products/onetime/create.js '<json>'` — create a one-time product
 - `products/onetime/update.js '<json>'` — update a one-time product
-- `products/onetime/publish.js <id>` — publish a one-time product
-- `products/onetime/unpublish.js <id>` — unpublish a one-time product
-- `products/onetime/archive.js <id>` — archive a one-time product
+- `products/onetime/publish.js '<json>'` — publish a one-time product
+- `products/onetime/unpublish.js '<json>'` — unpublish a one-time product
+- `products/onetime/archive.js '<json>'` — archive a one-time product
 - `products/onetime/metadata.js '<json>'` — sync metadata on a one-time product
 
 #### Subscription Products
 
 - `products/subscription/create.js '<json>'` — create a subscription product
 - `products/subscription/update.js '<json>'` — update a subscription product
-- `products/subscription/publish.js <id>` — publish a subscription product
-- `products/subscription/unpublish.js <id>` — unpublish a subscription product
-- `products/subscription/archive.js <id>` — archive a subscription product
+- `products/subscription/publish.js '<json>'` — publish a subscription product
+- `products/subscription/unpublish.js '<json>'` — unpublish a subscription product
+- `products/subscription/archive.js '<json>'` — archive a subscription product
 - `products/subscription/metadata.js '<json>'` — sync metadata on a subscription product
 
 #### Variants
 
-- `products/variants/get.js <id>` — get a product variant
+- `products/variants/get.js '<json>'` — get a product variant
 - `products/variants/create.js '<json>'` — create a variant
 - `products/variants/update.js '<json>'` — update a variant
-- `products/variants/archive.js <id>` — archive a variant
+- `products/variants/archive.js '<json>'` — archive a variant
 - `products/variants/batch.js '<json>'` — batch create/update/archive variants
 
 #### Plans
 
-- `products/plans/get.js <id>` — get a subscription plan
+- `products/plans/get.js '<json>'` — get a subscription plan
 - `products/plans/create.js '<json>'` — create a plan
 - `products/plans/update.js '<json>'` — update a plan
-- `products/plans/archive.js <id>` — archive a plan
+- `products/plans/archive.js '<json>'` — archive a plan
 
 ### Bundles
 
 - `bundles/list.js` — list bundles (perPage: 10, sorted by id desc)
-- `bundles/get.js <id>` — get a single bundle
-- `bundles/list-items.js <bundleId>` — list items in a bundle
-- `bundles/get-item.js <bundleId> <itemId>` — get a single bundle item
-- `bundles/list-groups.js <bundleId>` — list groups in a bundle
+- `bundles/get.js '<json>'` — get a single bundle
+- `bundles/list-items.js '<json>'` — list items in a bundle
+- `bundles/get-item.js '<json>'` — get a single bundle item
+- `bundles/list-groups.js '<json>'` — list groups in a bundle
 
 ### Tags
 
@@ -78,7 +78,7 @@ All scripts run from project root: `node /project/workspace/store-actions/script
 
 ### Surveys
 
-- `surveys/get.js <id>` — get a survey
+- `surveys/get.js '<json>'` — get a survey
 
 ### Metafields
 
@@ -112,8 +112,8 @@ For detailed type information beyond what the references provide, use the Grep t
 |params/products:{list.json,get.json}
 |params/products/onetime:{create.json,update.json,publish.json,unpublish.json,archive.json,metadata.json}
 |params/products/subscription:{create.json,update.json,publish.json,unpublish.json,archive.json,metadata.json}
-|params/products/variants:{get.json,create.json,update.json,batch.json}
-|params/products/plans:{get.json,create.json,update.json}
+|params/products/variants:{get.json,create.json,update.json,archive.json,batch.json}
+|params/products/plans:{get.json,create.json,update.json,archive.json}
 |params/bundles:{list.json,get.json,list-items.json,get-item.json,list-groups.json}
 |params/tags:{list.json}
 |params/surveys:{get.json}
