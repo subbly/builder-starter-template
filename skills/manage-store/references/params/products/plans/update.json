@@ -7,22 +7,6 @@
       "exclusiveMinimum": 0,
       "maximum": 9007199254740991
     },
-    "switchActiveSubscribers": {
-      "type": "boolean"
-    },
-    "frequencyUnit": {
-      "type": "string",
-      "enum": [
-        "day",
-        "week",
-        "month"
-      ]
-    },
-    "frequencyCount": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 365
-    },
     "name": {
       "anyOf": [
         {
@@ -37,67 +21,8 @@
     "price": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 9007199254740991
-    },
-    "anchorDate": {
-      "anyOf": [
-        {
-          "anyOf": [
-            {
-              "type": "string",
-              "format": "date",
-              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
-            },
-            {
-              "type": "string",
-              "const": "today"
-            }
-          ]
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "description": "Pins all subscribers to the same billing period boundaries. Required for anchored billing with daily frequency. Pass \"today\" to use the current date. Must fall between tomorrow and today + one billing cycle. Prohibited for digital products and adhoc plans without anchored shipping"
-    },
-    "rebillingDay": {
-      "anyOf": [
-        {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 1
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "description": "Fixed rebilling marker for daily frequency (must be 1). Mutually exclusive with rebillingDayOfMonth/rebillingDayOfWeek. Presence of any rebillingDay* field switches the plan to anchored billing. Prohibited for digital products"
-    },
-    "rebillingDayOfMonth": {
-      "anyOf": [
-        {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 31
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "description": "Day of month to rebill on (1–31) for monthly frequency. Must match anchorDate day-of-month when anchorDate is set. Mutually exclusive with rebillingDay/rebillingDayOfWeek. Prohibited for digital products"
-    },
-    "rebillingDayOfWeek": {
-      "anyOf": [
-        {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 7
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "description": "ISO day of week to rebill on (1=Monday–7=Sunday) for weekly frequency. Must match anchorDate weekday when anchorDate is set. Mutually exclusive with rebillingDay/rebillingDayOfMonth. Prohibited for digital products"
+      "maximum": 9007199254740991,
+      "description": "Prohibited when the plan has active subscriptions"
     },
     "cutOffDays": {
       "anyOf": [
@@ -116,13 +41,13 @@
       "anyOf": [
         {
           "type": "string",
-          "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+          "pattern": "^\\d{2}:\\d{2}$"
         },
         {
           "type": "null"
         }
       ],
-      "description": "Time-of-day deadline for the cutoff (HH:MM:SS format). Defaults to 23:59:00 on the server if cutOffDays is set but cutOffTime is omitted. Prohibited for digital products"
+      "description": "Time-of-day deadline for the cutoff (HH:MM format). Defaults to 23:59 on the server if cutOffDays is set but cutOffTime is omitted. Prohibited for digital products"
     },
     "chargeImmediately": {
       "type": "integer",
@@ -160,7 +85,7 @@
           "type": "null"
         }
       ],
-      "description": "Price for the trial period. Prohibited for anchored billing plans"
+      "description": "Price for the trial period. Prohibited for anchored billing plans and plans with an active pre-order"
     },
     "trialLengthDays": {
       "anyOf": [
@@ -173,7 +98,7 @@
           "type": "null"
         }
       ],
-      "description": "Duration of the trial period in days. Prohibited for anchored billing plans"
+      "description": "Duration of the trial period in days. Prohibited for anchored billing plans and plans with an active pre-order"
     },
     "trialSingleOrder": {
       "type": "integer",
