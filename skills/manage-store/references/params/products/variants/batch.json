@@ -90,43 +90,40 @@
                 "description": "Prohibited for gift card products."
               },
               "options": {
-                "anyOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "create": {
-                        "maxItems": 3,
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "name": {
-                              "type": "string",
-                              "maxLength": 255
-                            },
-                            "value": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "name",
-                            "value"
-                          ],
-                          "additionalProperties": false
+                "type": "object",
+                "properties": {
+                  "create": {
+                    "maxItems": 3,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "maxLength": 255
+                        },
+                        "value": {
+                          "type": "string"
                         }
-                      }
-                    },
-                    "additionalProperties": false
-                  },
-                  {
-                    "type": "null"
+                      },
+                      "required": [
+                        "name",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    }
                   }
+                },
+                "required": [
+                  "create"
                 ],
-                "description": "Prohibited for gift card products. Max 3 option types per product. Must match existing option names."
+                "additionalProperties": false,
+                "description": "Max 3 option types per product. Must match existing option names."
               }
             },
             "required": [
-              "price"
+              "price",
+              "options"
             ],
             "additionalProperties": false
           }
