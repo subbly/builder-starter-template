@@ -18,11 +18,16 @@ interface Plan {
   frequencyUnit: 'day' | 'week' | 'month';
   frequencyCount: number;
   anchored: boolean;
+  anchorDate?: string | null;
+  rebillingDay?: number | null;
+  rebillingDayOfWeek?: number | null;
+  rebillingDayOfMonth?: number | null;
   trialPrice?: number | null;
   trialLength?: number | null;
   trialSingleOrder: boolean;
   chargeImmediately: boolean;
   shipImmediately: boolean;
+  bufferDays?: number | null;
   rebillingStartAt?: string | null;
   cutOffAt?: string | null;
   cutOffDays?: number | null;
