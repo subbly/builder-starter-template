@@ -69,7 +69,7 @@
       "type": "integer",
       "minimum": 0,
       "maximum": 1,
-      "description": "1 = collect shipping address at checkout. Only for digital products"
+      "description": "1 = collect shipping address at checkout. Only for digital products. Defaults to 1 for physical products."
     },
     "tags": {
       "type": "object",
