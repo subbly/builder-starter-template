@@ -29,11 +29,10 @@ A configurable bundle is commonly positioned as a "build box": a powerful system
 For configurable bundles, prices or discounts are configured via `priceType` or `discountType`.
 
 - `priceType`: mode where bundle prices are driven by a price matrix:
-  `plan x tier (ruleset) (item quantity) x box quantity range`.
-  - `priceType: per_item`: selected items use the same base price from the selected plan tier/range; item `extraPrice` can still make final item prices different.
-  - `priceType: total`: bundle uses a static/base offer price from the plan range for the selected quantity.
+  - `priceType: per_item`: selected bundle items use the same price per bundle item; item `extraPrice` can still make final item prices different.
+  - `priceType: total`: bundle uses a static/base price for the whole bundle.
 - `discountType`: mode where original bundle item prices are kept and a bundle discount is applied on top.
-  - `discountType: per_item`: discount is applied per selected bundle item quantity.
+  - `discountType: per_item`: discount is applied per bundle item.
   - `discountType: total`: discount is applied to the bundle total.
   - `discountType: percentage`: same scope rules as above, but discount value is percentage-based instead of fixed amount.
 

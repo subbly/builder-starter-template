@@ -23,13 +23,15 @@
     "slugs": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "maxLength": 80
       }
     },
     "tags": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "maxLength": 255
       }
     },
     "published": {

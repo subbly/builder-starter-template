@@ -81,7 +81,8 @@
         {
           "type": "null"
         }
-      ]
+      ],
+      "description": "Pre-order end date (YYYY-MM-DD). Must be a date after today."
     },
     "giftingEnabled": {
       "type": "integer",
@@ -105,7 +106,8 @@
         {
           "type": "null"
         }
-      ]
+      ],
+      "description": "Required in payload when updating discountType or rulesetType. Prohibited when not configurable or rulesetType is total. Mutually exclusive with discountType."
     },
     "discountType": {
       "anyOf": [
@@ -120,14 +122,16 @@
         {
           "type": "null"
         }
-      ]
+      ],
+      "description": "Updating this field requires priceType in the payload. Prohibited when not configurable. Mutually exclusive with priceType."
     },
     "rulesetType": {
       "type": "string",
       "enum": [
         "total",
         "quantity"
-      ]
+      ],
+      "description": "Prohibited when not configurable or single_product. Updating this field requires priceType in the payload."
     },
     "appearanceType": {
       "type": "string",
@@ -153,16 +157,10 @@
       ]
     },
     "collectShippingAddress": {
-      "anyOf": [
-        {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 1
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "1 = collect shipping address at checkout. Only for digital products. Defaults to 1 for physical products."
     },
     "funnelId": {
       "anyOf": [

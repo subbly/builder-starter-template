@@ -7,7 +7,7 @@
       "exclusiveMinimum": 0,
       "maximum": 9007199254740991
     },
-    "productId": {
+    "variantId": {
       "type": "integer",
       "exclusiveMinimum": 0,
       "maximum": 9007199254740991
@@ -22,7 +22,8 @@
         {
           "type": "null"
         }
-      ]
+      ],
+      "description": "Prohibited when bundle is configurable. For non-configurable bundles: fixed count of this variant included in the bundle."
     },
     "position": {
       "anyOf": [
@@ -47,7 +48,7 @@
           "type": "null"
         }
       ],
-      "description": "Prohibited when bundle is not configurable"
+      "description": "Prohibited when bundle is not configurable. Additional surcharge in cents added on top of the plan price when a customer selects this item."
     },
     "settings": {
       "anyOf": [
@@ -89,7 +90,7 @@
   },
   "required": [
     "bundleId",
-    "productId"
+    "variantId"
   ],
   "additionalProperties": false
 }

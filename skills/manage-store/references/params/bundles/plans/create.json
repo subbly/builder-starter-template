@@ -26,7 +26,8 @@
           "rulesetId": {
             "type": "integer",
             "exclusiveMinimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "Must reference an active ruleset from the same bundle."
           },
           "ranges": {
             "type": "array",
@@ -49,7 +50,8 @@
                 "amount"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "Required and non-empty. Quantity values must be unique within the ruleset; first quantity should start at 1. Quantity breakpoints should match across all ruleset entries in the same payload."
           }
         },
         "required": [
@@ -58,7 +60,7 @@
         ],
         "additionalProperties": false
       },
-      "description": "Required when bundle is non-configurable or has priceType. Prohibited when configurable without priceType"
+      "description": "Required when bundle is non-configurable or has priceType. Prohibited when configurable without priceType. Must be non-empty and include exactly one entry per active bundle ruleset. Quantity breakpoints must match across rulesets, start at 1, and be unique within each ruleset."
     },
     "discounts": {
       "type": "array",
@@ -68,7 +70,8 @@
           "rulesetId": {
             "type": "integer",
             "exclusiveMinimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "Must reference an active ruleset from the same bundle."
           },
           "ranges": {
             "type": "array",
@@ -109,7 +112,8 @@
                 "quantity"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "Required and non-empty. Quantity values must be unique within the ruleset; first quantity should start at 1. Quantity breakpoints should match across all ruleset entries in the same payload. Each range should provide amountOff or percentOff (depending on bundle discountType)."
           }
         },
         "required": [
@@ -118,7 +122,7 @@
         ],
         "additionalProperties": false
       },
-      "description": "Prohibited when bundle has no discountType or has priceType"
+      "description": "Allowed only when bundle is configurable, has discountType, and has no priceType. Must be non-empty and include exactly one entry per active bundle ruleset. Quantity breakpoints must match across rulesets, start at 1, and be unique within each ruleset."
     },
     "frequencyUnit": {
       "type": "string",
@@ -127,13 +131,13 @@
         "week",
         "month"
       ],
-      "description": "Required when type is \"subscription\". Prohibited when type is \"one_time\""
+      "description": "Required when type is \"subscription\""
     },
     "frequencyCount": {
       "type": "integer",
       "minimum": 1,
       "maximum": 365,
-      "description": "Required when type is \"subscription\". Prohibited when type is \"one_time\""
+      "description": "Required when type is \"subscription\""
     },
     "shippings": {
       "type": "array",
@@ -198,7 +202,7 @@
         },
         "additionalProperties": false
       },
-      "description": "Required for physical products when type is \"subscription\". Prohibited for digital products and when type is \"one_time\""
+      "description": "Required for physical products when type is \"subscription\". Prohibited for digital products"
     },
     "anchorDate": {
       "anyOf": [

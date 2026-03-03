@@ -41,7 +41,7 @@ interface Bundle {
   preOrderEndAt?: string | null;
   funnelId?: number | null;
   collectShippingAddress?: boolean | null;
-  tags: string[];
+  tags: BundleTag[];
   published: boolean;
   itemsCount: number;
   plansCount: number;
@@ -143,5 +143,10 @@ interface BundlePrice {
 interface BundlePriceRange {
   range: number;
   amount?: number | null;
+}
+
+interface BundleTag {
+  id: number;
+  value: string;
 }
 ```

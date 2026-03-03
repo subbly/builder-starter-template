@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@subbly/private-api-client':
-        specifier: ^1.0.5
-        version: 1.0.5
+        specifier: ^1.0.7
+        version: 1.0.7
       dotenv:
         specifier: ^17.2.4
         version: 17.2.4
@@ -20,8 +20,8 @@ importers:
 
 packages:
 
-  '@subbly/private-api-client@1.0.5':
-    resolution: {integrity: sha512-MgVhTmjWyOK7LnzvXz3nmRryONYOiMeZirTuObAfiXz6ZuVpCG499q13imvdmHp5otjcGzWTQRD8Iw4+mSKC9w==}
+  '@subbly/private-api-client@1.0.7':
+    resolution: {integrity: sha512-Kr58dYjNyIUJswxklJFg5eAbpwb27BsqprKfo1Nq0QKFueAN3TqP11DDBxJhJorNPwCK1BTiiWWg0GKXeTPuEA==}
 
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
@@ -159,7 +159,7 @@ packages:
 
 snapshots:
 
-  '@subbly/private-api-client@1.0.5':
+  '@subbly/private-api-client@1.0.7':
     dependencies:
       axios: 1.13.5
       camelcase-keys: 9.1.3
