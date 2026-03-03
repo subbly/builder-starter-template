@@ -7,7 +7,7 @@
     "run": "node"
   },
   "dependencies": {
-    "@subbly/private-api-client": "^1.0.7",
+    "@subbly/private-api-client": "^1.0.8",
     "dotenv": "^17.2.4",
     "zod": "^4.3.6"
   },
