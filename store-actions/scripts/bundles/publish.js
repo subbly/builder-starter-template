@@ -1,6 +1,6 @@
 import { client } from '../../lib/client.js';
 
-// Usage: node scripts/bundles/get-item.js '{"bundleId":123,"itemId":456}'
+// Usage: node scripts/bundles/publish.js '{"id":123}'
 // Or pipe JSON via stdin
 
 let input = process.argv[2];
@@ -17,5 +17,5 @@ if (!input) {
 }
 
 const params = JSON.parse(input);
-const result = await client.bundles.getItem({ expand: ['variant.metadata'], ...params });
+const result = await client.bundles.publish(params);
 console.log(JSON.stringify(result, null, 2));
