@@ -1,5 +1,4 @@
 .idea
-.claude
 .subbly
 
 # misc
@@ -8,5 +7,7 @@
 
 # env files (can opt-in for committing if needed)
 .env*
+
+.claude/settings.local.json
 
 
