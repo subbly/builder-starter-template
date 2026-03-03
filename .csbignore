@@ -1,3 +1,5 @@
 /scripts
 !.subbly
 .claude
+builds
+store-actions/node_modules
