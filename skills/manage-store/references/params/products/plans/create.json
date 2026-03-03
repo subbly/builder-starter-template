@@ -215,8 +215,8 @@
                 "type": "string",
                 "enum": [
                   "day",
-                  "month",
-                  "year"
+                  "week",
+                  "month"
                 ]
               },
               {

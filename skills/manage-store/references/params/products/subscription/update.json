@@ -167,7 +167,7 @@
             "properties": {
               "url": {
                 "type": "string",
-                "maxLength": 255,
+                "maxLength": 500,
                 "format": "uri"
               },
               "order": {

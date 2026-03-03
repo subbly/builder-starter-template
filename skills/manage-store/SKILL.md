@@ -1,6 +1,6 @@
 ---
 name: manage-store
-description: "Typed client for querying and manipulating Subbly store data. Use when you need to fetch or modify products, bundles, tags, surveys, or metafields via Subbly Private API. Use pre-built scripts or create custom ones to interact with data. Resources: products (list, get), products.oneTime (create, update, publish, unpublish, archive, metadata), products.subscription (create, update, publish, unpublish, archive, metadata), products.variants (get, create, update, archive, batch), products.plans (get, create, update, archive), bundles (list, get, listItems, getItem, listGroups), tags (list), surveys (get), metafields (list, create, update)."
+description: "Typed client for querying and manipulating Subbly store data. Use when you need to fetch or modify products, bundles, tags, surveys, or metafields via Subbly Private API. Use pre-built scripts or create custom ones to interact with data. Resources: products (list, get), products.oneTime (create, update, publish, unpublish, archive, metadata), products.subscription (create, update, publish, unpublish, archive, metadata), products.variants (get, create, update, archive, batch), products.plans (get, create, update, archive), bundles (list, get, create, update, publish, unpublish, archive, metadata, listGroups), bundles.items (create, update, delete, batch), bundles.plans (get, create, update, archive), tags (list), surveys (get), metafields (list, create, update)."
 ---
 
 # Manage Store
@@ -68,9 +68,27 @@ All scripts run from project root: `node /project/workspace/store-actions/script
 
 - `/project/workspace/store-actions/scripts/bundles/list.js` — list bundles (perPage: 10, sorted by id desc)
 - `/project/workspace/store-actions/scripts/bundles/get.js '<json>'` — get a single bundle
-- `/project/workspace/store-actions/scripts/bundles/list-items.js '<json>'` — list items in a bundle
-- `/project/workspace/store-actions/scripts/bundles/get-item.js '<json>'` — get a single bundle item
+- `/project/workspace/store-actions/scripts/bundles/create.js '<json>'` — create a bundle
+- `/project/workspace/store-actions/scripts/bundles/update.js '<json>'` — update a bundle
+- `/project/workspace/store-actions/scripts/bundles/publish.js '<json>'` — publish a bundle
+- `/project/workspace/store-actions/scripts/bundles/unpublish.js '<json>'` — unpublish a bundle
+- `/project/workspace/store-actions/scripts/bundles/archive.js '<json>'` — archive a bundle
+- `/project/workspace/store-actions/scripts/bundles/metadata.js '<json>'` — sync metadata on a bundle
 - `/project/workspace/store-actions/scripts/bundles/list-groups.js '<json>'` — list groups in a bundle
+
+#### Bundle Items
+
+- `/project/workspace/store-actions/scripts/bundles/items/create.js '<json>'` — create a bundle item
+- `/project/workspace/store-actions/scripts/bundles/items/update.js '<json>'` — update a bundle item
+- `/project/workspace/store-actions/scripts/bundles/items/delete.js '<json>'` — delete a bundle item
+- `/project/workspace/store-actions/scripts/bundles/items/batch.js '<json>'` — batch create/update/delete bundle items
+
+#### Bundle Plans
+
+- `/project/workspace/store-actions/scripts/bundles/plans/get.js '<json>'` — get a bundle plan
+- `/project/workspace/store-actions/scripts/bundles/plans/create.js '<json>'` — create a bundle plan
+- `/project/workspace/store-actions/scripts/bundles/plans/update.js '<json>'` — update a bundle plan
+- `/project/workspace/store-actions/scripts/bundles/plans/archive.js '<json>'` — archive a bundle plan
 
 ### Tags
 
@@ -115,12 +133,14 @@ IMPORTANT: Read params BEFORE executing scripts. Read response types to understa
 |references/params/products/subscription:{create.json,update.json,publish.json,unpublish.json,archive.json,metadata.json}
 |references/params/products/variants:{get.json,create.json,update.json,archive.json,batch.json}
 |references/params/products/plans:{get.json,create.json,update.json,archive.json}
-|references/params/bundles:{list.json,get.json,list-items.json,get-item.json,list-groups.json}
+|references/params/bundles:{list.json,get.json,create.json,update.json,publish.json,unpublish.json,archive.json,metadata.json,list-groups.json}
+|references/params/bundles/items:{create.json,update.json,delete.json,batch.json}
+|references/params/bundles/plans:{get.json,create.json,update.json,archive.json}
 |references/params/tags:{list.json}
 |references/params/surveys:{get.json}
 |references/params/metafields:{list.json,create.json,update.json}
 |references/responses/products:{response.md,variants/response.md,plans/response.md}
-|references/responses/bundles:{response.md,item-response.md,group-response.md}
+|references/responses/bundles:{response.md,item-response.md,group-response.md,plan-response.md}
 |references/responses/tags:{response.md}
 |references/responses/surveys:{response.md}
 |references/responses/metafields:{response.md}

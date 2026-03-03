@@ -5,12 +5,11 @@ Return type for `bundles.listGroups` (`PaginatedResponse<BundleGroup>`).
 ```ts
 interface BundleGroup {
   id: number;
-  bundleId: number;
-  name: string;
-  description?: string | null;
+  productId: number;
+  product?: OneTimeProduct | SubscriptionProduct | null;
   minQuantity: number;
   maxQuantity?: number | null;
-  position: number;
+  items: BundleItem[];
   createdAt: string;
   updatedAt?: string;
 }

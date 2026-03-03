@@ -1,6 +1,14 @@
 # Bundle Response
 
-Return type for `bundles.list` (`PaginatedResponse<Bundle>`) and `bundles.get` (`Bundle`).
+Return type for:
+- `bundles.list` (`PaginatedResponse<Bundle>`)
+- `bundles.get` (`Bundle`)
+- `bundles.create` (`Bundle`)
+- `bundles.update` (`Bundle`)
+- `bundles.publish` (`Bundle`)
+- `bundles.unpublish` (`Bundle`)
+- `bundles.archive` (`Bundle`)
+- `bundles.metadata` (`Bundle`)
 
 ```ts
 interface Bundle {
@@ -19,16 +27,26 @@ interface Bundle {
   selectionType?: 'variant' | 'product' | 'single_product' | null;
   discountType?: 'per_item' | 'total' | 'percentage' | null;
   priceType?: 'per_item' | 'total' | null;
-  rulesetType: 'total' | 'quantity';
-  appearanceType: 'one_step' | 'two_step' | 'without_ruleset' | 'after_checkout';
+  rulesetType?: 'total' | 'quantity' | null;
+  appearanceType?: 'one_step' | 'two_step' | 'without_ruleset' | 'after_checkout' | null;
   rulesets?: BundleRuleset[];
   plans?: BundlePlan[];
   preferences?: BundlePreference[];
   filters?: BundleFilter[];
   discounts?: BundleDiscount[];
   prices?: BundlePrice[];
+  setupFee?: number | null;
+  giftingEnabled: boolean;
+  pauseEnabled: boolean;
+  preOrderEndAt?: string | null;
+  funnelId?: number | null;
+  collectShippingAddress?: boolean | null;
   tags: string[];
   published: boolean;
+  itemsCount: number;
+  plansCount: number;
+  rulesetsCount: number;
+  metadata?: unknown[] | null;
   createdAt: string;
   updatedAt?: string;
 }
@@ -46,6 +64,8 @@ interface BundleRuleset {
   name: string;
   minQuantity: number;
   maxQuantity?: number | null;
+  minTotal?: number | null;
+  maxTotal?: number | null;
   ctaText?: string | null;
   products?: (OneTimeProduct | SubscriptionProduct)[];
   createdAt: string;
@@ -65,7 +85,7 @@ interface BundlePlan {
 interface BundlePreference {
   id: number;
   title: string;
-  /** @deprecated → use metafieldId */
+  /** @deprecated -> use metafieldId */
   attributeId?: number;
   metafieldId: number;
   values: BundlePreferenceValue[];
@@ -75,13 +95,14 @@ interface BundlePreference {
 
 interface BundlePreferenceValue {
   id: number;
-  title: string;
+  value: string;
+  name: string;
 }
 
 interface BundleFilter {
   id: number;
   title: string;
-  /** @deprecated → use metafieldId */
+  /** @deprecated -> use metafieldId */
   attributeId?: number;
   metafieldId: number;
   values: BundleFilterValue[];
@@ -91,7 +112,8 @@ interface BundleFilter {
 
 interface BundleFilterValue {
   id: number;
-  title: string;
+  value: string;
+  name: string;
 }
 
 interface BundleDiscount {
