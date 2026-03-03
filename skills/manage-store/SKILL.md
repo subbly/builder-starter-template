@@ -139,7 +139,9 @@ IMPORTANT: Read params BEFORE executing scripts. Read response types to understa
 |references/params/tags:{list.json}
 |references/params/surveys:{get.json}
 |references/params/metafields:{list.json,create.json,update.json}
-|references/responses/products:{response.md,variants/response.md,plans/response.md}
+|references/responses/products:{response.md}
+|references/responses/products/variants:{response.md,batch-response.md}
+|references/responses/products/plans:{response.md}
 |references/responses/bundles:{response.md,item-response.md,group-response.md,plan-response.md}
 |references/responses/tags:{response.md}
 |references/responses/surveys:{response.md}
