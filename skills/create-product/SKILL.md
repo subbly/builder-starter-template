@@ -55,6 +55,8 @@ See `references/subscription-scheduling.md` for the full technical detail on bil
 
 When discussing product setup with the user, use human-readable language. Do not show JSON, field names, or script arguments. Translate API concepts into business terms (e.g. "ships on the 15th of each month" not `unitDay: 15`, "billed every 3 months" not `frequencyCount: 3`). Only use technical field names when building the actual API payload.
 
+Avoid using internal technical aliases in parentheses when communicating. The parenthetical forms exist only for internal reference in this document.
+
 ## What to Know Before Creating
 
 Before calling the creation scripts, gather these from the user. Ask questions where the answer is unclear.

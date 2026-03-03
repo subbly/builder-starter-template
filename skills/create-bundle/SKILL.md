@@ -24,7 +24,7 @@ Key behavior:
 
 ### Configurable bundles (`configurable: 1`)
 
-A configurable bundle is commonly positioned as a "build box": a powerful system to customize a box using preferences, tiers (rulesets), flexible price and discount setups, appearance types, and selection types.
+A configurable bundle is commonly positioned as a "build box": a powerful system to customize a bundle using preferences, tiers (rulesets), flexible price and discount setups, appearance types, and selection types.
 
 For configurable bundles, prices or discounts are configured via `priceType` or `discountType`.
 
@@ -48,13 +48,13 @@ For configurable bundles, prices or discounts are configured via `priceType` or 
 - `product`: customer selects variants from a grouped list by one-time product; multiple variants can be selected from one group. Most common selection type in production stores.
 - `single_product`: similar to a common "subscribe and save" flow; customer selects variants from grouped one-time products, with only one variant allowed per group item
 
-`quantitySelectors` is an array of predefined quantity values (e.g. `[1, 2, 3]`) that let the customer quickly switch the total number of boxes. It applies to the whole bundle, not to individual items. The selected value multiplies the entire configured bundle: selecting 2 boxes with item A (qty 1) and item B (qty 2) results in 2 units of A and 4 units of B. Only available for configurable bundles.
+`quantitySelectors` is an array of predefined quantity values (e.g. `[1, 2, 3]`) that let the customer quickly switch the total number of bundles. It applies to the whole bundle, not to individual items. The selected value multiplies the entire configured bundle: selecting 2 bundles with item A (qty 1) and item B (qty 2) results in 2 units of A and 4 units of B. Only available for configurable bundles.
 
 #### Tiers (rulesets)
 
 Tiers (rulesets) define the qualification ranges for bundle price and discount logic.
 
-- `quantity` tier (ruleset) type: tier is based on number of selected bundle items
+- `quantity` tier (ruleset) type: tier is based on number of selected bundle items per single bundle, regardless of bundle quantity in cart
 - `total` tier (ruleset) type: tier is based on cart subtotal/amount
 
 `quantity` tier (ruleset) type is the preferred and most common setup in production stores.
@@ -74,7 +74,19 @@ Practical constraints:
 
 When discussing bundle setup, use business language first. Avoid raw JSON or field names until you are building the final payload.
 
+Avoid using internal technical aliases in parentheses when communicating. For example, say "tiers" not "tiers (rulesets)". The parenthetical forms exist only for internal reference in this document.
+
 Example: say "customers can pick up to 3 items from this section" instead of `settings.create[].maxQuantity`.
+
+### Terminology Map
+
+Merchants describe the same concepts differently depending on their niche. Recognize these synonyms and map them to the right internal concept.
+
+**Bundle**: box, subscription box, kit, pack, crate, bag, set, collection, bundle, offer
+
+**Bundle items**: items, products, servings, pieces, meals, recipes, treats, samples, picks, slots, selections, snacks, books, candles, bottles, cards (anything domain-specific the merchant puts in their bundle)
+
+**Tiers (rulesets)**: box sizes, bundle size, sizes (small / medium / large), tiers, levels, packs, options (e.g. "6-item box", "12-item box")
 
 ## What to Know Before Creating or Updating
 
@@ -122,10 +134,132 @@ Bundle plan prices and discounts are validated against bundle state: configurabl
 
 Every plan needs base fields + either `prices` or `discounts`. Subscription plans additionally need cadence, shippings, and scheduling fields.
 
-Read `references/bundle-plans.md` for plan types, prices and discounts, subscription fields, and billing modes.
-Read `references/subscription-scheduling.md` for anchored/adhoc shipping examples and cutoff detail.
-
 For plan create/update/get execution and parameter references, use the `manage-store` skill.
+
+### Plan Types
+
+Bundle plans support two types:
+
+- `one_time`: single charge, no recurring schedule fields. Only one active one-time plan is allowed per bundle.
+- `subscription`: recurring billing plan with cadence and optional shipping schedule controls
+
+### Prices and Discounts
+
+Every bundle plan payload requires `bundleId`, `type`, and `name`, then exactly one of two fields:
+
+- `prices`: when bundle is non-configurable, or configurable with `priceType`
+- `discounts`: when bundle is configurable with `discountType` and no `priceType`
+
+#### How the Price/Discount Matrix Works
+
+Plan pricing is a two-dimensional matrix:
+
+- **Rows** = tiers (rulesets). Each tier represents a range of bundle items the customer can select in the bundle. Every active tier must have exactly one entry in the payload, referenced by `rulesetId`. Non-configurable bundles have a single default tier created by the backend; use its `rulesetId`.
+- **Columns** = ranges (quantity breakpoints). Each range entry represents a cart quantity (number of bundles). The `quantity` field is the breakpoint at which that price/discount starts applying: quantity 1 covers 1 bundle, quantity 3 means "from 3 bundles onward", etc.
+
+The matrix value depends on the mode:
+- `prices` → `amount` (price in cents)
+- `discounts` → `amountOff` (fixed discount in cents) or `percentOff` (percentage discount, 0–100), depending on the bundle's `discountType`
+
+#### Range Rules
+
+- Ranges must always start from `quantity: 1`. This is the base entry that covers 1 bundle.
+- Quantity values must be unique within each tier.
+- Quantity breakpoints must match across all tier entries in the same payload. If tier A has breakpoints `[1, 3, 5]`, every other tier must use the same breakpoints `[1, 3, 5]`.
+
+#### Example: Price Matrix for a Configurable Bundle
+
+A bundle with `priceType: per_item`, two active tiers (3-item bundle and 5-item bundle), and volume pricing for 1 or 3+ bundles:
+
+```json
+"prices": [
+  {
+    "rulesetId": 10,
+    "ranges": [
+      { "quantity": 1, "amount": 1000 },
+      { "quantity": 3, "amount": 900 }
+    ]
+  },
+  {
+    "rulesetId": 11,
+    "ranges": [
+      { "quantity": 1, "amount": 800 },
+      { "quantity": 3, "amount": 700 }
+    ]
+  }
+]
+```
+
+This reads as: tier 10 (e.g. 3-item bundle) costs $10/item for 1–2 bundles, $9/item for 3+ bundles. Tier 11 (e.g. 5-item bundle) costs $8/item for 1–2 bundles, $7/item for 3+ bundles.
+
+#### Example: Price Matrix for a Non-Configurable (Fixed) Bundle
+
+A fixed bundle has a single default tier and `priceType` is forced to `total`. The range quantity only controls volume discounts by number of bundles:
+
+```json
+"prices": [
+  {
+    "rulesetId": 5,
+    "ranges": [
+      { "quantity": 1, "amount": 2999 }
+    ]
+  }
+]
+```
+
+This is the simplest case: one tier, flat $29.99 per bundle regardless of quantity.
+
+#### Example: Discount Matrix
+
+A configurable bundle with `discountType: percentage`, one tier, and increasing discounts for buying more bundles:
+
+```json
+"discounts": [
+  {
+    "rulesetId": 10,
+    "ranges": [
+      { "quantity": 1, "percentOff": 5 },
+      { "quantity": 3, "percentOff": 10 }
+    ]
+  }
+]
+```
+
+This gives 5% off the original item prices for 1–2 bundles, 10% off for 3+ bundles.
+
+### Subscription Plan Fields
+
+For `type: subscription`, additionally include:
+
+- `frequencyUnit`, `frequencyCount`: billing cadence (required)
+- `shippings`: required for physical bundles, prohibited for digital
+- Anchored billing: any `rebillingDay*` field switches the plan to synchronized cycles
+- Cutoff: `cutOffDays`, `cutOffTime` required for anchored billing, available with anchored shipping in adhoc
+- `anchorDate`: required for daily-frequency anchored billing; use `"today"` to pin from now
+- Optional controls: `chargeImmediately`, `shipImmediately`, `bufferDays`, `trial*`, `commitmentBillingCount`, `chargesLimit`, `surveyId`
+
+### Billing Modes (Physical)
+
+Physical subscription plans support two practical billing modes:
+
+- adhoc (independent cycles): billing rolls from each subscriber signup date
+- anchored (synchronized cycles): billing runs on fixed calendar markers
+
+Important behaviors:
+- Shipments always happen after billing
+- Cutoff windows (`cutOffDays`, `cutOffTime`) gate inclusion in shipment/billing windows
+- Trial fields are not available for anchored billing
+
+### Coherent vs Incoherent Shipping
+
+A plan can include multiple shipping entries within one billing cycle.
+
+- Coherent schedule: billing and shipping at same cadence (e.g. bill monthly, ship monthly)
+- Incoherent schedule: shipping more frequently than billing (prepaid pattern)
+
+Example incoherent model: bill every 3 months, ship monthly (3 shipments per billing cycle).
+
+Read `references/subscription-scheduling.md` for anchored/adhoc shipping examples and cutoff detail.
 
 ## Create/Update Flow
 
@@ -156,4 +290,4 @@ Important: switching tier (ruleset) type (`rulesetType`), `priceType`, or `disco
 IMPORTANT: Read local references first for behavior and edge cases.
 
 |root: /project/workspace/skills/create-bundle
-|references/references:{bundle-edge-cases.md,bundle-plans.md,subscription-scheduling.md}
+|references/references:{bundle-edge-cases.md,subscription-scheduling.md}
