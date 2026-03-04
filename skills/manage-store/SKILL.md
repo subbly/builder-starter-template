@@ -9,7 +9,7 @@ The `/project/workspace/store-actions/` workspace provides pre-built scripts for
 
 ## Instructions
 
-- Read ALL related params and responses for every planned step before executing any code (e.g., for creating a product with variants and publishing: read references/params/products/onetime/create.json, references/responses/products/response.md, references/params/products/variants/create.json, references/responses/products/variants/response.md, references/params/products/onetime/publish.json).
+- Read ALL related params and responses for every planned step before executing any code (e.g., for creating a product with variants and publishing: read `references/params/products/onetime/create.json`, `references/responses/products/response.md`, `references/params/products/variants/create.json`, `references/responses/products/variants/response.md`, `references/params/products/onetime/publish.json`).
 - Execute scripts in sequence, pipe output through `jq`. Use response data from earlier steps as input to later steps.
 - Never hard-code API keys or URLs. Never read or search for `.env` or `.env.example`. Credentials are auto-injected via `/project/workspace/store-actions/lib/client.js`.
 
@@ -24,89 +24,101 @@ IMPORTANT: API responses can be large. NEVER output a full response object. Inst
 
 ## Available Scripts
 
-All scripts run from project root: `node /project/workspace/store-actions/scripts/<path>`
+<scripts>: `/project/workspace/store-actions/scripts`
+<ref>: `/project/workspace/skills/manage-store/references`
 
-### Products
+Run: `node <scripts>/<script> '<json[path]>'`
 
-- `/project/workspace/store-actions/scripts/products/list.js` — list products (perPage: 10, sorted by id desc)
-- `/project/workspace/store-actions/scripts/products/get.js '<json>'` — get a single product
+`script <json[path]>` - read params schema at `<ref>/path` BEFORE executing. `[path]` - read response type at `<ref>/path` to understand output.
+
+All list methods return `PaginatedResponse<T>` (see `<ref>/responses/paginated-response.md`).
+
+Batch methods return type `{ create: T[], update?: T[], delete?: T[], archive?: T[] }`. For better understanding read response references
+
+### Products [responses/products/response.md]
+
+- `products/list.js <json[params/products/list.json]>`
+- `products/get.js <json[params/products/get.json]>`
 
 #### One-Time Products
 
-- `/project/workspace/store-actions/scripts/products/onetime/create.js '<json>'` — create a one-time product
-- `/project/workspace/store-actions/scripts/products/onetime/update.js '<json>'` — update a one-time product
-- `/project/workspace/store-actions/scripts/products/onetime/publish.js '<json>'` — publish a one-time product
-- `/project/workspace/store-actions/scripts/products/onetime/unpublish.js '<json>'` — unpublish a one-time product
-- `/project/workspace/store-actions/scripts/products/onetime/archive.js '<json>'` — archive a one-time product
-- `/project/workspace/store-actions/scripts/products/onetime/metadata.js '<json>'` — sync metadata on a one-time product
+- `products/onetime/create.js <json[params/products/onetime/create.json]>`
+- `products/onetime/update.js <json[params/products/onetime/update.json]>`
+- `products/onetime/publish.js <json[params/products/onetime/publish.json]>`
+- `products/onetime/unpublish.js <json[params/products/onetime/unpublish.json]>`
+- `products/onetime/archive.js <json[params/products/onetime/archive.json]>`
+- `products/onetime/metadata.js <json[params/products/onetime/metadata.json]>`
 
 #### Subscription Products
 
-- `/project/workspace/store-actions/scripts/products/subscription/create.js '<json>'` — create a subscription product
-- `/project/workspace/store-actions/scripts/products/subscription/update.js '<json>'` — update a subscription product
-- `/project/workspace/store-actions/scripts/products/subscription/publish.js '<json>'` — publish a subscription product
-- `/project/workspace/store-actions/scripts/products/subscription/unpublish.js '<json>'` — unpublish a subscription product
-- `/project/workspace/store-actions/scripts/products/subscription/archive.js '<json>'` — archive a subscription product
-- `/project/workspace/store-actions/scripts/products/subscription/metadata.js '<json>'` — sync metadata on a subscription product
+- `products/subscription/create.js <json[params/products/subscription/create.json]>`
+- `products/subscription/update.js <json[params/products/subscription/update.json]>`
+- `products/subscription/publish.js <json[params/products/subscription/publish.json]>`
+- `products/subscription/unpublish.js <json[params/products/subscription/unpublish.json]>`
+- `products/subscription/archive.js <json[params/products/subscription/archive.json]>`
+- `products/subscription/metadata.js <json[params/products/subscription/metadata.json]>`
 
-#### Variants
+#### Variants [responses/products/variants/response.md]
 
-- `/project/workspace/store-actions/scripts/products/variants/get.js '<json>'` — get a product variant
-- `/project/workspace/store-actions/scripts/products/variants/create.js '<json>'` — create a variant
-- `/project/workspace/store-actions/scripts/products/variants/update.js '<json>'` — update a variant
-- `/project/workspace/store-actions/scripts/products/variants/archive.js '<json>'` — archive a variant
-- `/project/workspace/store-actions/scripts/products/variants/batch.js '<json>'` — batch create/update/archive variants
+- `products/variants/get.js <json[params/products/variants/get.json]>`
+- `products/variants/create.js <json[params/products/variants/create.json]>`
+- `products/variants/update.js <json[params/products/variants/update.json]>`
+- `products/variants/archive.js <json[params/products/variants/archive.json]>`
+- `products/variants/batch.js <json[params/products/variants/batch.json]>`
 
-#### Plans
+#### Plans [responses/products/plans/response.md]
 
-- `/project/workspace/store-actions/scripts/products/plans/get.js '<json>'` — get a subscription plan
-- `/project/workspace/store-actions/scripts/products/plans/create.js '<json>'` — create a plan
-- `/project/workspace/store-actions/scripts/products/plans/update.js '<json>'` — update a plan
-- `/project/workspace/store-actions/scripts/products/plans/archive.js '<json>'` — archive a plan
+- `products/plans/get.js <json[params/products/plans/get.json]>`
+- `products/plans/create.js <json[params/products/plans/create.json]>`
+- `products/plans/update.js <json[params/products/plans/update.json]>`
+- `products/plans/archive.js <json[params/products/plans/archive.json]>`
 
-### Bundles
+### Bundles [responses/bundles/response.md]
 
-- `/project/workspace/store-actions/scripts/bundles/list.js` — list bundles (perPage: 10, sorted by id desc)
-- `/project/workspace/store-actions/scripts/bundles/get.js '<json>'` — get a single bundle
-- `/project/workspace/store-actions/scripts/bundles/create.js '<json>'` — create a bundle
-- `/project/workspace/store-actions/scripts/bundles/update.js '<json>'` — update a bundle
-- `/project/workspace/store-actions/scripts/bundles/publish.js '<json>'` — publish a bundle
-- `/project/workspace/store-actions/scripts/bundles/unpublish.js '<json>'` — unpublish a bundle
-- `/project/workspace/store-actions/scripts/bundles/archive.js '<json>'` — archive a bundle
-- `/project/workspace/store-actions/scripts/bundles/metadata.js '<json>'` — sync metadata on a bundle
-- `/project/workspace/store-actions/scripts/bundles/list-groups.js '<json>'` — list groups in a bundle
+- `bundles/list.js <json[params/bundles/list.json]>`
+- `bundles/get.js <json[params/bundles/get.json]>`
+- `bundles/create.js <json[params/bundles/create.json]>`
+- `bundles/update.js <json[params/bundles/update.json]>`
+- `bundles/publish.js <json[params/bundles/publish.json]>`
+- `bundles/unpublish.js <json[params/bundles/unpublish.json]>`
+- `bundles/archive.js <json[params/bundles/archive.json]>`
+- `bundles/metadata.js <json[params/bundles/metadata.json]>`
 
-#### Bundle Items
+#### Bundle Groups [responses/bundles/group-response.md]
 
-- `/project/workspace/store-actions/scripts/bundles/items/create.js '<json>'` — create a bundle item
-- `/project/workspace/store-actions/scripts/bundles/items/update.js '<json>'` — update a bundle item
-- `/project/workspace/store-actions/scripts/bundles/items/delete.js '<json>'` — delete a bundle item
-- `/project/workspace/store-actions/scripts/bundles/items/batch.js '<json>'` — batch create/update/delete bundle items
+- `bundles/list-groups.js <json[params/bundles/list-groups.json]>`
 
-#### Bundle Plans
+#### Bundle Items [responses/bundles/item-response.md]
 
-- `/project/workspace/store-actions/scripts/bundles/plans/get.js '<json>'` — get a bundle plan
-- `/project/workspace/store-actions/scripts/bundles/plans/create.js '<json>'` — create a bundle plan
-- `/project/workspace/store-actions/scripts/bundles/plans/update.js '<json>'` — update a bundle plan
-- `/project/workspace/store-actions/scripts/bundles/plans/archive.js '<json>'` — archive a bundle plan
+- `bundles/items/create.js <json[params/bundles/items/create.json]>`
+- `bundles/items/update.js <json[params/bundles/items/update.json]>`
+- `bundles/items/delete.js <json[params/bundles/items/delete.json]>`
+- `bundles/items/batch.js <json[params/bundles/items/batch.json]>`
 
-### Tags
+#### Bundle Plans [responses/bundles/plan-response.md]
 
-- `/project/workspace/store-actions/scripts/tags/list.js` — list tags (perPage: 50, sorted by id desc)
+- `bundles/plans/get.js <json[params/bundles/plans/get.json]>`
+- `bundles/plans/create.js <json[params/bundles/plans/create.json]>`
+- `bundles/plans/update.js <json[params/bundles/plans/update.json]>`
+- `bundles/plans/archive.js <json[params/bundles/plans/archive.json]>`
 
-### Surveys
+### Tags [responses/tags/response.md]
 
-- `/project/workspace/store-actions/scripts/surveys/get.js '<json>'` — get a survey
+- `tags/list.js <json[params/tags/list.json]>`
 
-### Metafields
+### Surveys [responses/surveys/response.md]
 
-- `/project/workspace/store-actions/scripts/metafields/list.js` — list metafields (perPage: 50, sorted by id desc)
-- `/project/workspace/store-actions/scripts/metafields/create.js '<json>'` — create a metafield
-- `/project/workspace/store-actions/scripts/metafields/update.js '<json>'` — update a metafield (requires slug + dataType)
+- `surveys/get.js <json[params/surveys/get.json]>`
+
+### Metafields [responses/metafields/response.md]
+
+- `metafields/list.js <json[params/metafields/list.json]>`
+- `metafields/create.js <json[params/metafields/create.json]>`
+- `metafields/update.js <json[params/metafields/update.json]>`
 
 ## Custom Scripts
 
-NEVER modify files in `/project/workspace/store-actions/scripts/` — those are maintained templates.
+NEVER modify files in `/project/workspace/store-actions/scripts/` - those are maintained templates.
 
 Create custom scripts in `/project/workspace/store-actions/tmp/`. Boilerplate:
 
@@ -122,30 +134,3 @@ Run with: `node /project/workspace/store-actions/tmp/my-script.js`
 ## Looking Up Types
 
 For detailed type information beyond what the references provide, use the Grep tool to search the package type definitions at `/project/workspace/store-actions/node_modules/@subbly/private-api-client/dist/index.d.ts`.
-
-## References
-
-IMPORTANT: Read params BEFORE executing scripts. Read response types to understand output shape.
-
-|root: /project/workspace/skills/manage-store
-|references/params/products:{list.json,get.json}
-|references/params/products/onetime:{create.json,update.json,publish.json,unpublish.json,archive.json,metadata.json}
-|references/params/products/subscription:{create.json,update.json,publish.json,unpublish.json,archive.json,metadata.json}
-|references/params/products/variants:{get.json,create.json,update.json,archive.json,batch.json}
-|references/params/products/plans:{get.json,create.json,update.json,archive.json}
-|references/params/bundles:{list.json,get.json,create.json,update.json,publish.json,unpublish.json,archive.json,metadata.json,list-groups.json}
-|references/params/bundles/items:{create.json,update.json,delete.json,batch.json}
-|references/params/bundles/plans:{get.json,create.json,update.json,archive.json}
-|references/params/tags:{list.json}
-|references/params/surveys:{get.json}
-|references/params/metafields:{list.json,create.json,update.json}
-|references/responses/products:{response.md}
-|references/responses/products/variants:{response.md,batch-response.md}
-|references/responses/products/plans:{response.md}
-|references/responses/bundles:{response.md,item-response.md,group-response.md,plan-response.md}
-|references/responses/tags:{response.md}
-|references/responses/surveys:{response.md}
-|references/responses/metafields:{response.md}
-|references/responses:{paginated-response.md}
-
-All list methods wrap responses in `PaginatedResponse<T>` (see `references/responses/paginated-response.md`).
