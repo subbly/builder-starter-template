@@ -17,5 +17,5 @@ if (!input) {
 }
 
 const params = JSON.parse(input);
-const result = await client.products.plans.create(params);
+const result = await client.products.plans.create({ expand: ['metadata'], ...params });
 console.log(JSON.stringify(result, null, 2));

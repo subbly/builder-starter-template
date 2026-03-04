@@ -9,7 +9,7 @@ The `/project/workspace/store-actions/` workspace provides pre-built scripts for
 
 ## Instructions
 
-- Read ALL related params and responses for every planned step before executing any code (e.g., for creating a product with variants and publishing: read `references/params/products/onetime/create.json`, `references/responses/products/response.md`, `references/params/products/variants/create.json`, `references/responses/products/variants/response.md`, `references/params/products/onetime/publish.json`).
+- ALWAYS read ALL related params and responses before executing a script or creating a tmp script.
 - Execute scripts in sequence, pipe output through `jq`. Use response data from earlier steps as input to later steps.
 - Never hard-code API keys or URLs. Never read or search for `.env` or `.env.example`. Credentials are auto-injected via `/project/workspace/store-actions/lib/client.js`.
 
@@ -21,6 +21,7 @@ IMPORTANT: API responses can be large. NEVER output a full response object. Inst
 - Save full responses to `/project/workspace/store-actions/results/` and use the `grep` tool to search within them
 - Use pagination params (`perPage`, `page`) to limit result size at the API level
 - Write a custom script in `/project/workspace/store-actions/tmp/` that fetches and filters data server-side instead of post-processing
+- When a mutating script (create, update, delete, batch, publish, archive) is piped through `jq` and the command fails, the error may be from `jq`, not the API. The API call likely already succeeded. Never retry a mutating call after a pipe failure. Instead, fetch the entity to verify current state before deciding to retry. Prefer decoupling: save raw output to `/project/workspace/store-actions/results/` first, then format with `jq` separately.
 
 ## Available Scripts
 

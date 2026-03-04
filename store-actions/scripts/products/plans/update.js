@@ -17,5 +17,5 @@ if (!input) {
 }
 
 const params = JSON.parse(input);
-const result = await client.products.plans.update(params);
+const result = await client.products.plans.update({ expand: ['metadata'], ...params });
 console.log(JSON.stringify(result, null, 2));

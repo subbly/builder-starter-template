@@ -17,5 +17,5 @@ if (!input) {
 }
 
 const params = JSON.parse(input);
-const result = await client.bundles.create(params);
+const result = await client.bundles.create({ expand: ['metadata', 'filters', 'preferences', 'plans.variant', 'plans.plan', 'rulesets'], ...params });
 console.log(JSON.stringify(result, null, 2));

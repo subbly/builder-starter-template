@@ -17,5 +17,5 @@ if (!input) {
 }
 
 const params = JSON.parse(input);
-const result = await client.products.oneTime.update(params);
+const result = await client.products.oneTime.update({ expand: ['plans', 'variants', 'metadata'], ...params });
 console.log(JSON.stringify(result, null, 2));

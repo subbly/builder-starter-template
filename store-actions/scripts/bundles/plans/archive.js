@@ -17,5 +17,5 @@ if (!input) {
 }
 
 const params = JSON.parse(input);
-const result = await client.bundles.plans.archive(params);
+const result = await client.bundles.plans.archive({ expand: ['variant.metadata', 'plan.metadata'], ...params });
 console.log(JSON.stringify(result, null, 2));
