@@ -11,8 +11,12 @@ Sync workflow to copy updated files from the `/var/www/subbly-private-api-client
 
 | Source (subbly-private-api-client)  | Destination (this project) |
 |-------------------------------------|----------------------------|
-| `skills/`                           | `skills/`                  |
+| `skills/manage-store/`              | `skills/manage-store/`     |
+| `skills/create-bundle/`             | `skills/create-bundle/`    |
+| `skills/create-product/`            | `skills/create-product/`   |
 | `packages/store-actions/`           | `store-actions/`           |
+
+**Only the three skills above are synced.** Other skills in `skills/` (e.g. localization, cms-integration, frontend-design, troubleshooting) are local-only and must not be touched during sync.
 
 ## Sync Procedure
 
@@ -21,9 +25,11 @@ Sync workflow to copy updated files from the `/var/www/subbly-private-api-client
 Before copying, compare both trees to find files that exist locally but were removed upstream. `cp` only adds/overwrites — it does NOT delete removed files, so this must be done explicitly:
 
 ```bash
-# Check for stale skills files
-diff <(cd /var/www/subbly-private-api-client/skills && find . -type f | sort) \
-     <(cd /var/www/subbly-builder-default/skills && find . -type f | sort)
+# Check for stale skills files (only synced skills)
+for skill in manage-store create-bundle create-product; do
+  diff <(cd /var/www/subbly-private-api-client/skills/$skill && find . -type f | sort) \
+       <(cd /var/www/subbly-builder-default/skills/$skill && find . -type f | sort)
+done
 
 # Check for stale store-actions files
 diff <(cd /var/www/subbly-private-api-client/packages/store-actions && find . -type f ! -path '*/node_modules/*' ! -name '.env' | sort) \
@@ -35,7 +41,9 @@ Lines prefixed with `>` are files that exist locally but not upstream — delete
 ### 2. Sync skills
 
 ```bash
-cp -r /var/www/subbly-private-api-client/skills/* /var/www/subbly-builder-default/skills/
+for skill in manage-store create-bundle create-product; do
+  cp -r /var/www/subbly-private-api-client/skills/$skill/* /var/www/subbly-builder-default/skills/$skill/
+done
 ```
 
 ### 3. Sync store-actions
