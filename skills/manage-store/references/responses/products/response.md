@@ -1,7 +1,5 @@
 # Product Response
 
-Return type for `products.list` (`PaginatedResponse<Product>`) and `products.get` (`Product`).
-
 ```ts
 interface Product {
   id: number;

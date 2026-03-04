@@ -1,11 +1,5 @@
 # Bundle Item Response
 
-Return type for:
-- `bundles.items.create` (`BundleItem`)
-- `bundles.items.update` (`BundleItem`)
-- `bundles.items.delete` (`BundleItem`)
-- `bundles.items.batch` (`BatchBundleItemsResponse`)
-
 ```ts
 interface BundleItem {
   id: number;

@@ -1,15 +1,5 @@
 # Bundle Response
 
-Return type for:
-- `bundles.list` (`PaginatedResponse<Bundle>`)
-- `bundles.get` (`Bundle`)
-- `bundles.create` (`Bundle`)
-- `bundles.update` (`Bundle`)
-- `bundles.publish` (`Bundle`)
-- `bundles.unpublish` (`Bundle`)
-- `bundles.archive` (`Bundle`)
-- `bundles.metadata` (`Bundle`)
-
 ```ts
 interface Bundle {
   id: number;

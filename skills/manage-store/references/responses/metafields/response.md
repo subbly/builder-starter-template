@@ -1,7 +1,5 @@
 # Metafield Response
 
-Return type for `metafields.list` (`PaginatedResponse<Metafield>`), `metafields.create` (`Metafield`), `metafields.update` (`Metafield`).
-
 ```ts
 interface Metafield {
   id: number;

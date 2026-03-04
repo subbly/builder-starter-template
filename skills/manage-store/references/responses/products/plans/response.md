@@ -1,7 +1,5 @@
 # Plan Response
 
-Return type for `products.plans.get` (`Plan`).
-
 ```ts
 interface Plan {
   id: number;

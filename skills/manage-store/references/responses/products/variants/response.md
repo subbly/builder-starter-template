@@ -1,7 +1,5 @@
 # Variant Response
 
-Return type for `products.variants.get` (`Variant`).
-
 ```ts
 interface Variant {
   id: number;
@@ -41,4 +39,12 @@ interface PriceSchemaRange {
   createdAt: string;
   updatedAt?: string;
 }
+
+interface VariantBatchResponse {
+  create: Variant[];
+  update: Variant[];
+  delete: Variant[];
+}
 ```
+
+`VariantBatchResponse`: all three keys are always present. Each returns full `Variant` entities — including `delete`, which returns the archived variants in their final state.

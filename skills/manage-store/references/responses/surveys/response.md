@@ -1,7 +1,5 @@
 # Survey Response
 
-Return type for `surveys.get` (`Survey`).
-
 ```ts
 interface Survey {
   id: number;
