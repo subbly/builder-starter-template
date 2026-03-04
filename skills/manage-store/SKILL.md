@@ -10,6 +10,18 @@ The `/project/workspace/store-actions/` workspace provides pre-built scripts for
 ## Instructions
 
 - ALWAYS read ALL related params and responses before executing a script or creating a tmp script.
+
+<example>
+Task: "Create a bundle with a plan and publish it"
+
+Thinking: I need to create a bundle, add a plan to it, then publish. Let me identify all scripts and references I'll use:
+1. `bundles/create.js` → read `params/bundles/create.json` + `responses/bundles/response.md`
+2. `bundles/plans/create.js` → read `params/bundles/plans/create.json` + `responses/bundles/plan-response.md`
+3. `bundles/publish.js` → read `params/bundles/publish.json`
+
+I must read ALL six files before executing any script, so I understand the full data flow — what fields the create response returns (e.g. bundle `id`) and what the next step requires as input.
+</example>
+
 - Execute scripts in sequence, pipe output through `jq`. Use response data from earlier steps as input to later steps.
 - Never hard-code API keys or URLs. Never read or search for `.env` or `.env.example`. Credentials are auto-injected via `/project/workspace/store-actions/lib/client.js`.
 
