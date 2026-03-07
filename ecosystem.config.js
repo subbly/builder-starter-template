@@ -2,11 +2,11 @@ module.exports = {
   apps: [
     {
       name: 'subbly-dev',
-      script: 'pnpm',
-      args: 'run dev',
+      script: 'bash',
+      args: '-c "rm -rf .next && pnpm run dev"',
       cwd: '/project/workspace/main',
       interpreter: 'none',
-      watch: ['src/**/*.css', 'src/**/*.scss', './pnpm-lock.yaml'],
+      watch: ['src/**/*.css', 'src/**/*.scss'],
       watch_delay: 1000,
       ignore_watch: ['node_modules', '.git', '.next'],
       exp_backoff_restart_delay: 1000,
