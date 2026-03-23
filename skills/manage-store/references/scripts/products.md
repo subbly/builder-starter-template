@@ -1,6 +1,8 @@
 # Products
 
-## Products [responses/products/response.md]
+Response type: `responses/products/response.md`
+
+### Products
 
 - `products/list.js <json[params/products/list.yaml]>`
 - `products/get.js <json[params/products/get.yaml]>`
@@ -22,18 +24,3 @@
 - `products/subscription/unpublish.js <json[params/products/subscription/unpublish.yaml]>`
 - `products/subscription/archive.js <json[params/products/subscription/archive.yaml]>`
 - `products/subscription/metadata.js <json[params/products/subscription/metadata.yaml]>`
-
-## Variants [responses/products/variants/response.md]
-
-- `products/variants/get.js <json[params/products/variants/get.yaml]>`
-- `products/variants/create.js <json[params/products/variants/create.yaml]>`
-- `products/variants/update.js <json[params/products/variants/update.yaml]>`
-- `products/variants/archive.js <json[params/products/variants/archive.yaml]>`
-- `products/variants/batch.js <json[params/products/variants/batch.yaml]>`
-
-## Plans [responses/products/plans/response.md]
-
-- `products/plans/get.js <json[params/products/plans/get.yaml]>`
-- `products/plans/create.js <json[params/products/plans/create.yaml]>`
-- `products/plans/update.js <json[params/products/plans/update.yaml]>`
-- `products/plans/archive.js <json[params/products/plans/archive.yaml]>`

@@ -1,6 +1,6 @@
 # Metafields
 
-## Metafields [responses/metafields/response.md]
+Response type: `responses/metafields/response.md`
 
 - `metafields/list.js <json[params/metafields/list.yaml]>`
 - `metafields/create.js <json[params/metafields/create.yaml]>`

@@ -107,7 +107,7 @@
           "type": "null"
         }
       ],
-      "description": "Required in payload when updating discountType or rulesetType. Prohibited when not configurable or rulesetType is total. Mutually exclusive with discountType."
+      "description": "Send with discountType/rulesetType updates (null if not needed). Configurable only. Not for single_product or total rulesetType. Mutually exclusive with discountType."
     },
     "discountType": {
       "anyOf": [
@@ -123,7 +123,7 @@
           "type": "null"
         }
       ],
-      "description": "Updating this field requires priceType in the payload. Prohibited when not configurable. Mutually exclusive with priceType."
+      "description": "Send with priceType updates (null if not needed). Configurable only. Mutually exclusive with priceType (except single_product)."
     },
     "rulesetType": {
       "type": "string",
@@ -131,7 +131,7 @@
         "total",
         "quantity"
       ],
-      "description": "Prohibited when not configurable or single_product. Updating this field requires priceType in the payload."
+      "description": "Configurable only. Not for single_product. Send priceType when updating."
     },
     "appearanceType": {
       "type": "string",
@@ -139,7 +139,8 @@
         "one_step",
         "two_step",
         "without_ruleset"
-      ]
+      ],
+      "description": "Configurable only. Not for single_product."
     },
     "quantitySelectors": {
       "anyOf": [

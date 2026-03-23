@@ -59,22 +59,23 @@ priceType:
   type: string
   nullable: true
   enum: [per_item, total]
-  description: Required when updating discountType or rulesetType. Prohibited when not configurable or rulesetType is total. Mutually exclusive with discountType
+  description: Send with discountType/rulesetType updates (null if not needed). Configurable only. Not for single_product or total rulesetType. Mutually exclusive with discountType
 
 discountType:
   type: string
   nullable: true
   enum: [per_item, total, percentage]
-  description: Requires priceType in payload. Prohibited when not configurable. Mutually exclusive with priceType
+  description: Send with priceType updates (null if not needed). Configurable only. Mutually exclusive with priceType (except single_product)
 
 rulesetType:
   type: string
   enum: [total, quantity]
-  description: Prohibited when not configurable or single_product. Requires priceType in payload
+  description: Configurable only. Not for single_product. Send priceType when updating
 
 appearanceType:
   type: string
   enum: [one_step, two_step, without_ruleset]
+  description: Configurable only. Not for single_product
 
 quantitySelectors:
   type: array

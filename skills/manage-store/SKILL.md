@@ -5,21 +5,22 @@ description: "Typed client for querying and manipulating Subbly store data. Use 
 
 # Manage Store
 
-The `/project/workspace/store-actions/` workspace provides pre-built scripts for querying and modifying Subbly store data via the `@subbly/private-api-client` package. All scripts output JSON to stdout. 
+The `/project/workspace/store-actions/` workspace provides pre-built scripts for querying and modifying Subbly store data via the `@subbly/private-api-client` package. All scripts output JSON to stdout.
 
 ## Instructions
 
-- ALWAYS read ALL related params and responses before executing a script or creating a tmp script.
+- Before executing a script, read its script reference file (listed in Available Scripts below) then read the params and response files it points to. Read ONLY the references for the script you are about to execute -- do not bulk-read all references upfront.
+- When chaining multiple scripts, read references one step at a time. After each script completes, read the next step's references before proceeding.
 
 <example>
 Task: "Create a bundle with a plan and publish it"
 
-Thinking: I need to create a bundle, add a plan to it, then publish. Let me identify all scripts and references I'll use:
-1. `bundles/create.js` → read `params/bundles/create.json` + `responses/bundles/response.md`
-2. `bundles/plans/create.js` → read `params/bundles/plans/create.json` + `responses/bundles/plan-response.md`
-3. `bundles/publish.js` → read `params/bundles/publish.json`
+Thinking: I need 3 scripts in sequence. I'll read references just before each call:
+1. Read `params/bundles/create.yaml` + `responses/bundles/response.md`, then run `bundles/create.js`
+2. Read `params/bundles/plans/create.yaml` + `responses/bundles/plan-response.md`, then run `bundles/plans/create.js`
+3. Read `params/bundles/publish.yaml` (no response needed for publish), then run `bundles/publish.js`
 
-I must read ALL six files before executing any script, so I understand the full data flow — what fields the create response returns (e.g. bundle `id`) and what the next step requires as input.
+I'll pipe each output through jq and chain IDs forward.
 </example>
 
 - Execute scripts in sequence, pipe output through `jq`. Use response data from earlier steps as input to later steps.
@@ -40,94 +41,15 @@ IMPORTANT: API responses can be large. NEVER output a full response object. Inst
 <scripts>: `/project/workspace/store-actions/scripts`
 <ref>: `/project/workspace/skills/manage-store/references`
 
-Run: `node <scripts>/<script> '<json[path]>'`
+Run: `node <scripts>/<script> '<json>'`
 
-`script <json[path]>` - read params schema at `<ref>/path` BEFORE executing. `[path]` - read response type at `<ref>/path` to understand output.
+Before running a script, read its reference file to find params and response paths.
 
 All list methods return `PaginatedResponse<T>` (see `<ref>/responses/paginated-response.md`).
+Batch methods return `{ create: T[], update?: T[], delete?: T[], archive?: T[] }`.
 
-Batch methods return type `{ create: T[], update?: T[], delete?: T[], archive?: T[] }`. For better understanding read response references
-
-### Products [responses/products/response.md]
-
-- `products/list.js <json[params/products/list.json]>`
-- `products/get.js <json[params/products/get.json]>`
-
-#### One-Time Products
-
-- `products/onetime/create.js <json[params/products/onetime/create.json]>`
-- `products/onetime/update.js <json[params/products/onetime/update.json]>`
-- `products/onetime/publish.js <json[params/products/onetime/publish.json]>`
-- `products/onetime/unpublish.js <json[params/products/onetime/unpublish.json]>`
-- `products/onetime/archive.js <json[params/products/onetime/archive.json]>`
-- `products/onetime/metadata.js <json[params/products/onetime/metadata.json]>`
-
-#### Subscription Products
-
-- `products/subscription/create.js <json[params/products/subscription/create.json]>`
-- `products/subscription/update.js <json[params/products/subscription/update.json]>`
-- `products/subscription/publish.js <json[params/products/subscription/publish.json]>`
-- `products/subscription/unpublish.js <json[params/products/subscription/unpublish.json]>`
-- `products/subscription/archive.js <json[params/products/subscription/archive.json]>`
-- `products/subscription/metadata.js <json[params/products/subscription/metadata.json]>`
-
-#### Variants [responses/products/variants/response.md]
-
-- `products/variants/get.js <json[params/products/variants/get.json]>`
-- `products/variants/create.js <json[params/products/variants/create.json]>`
-- `products/variants/update.js <json[params/products/variants/update.json]>`
-- `products/variants/archive.js <json[params/products/variants/archive.json]>`
-- `products/variants/batch.js <json[params/products/variants/batch.json]>`
-
-#### Plans [responses/products/plans/response.md]
-
-- `products/plans/get.js <json[params/products/plans/get.json]>`
-- `products/plans/create.js <json[params/products/plans/create.json]>`
-- `products/plans/update.js <json[params/products/plans/update.json]>`
-- `products/plans/archive.js <json[params/products/plans/archive.json]>`
-
-### Bundles [responses/bundles/response.md]
-
-- `bundles/list.js <json[params/bundles/list.json]>`
-- `bundles/get.js <json[params/bundles/get.json]>`
-- `bundles/create.js <json[params/bundles/create.json]>`
-- `bundles/update.js <json[params/bundles/update.json]>`
-- `bundles/publish.js <json[params/bundles/publish.json]>`
-- `bundles/unpublish.js <json[params/bundles/unpublish.json]>`
-- `bundles/archive.js <json[params/bundles/archive.json]>`
-- `bundles/metadata.js <json[params/bundles/metadata.json]>`
-
-#### Bundle Groups [responses/bundles/group-response.md]
-
-- `bundles/list-groups.js <json[params/bundles/list-groups.json]>`
-
-#### Bundle Items [responses/bundles/item-response.md]
-
-- `bundles/items/create.js <json[params/bundles/items/create.json]>`
-- `bundles/items/update.js <json[params/bundles/items/update.json]>`
-- `bundles/items/delete.js <json[params/bundles/items/delete.json]>`
-- `bundles/items/batch.js <json[params/bundles/items/batch.json]>`
-
-#### Bundle Plans [responses/bundles/plan-response.md]
-
-- `bundles/plans/get.js <json[params/bundles/plans/get.json]>`
-- `bundles/plans/create.js <json[params/bundles/plans/create.json]>`
-- `bundles/plans/update.js <json[params/bundles/plans/update.json]>`
-- `bundles/plans/archive.js <json[params/bundles/plans/archive.json]>`
-
-### Tags [responses/tags/response.md]
-
-- `tags/list.js <json[params/tags/list.json]>`
-
-### Surveys [responses/surveys/response.md]
-
-- `surveys/get.js <json[params/surveys/get.json]>`
-
-### Metafields [responses/metafields/response.md]
-
-- `metafields/list.js <json[params/metafields/list.json]>`
-- `metafields/create.js <json[params/metafields/create.json]>`
-- `metafields/update.js <json[params/metafields/update.json]>`
+|root: /project/workspace/skills/manage-store/references
+|scripts/{products,variants,plans,bundles,tags,surveys,metafields}.md
 
 ## Custom Scripts
 
