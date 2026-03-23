@@ -97,11 +97,11 @@ importers:
         specifier: ^0.6.21
         version: 0.6.21
       '@subbly/kit':
-        specifier: ^0.0.24
-        version: 0.0.24
+        specifier: ^0.0.25
+        version: 0.0.25
       '@subbly/react':
-        specifier: ^0.0.24
-        version: 0.0.24
+        specifier: ^0.0.25
+        version: 0.0.25
       '@subbly/sdk':
         specifier: ^0.6.21
         version: 0.6.21
@@ -362,8 +362,8 @@ packages:
     resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/types@7.28.5':
-    resolution: {integrity: sha512-qQ5m48eI/MFLQ5PxQj4PFaprjyCTLI37ElWMmNs0K8Lk3dVeOdNpB3ks8jc7yM5CDmVC73eMVk/trk3fgmrUpA==}
+  '@babel/types@7.29.0':
+    resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
   '@bundled-es-modules/cookie@2.0.1':
@@ -1413,11 +1413,11 @@ packages:
     resolution: {integrity: sha512-L8ofLDXYBk+eJw3jfVluGDJpW4rSv7+5jBDebgqFI2EOgznE1x6I0F9nWaGR1tv2dRB8S3/xDdfI2frNKm1YqQ==}
     engines: {node: '>=16'}
 
-  '@subbly/kit@0.0.24':
-    resolution: {integrity: sha512-d8ztBJYoFuYtbmgGUZB4Xo0VWib0jBMgLUuA8B0v8UhBK1QSTrQqUlspFXJooi4enqDiF2kg0t9ZBktvuUOscw==}
+  '@subbly/kit@0.0.25':
+    resolution: {integrity: sha512-qACC/bh6Ai6ml+W8SZuXFll1D0iZiIHOqPe5ECkUAW744KZJ33T9/i5rwVvhm4X+/b26xhoY3nZi0jdMT5iSjQ==}
 
-  '@subbly/react@0.0.24':
-    resolution: {integrity: sha512-B6vtckSAy3UEIWT4Iec5D9EWuYdXoZydjU184q091QKDYNCpMxkJKz5/7tGxaeyg8hWvbSprYQ9PB98QMIa6Vw==}
+  '@subbly/react@0.0.25':
+    resolution: {integrity: sha512-kGL5tartno0XhCFYF1C8eER7xmYGq5dX4/RnZV7I51EnYmLBcjd2qnXmEZ5RqlQjBNuWQe0HHAbVM1v9dK9bZQ==}
 
   '@subbly/sdk@0.6.21':
     resolution: {integrity: sha512-QGZDpN93YRHqKhlVE482loobP3TxXb41a5fv5/HSW0sE6v6FXDj7jIavCqN8ghS0PrveBHqcobgn2lTw55Io9Q==}
@@ -2997,6 +2997,9 @@ packages:
   lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
 
+  lodash-es@4.17.23:
+    resolution: {integrity: sha512-kVI48u3PZr38HdYz98UmfPnXl2DXrpdctLrFLCd3kOx1xUkOmpFPx7gCWWM5MPkL/fD8zb+Ph0QzjGFs4+hHWg==}
+
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
 
@@ -4208,7 +4211,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@babel/types@7.28.5':
+  '@babel/types@7.29.0':
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
@@ -5274,18 +5277,18 @@ snapshots:
       qs: 6.14.0
       snakecase-keys: 6.0.0
 
-  '@subbly/kit@0.0.24':
+  '@subbly/kit@0.0.25':
     dependencies:
       '@subbly/api-client': 0.6.21
       '@subbly/sdk': 0.6.21
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
       tiny-typed-emitter: 2.1.0
 
-  '@subbly/react@0.0.24':
+  '@subbly/react@0.0.25':
     dependencies:
       '@subbly/api-client': 0.6.21
-      '@subbly/kit': 0.0.24
-      lodash-es: 4.17.21
+      '@subbly/kit': 0.0.25
+      lodash-es: 4.17.23
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
@@ -5746,7 +5749,7 @@ snapshots:
 
   babel-plugin-react-compiler@1.0.0:
     dependencies:
-      '@babel/types': 7.28.5
+      '@babel/types': 7.29.0
     optional: true
 
   balanced-match@1.0.2: {}
@@ -6957,6 +6960,8 @@ snapshots:
       p-locate: 5.0.0
 
   lodash-es@4.17.21: {}
+
+  lodash-es@4.17.23: {}
 
   lodash.merge@4.6.2: {}
 
