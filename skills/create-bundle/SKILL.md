@@ -163,14 +163,11 @@ Each item accepts `quantity`, `extraPrice`, `settings`, and `position`. See item
 
 ### Item Constraints
 
-Bundle items must be valid one-time variants:
-- not archived
-- not a gift card
-- not duplicated inside the same bundle
-
-Other constraints:
-- batch item create max is 200 items
-- deleting items is blocked when bundle would drop below minimum required count
+- Bundle items must be valid one-time variants: not archived, not a gift card, not duplicated inside the same bundle
+- `settings` (per-tier max-quantity) requires configurable bundle with `variant` or `product` selection type
+- `settings` is prohibited for fixed bundles and `single_product`
+- Batch item create max is 200 items
+- Deleting items is blocked when bundle would drop below minimum required count
 
 ## Manage Bundle Tiers
 
