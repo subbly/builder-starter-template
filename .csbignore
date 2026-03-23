@@ -3,3 +3,8 @@
 .claude
 builds
 store-actions/node_modules
+/build.dev.ts
+/build.prod.ts
+/package-lock.json
+/package.json
+/template.ts

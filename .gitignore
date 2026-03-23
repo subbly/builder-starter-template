@@ -1,5 +1,6 @@
 .idea
 .subbly
+node_modules
 
 # misc
 .DS_Store

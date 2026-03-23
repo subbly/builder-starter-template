@@ -21,11 +21,6 @@
     "install": {
       "name": "Install Dependencies",
       "command": "cd main && pnpm install --dangerously-allow-all-builds"
-    },
-    "watch": {
-      "name": "Watch Dependencies",
-      "command": "cd main && export SHELL=/bin/bash; chokidar 'package.json' 'pnpm-lock.yaml' -d 2000 -c 'pnpm install --dangerously-allow-all-builds && (pm2 restart subbly-dev -s || true)'",
-      "runAtStart": true
     }
   }
 }
