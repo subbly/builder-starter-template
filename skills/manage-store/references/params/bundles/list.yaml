@@ -1,0 +1,58 @@
+# Bundles List
+
+page:
+  type: integer
+  min: 0
+
+perPage:
+  type: integer
+  min: 1
+  max: 100
+
+ids:
+  type: array
+  items:
+    type: integer
+    min: 1
+
+slugs:
+  type: array
+  items:
+    type: string
+    maxLength: 80
+
+tags:
+  type: array
+  items:
+    type: string
+    maxLength: 255
+
+published:
+  type: integer
+  enum: [0, 1]
+
+configurable:
+  type: integer
+  enum: [0, 1]
+
+digital:
+  type: integer
+  enum: [0, 1]
+
+expand:
+  type: array
+  items:
+    type: string
+
+sort:
+  type: object
+  properties:
+    field:
+      type: string
+      enum: [id, name]
+      required: true
+      description: "id = creation order, name = alphabetical"
+    direction:
+      type: string
+      enum: [asc, desc]
+      required: true

@@ -1,0 +1,45 @@
+# Bundle Item Create
+
+bundleId:
+  type: integer
+  min: 1
+  required: true
+
+variantId:
+  type: integer
+  min: 1
+  required: true
+
+quantity:
+  type: integer
+  nullable: true
+  min: 1
+  description: Prohibited when bundle is configurable. For non-configurable bundles: fixed count of this variant included in the bundle
+
+position:
+  type: integer
+  nullable: true
+  min: 1
+
+extraPrice:
+  type: integer
+  nullable: true
+  min: 0
+  description: Prohibited when bundle is not configurable. Additional surcharge in cents added on top of the plan price when a customer selects this item
+
+settings:
+  type: object
+  nullable: true
+  description: Prohibited when bundle is not configurable or is single_product
+  properties:
+    create:
+      type: array
+      items:
+        bundleRulesetId:
+          type: integer
+          min: 1
+          required: true
+        maxQuantity:
+          type: integer
+          min: 1
+          required: true

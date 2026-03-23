@@ -1,0 +1,20 @@
+# Bundle Groups List
+
+page:
+  type: integer
+  min: 0
+
+perPage:
+  type: integer
+  min: 1
+  max: 100
+
+bundleId:
+  type: integer
+  min: 1
+  required: true
+
+expand:
+  type: array
+  items:
+    type: string

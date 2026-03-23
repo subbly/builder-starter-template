@@ -1,0 +1,11 @@
+# Bundle Plan Archive
+
+bundleId:
+  type: integer
+  min: 1
+  required: true
+
+planId:
+  type: integer
+  min: 1
+  required: true

@@ -1,0 +1,17 @@
+# Bundle Item Get
+
+bundleId:
+  type: integer
+  min: 1
+  required: true
+
+itemId:
+  type: integer
+  min: 1
+  required: true
+
+expand:
+  type: array
+  items:
+    type: string
+  description: "Relations to expand: variant, product"

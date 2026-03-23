@@ -1,0 +1,195 @@
+# Bundle Create
+
+configurable:
+  type: integer
+  enum: [0, 1]
+  required: true
+
+selectionType:
+  type: string
+  nullable: true
+  enum: [variant, product, single_product]
+  description: Required when configurable is 1
+
+digital:
+  type: integer
+  enum: [0, 1]
+
+slug:
+  type: string
+  maxLength: 70
+  pattern: ^[a-zA-Z0-9_-]+$
+  required: true
+
+name:
+  type: string
+  nullable: true
+  maxLength: 255
+
+hiddenItems:
+  type: integer
+  enum: [0, 1]
+
+searchable:
+  type: integer
+  enum: [0, 1]
+
+showRulesetName:
+  type: integer
+  enum: [0, 1]
+  description: Prohibited when configurable is 0
+
+description:
+  type: string
+  nullable: true
+
+deliveryInfo:
+  type: string
+  nullable: true
+  maxLength: 500
+
+setupFee:
+  type: integer
+  nullable: true
+  min: 0
+
+preOrderEndAt:
+  type: string
+  format: date
+  nullable: true
+  description: Pre-order end date (YYYY-MM-DD). Must be a date after today
+
+giftingEnabled:
+  type: integer
+  enum: [0, 1]
+  description: Prohibited when digital is 1
+
+pauseEnabled:
+  type: integer
+  enum: [0, 1]
+
+priceType:
+  type: string
+  nullable: true
+  enum: [per_item, total]
+  description: Prohibited when not configurable or rulesetType is total. Mutually exclusive with discountType
+
+discountType:
+  type: string
+  nullable: true
+  enum: [per_item, total, percentage]
+  description: Prohibited when not configurable. Mutually exclusive with priceType
+
+rulesetType:
+  type: string
+  enum: [total, quantity]
+  description: Prohibited when not configurable or single_product
+
+appearanceType:
+  type: string
+  enum: [one_step, two_step, without_ruleset]
+  description: Prohibited when not configurable or single_product
+
+quantitySelectors:
+  type: array
+  nullable: true
+  description: Prohibited when not configurable or single_product
+  items:
+    type: integer
+    min: 1
+
+collectShippingAddress:
+  type: integer
+  enum: [0, 1]
+  description: 1 = collect shipping address at checkout. Only for digital products. Defaults to 1 for physical products
+
+funnelId:
+  type: integer
+  nullable: true
+  min: 1
+
+tags:
+  type: object
+  nullable: true
+  properties:
+    create:
+      type: array
+      items:
+        value:
+          type: string
+          maxLength: 255
+          required: true
+
+filters:
+  type: object
+  nullable: true
+  description: Prohibited when not configurable or single_product
+  properties:
+    create:
+      type: array
+      maxItems: 1
+      items:
+        metadataId:
+          type: integer
+          min: 1
+          required: true
+
+preferences:
+  type: object
+  nullable: true
+  description: Prohibited when not configurable or single_product
+  properties:
+    create:
+      type: array
+      items:
+        attributeId:
+          type: integer
+          min: 1
+          required: true
+        title:
+          type: string
+          maxLength: 255
+          required: true
+
+rulesets:
+  type: object
+  nullable: true
+  description: Prohibited when not configurable or single_product
+  properties:
+    create:
+      type: array
+      minItems: 1
+      items:
+        min:
+          type: integer
+          min: 0
+          required: true
+        max:
+          type: integer
+          nullable: true
+          min: 1
+        name:
+          type: string
+          nullable: true
+          maxLength: 255
+        ctaText:
+          type: string
+          nullable: true
+          maxLength: 255
+
+images:
+  type: object
+  nullable: true
+  properties:
+    create:
+      type: array
+      maxItems: 5
+      items:
+        url:
+          type: string
+          format: uri
+          maxLength: 500
+          required: true
+        order:
+          type: integer
+          nullable: true

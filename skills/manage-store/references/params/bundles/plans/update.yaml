@@ -1,0 +1,139 @@
+# Bundle Plan Update
+
+bundleId:
+  type: integer
+  min: 1
+  required: true
+
+planId:
+  type: integer
+  min: 1
+  required: true
+
+name:
+  type: string
+  maxLength: 255
+
+prices:
+  type: array
+  description: Prohibited when bundle is configurable without priceType. If sent, must be non-empty and include exactly one entry per active bundle ruleset. Quantity breakpoints must match across rulesets, start at 1, and be unique within each ruleset. May be rejected while plan has active subscribers
+  items:
+    rulesetId:
+      type: integer
+      min: 1
+      required: true
+      description: Must reference an active ruleset from the same bundle
+    ranges:
+      type: array
+      required: true
+      description: Required and non-empty. Quantity values must be unique within the ruleset; first quantity should start at 1. Quantity breakpoints should match across all ruleset entries in the same payload
+      items:
+        quantity:
+          type: integer
+          min: 1
+          required: true
+        amount:
+          type: integer
+          min: 0
+          required: true
+
+discounts:
+  type: array
+  description: Allowed only when bundle is configurable, has discountType, and has no priceType. If sent, must be non-empty and include exactly one entry per active bundle ruleset. May be rejected while plan has active subscribers
+  items:
+    rulesetId:
+      type: integer
+      min: 1
+      required: true
+      description: Must reference an active ruleset from the same bundle
+    ranges:
+      type: array
+      required: true
+      description: Required and non-empty. Each range should provide amountOff or percentOff (depending on bundle discountType)
+      items:
+        quantity:
+          type: integer
+          min: 1
+          required: true
+        amountOff:
+          type: integer
+          nullable: true
+          min: 0
+        percentOff:
+          type: number
+          nullable: true
+          min: 0
+          max: 100
+
+shippings:
+  type: array
+  items:
+    addUnit:
+      type: string
+      nullable: true
+      enum: [day, week, month]
+      description: Buffered format: time unit to offset shipment from billing start. Mutually exclusive with unitDay/unitOffset. Only available for adhoc billing
+    addCount:
+      type: integer
+      nullable: true
+      description: Buffered format: number of addUnit intervals to offset from billing start. Use -1 to ship the day before the next billing cycle. Mutually exclusive with unitDay/unitOffset
+    unitDay:
+      type: integer
+      nullable: true
+      description: Anchored format: day within the frequency unit to ship on (1-31 for monthly, 1-7 ISO for weekly). Mutually exclusive with addUnit/addCount. Required for anchored billing or adhoc with anchored shipping
+    unitOffset:
+      type: integer
+      nullable: true
+      description: Anchored format: which iteration within the billing period this shipment belongs to (0 to frequencyCount-1). Mutually exclusive with addUnit/addCount
+
+cutOffDays:
+  type: integer
+  nullable: true
+  min: 0
+
+cutOffTime:
+  type: string
+  nullable: true
+  pattern: ^(?:[01]\d|2[0-3]):[0-5]\d$
+
+chargeImmediately:
+  type: integer
+  enum: [0, 1]
+
+shipImmediately:
+  type: integer
+  enum: [0, 1]
+
+bufferDays:
+  type: integer
+  nullable: true
+  min: 0
+
+trialPrice:
+  type: integer
+  nullable: true
+  min: 0
+
+trialLengthDays:
+  type: integer
+  nullable: true
+  min: 0
+
+trialSingleOrder:
+  type: integer
+  enum: [0, 1]
+
+commitmentBillingCount:
+  type: integer
+  nullable: true
+  min: 1
+
+chargesLimit:
+  type: integer
+  nullable: true
+  min: 1
+
+surveyId:
+  type: integer
+  nullable: true
+  min: 1

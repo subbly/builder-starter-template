@@ -1,0 +1,44 @@
+# Variant Create
+
+productId:
+  type: integer
+  min: 1
+  required: true
+
+name:
+  type: string
+  nullable: true
+  maxLength: 255
+  description: Required when product is a gift card or no options provided. Auto-generated from option values (joined with " / ") when omitted
+
+description:
+  type: string
+  nullable: true
+
+price:
+  type: integer
+  min: 0
+  required: true
+
+inventoryItemId:
+  type: integer
+  nullable: true
+  min: 1
+  description: Prohibited for gift card products
+
+options:
+  type: object
+  nullable: true
+  description: Prohibited for gift card products. Max 3 option types per product. Must match existing option names if the product already has variants with options
+  properties:
+    create:
+      type: array
+      maxItems: 3
+      items:
+        name:
+          type: string
+          maxLength: 255
+          required: true
+        value:
+          type: string
+          required: true

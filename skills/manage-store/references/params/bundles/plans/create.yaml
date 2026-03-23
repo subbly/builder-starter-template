@@ -1,0 +1,189 @@
+# Bundle Plan Create
+
+bundleId:
+  type: integer
+  min: 1
+  required: true
+
+type:
+  type: string
+  enum: [subscription, one_time]
+  required: true
+
+name:
+  type: string
+  maxLength: 255
+  required: true
+
+prices:
+  type: array
+  description: Required when non-configurable or has priceType. Prohibited when configurable without priceType. If sent, must be non-empty and include exactly one entry per active bundle ruleset. Quantity breakpoints must match across rulesets, start at 1, and be unique within each ruleset. May be rejected while plan has active subscribers
+  items:
+    rulesetId:
+      type: integer
+      min: 1
+      required: true
+      description: Must reference an active ruleset from the same bundle
+    ranges:
+      type: array
+      required: true
+      description: Required and non-empty. Quantity values must be unique within the ruleset; first quantity should start at 1
+      items:
+        quantity:
+          type: integer
+          min: 1
+          required: true
+        amount:
+          type: integer
+          min: 0
+          required: true
+
+discounts:
+  type: array
+  description: Allowed only when bundle is configurable, has discountType, and has no priceType. One entry per active ruleset. May be rejected while plan has active subscribers
+  items:
+    rulesetId:
+      type: integer
+      min: 1
+      required: true
+      description: Must reference an active ruleset from the same bundle
+    ranges:
+      type: array
+      required: true
+      description: Required and non-empty. Each range should provide amountOff or percentOff (depending on bundle discountType)
+      items:
+        quantity:
+          type: integer
+          min: 1
+          required: true
+        amountOff:
+          type: integer
+          nullable: true
+          min: 0
+        percentOff:
+          type: number
+          nullable: true
+          min: 0
+          max: 100
+
+frequencyUnit:
+  type: string
+  enum: [day, week, month]
+  description: Required when type is subscription
+
+frequencyCount:
+  type: integer
+  min: 1
+  max: 365
+  description: Required when type is subscription
+
+shippings:
+  type: array
+  description: Required for physical subscription. Prohibited for digital
+  items:
+    addUnit:
+      type: string
+      nullable: true
+      enum: [day, week, month]
+      description: Buffered format: time unit to offset shipment from billing start. Mutually exclusive with unitDay/unitOffset. Only available for adhoc billing
+    addCount:
+      type: integer
+      nullable: true
+      description: Buffered format: number of addUnit intervals to offset from billing start. Use -1 to ship the day before the next billing cycle. Mutually exclusive with unitDay/unitOffset
+    unitDay:
+      type: integer
+      nullable: true
+      description: Anchored format: day within the frequency unit to ship on (1-31 for monthly, 1-7 ISO for weekly). Mutually exclusive with addUnit/addCount. Required for anchored billing or adhoc with anchored shipping
+    unitOffset:
+      type: integer
+      nullable: true
+      description: Anchored format: which iteration within the billing period this shipment belongs to (0 to frequencyCount-1). Mutually exclusive with addUnit/addCount
+
+anchorDate:
+  type: string
+  format: date
+  nullable: true
+  description: Pins all subscribers to the same billing period boundaries. Required for anchored billing with daily frequency. Pass "today" to use the current date. Prohibited for digital and adhoc without anchored shipping
+
+rebillingDay:
+  type: integer
+  nullable: true
+  min: 1
+  max: 1
+  description: For daily frequency. Mutually exclusive with rebillingDayOfMonth/rebillingDayOfWeek. Prohibited for digital
+
+rebillingDayOfMonth:
+  type: integer
+  nullable: true
+  min: 1
+  max: 31
+  description: For monthly frequency. Mutually exclusive with rebillingDay/rebillingDayOfWeek. Prohibited for digital
+
+rebillingDayOfWeek:
+  type: integer
+  nullable: true
+  min: 1
+  max: 7
+  description: ISO day (1=Mon, 7=Sun) for weekly frequency. Mutually exclusive with rebillingDay/rebillingDayOfMonth. Prohibited for digital
+
+cutOffDays:
+  type: integer
+  nullable: true
+  min: 0
+  description: Number of days before the first shipment date that acts as a preparation deadline. Required for anchored billing plans
+
+cutOffTime:
+  type: string
+  nullable: true
+  pattern: ^(?:[01]\d|2[0-3]):[0-5]\d$
+  description: Time-of-day deadline for the cutoff (HH:MM format). Defaults to 23:59 on the server if cutOffDays is set but cutOffTime is omitted
+
+chargeImmediately:
+  type: integer
+  enum: [0, 1]
+  description: Whether to charge the subscriber on signup (1) or defer to the next billing date (0). Forced to 1 for adhoc plans. Prohibited for digital
+
+shipImmediately:
+  type: integer
+  enum: [0, 1]
+  description: Whether to ship immediately on signup (1) or wait for the next scheduled shipment (0). Cannot be 1 when chargeImmediately is 0
+
+bufferDays:
+  type: integer
+  nullable: true
+  min: 0
+  description: Number of days after signup before the first shipment is dispatched. Only allowed when shipImmediately is true. Prohibited for digital
+
+trialPrice:
+  type: integer
+  nullable: true
+  min: 0
+  description: Price for the trial period. Prohibited for anchored billing plans
+
+trialLengthDays:
+  type: integer
+  nullable: true
+  min: 0
+  description: Duration of the trial period in days. Prohibited for anchored billing plans
+
+trialSingleOrder:
+  type: integer
+  enum: [0, 1]
+  description: Whether the trial is a single order (1) or recurring (0). Only available for adhoc physical plans
+
+commitmentBillingCount:
+  type: integer
+  nullable: true
+  min: 1
+  description: Minimum number of billing cycles before cancellation is allowed
+
+chargesLimit:
+  type: integer
+  nullable: true
+  min: 1
+  description: Maximum number of successful charges before the subscription is automatically expired
+
+surveyId:
+  type: integer
+  nullable: true
+  min: 1

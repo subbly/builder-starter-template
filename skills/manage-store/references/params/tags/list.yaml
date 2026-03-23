@@ -1,0 +1,23 @@
+# Tags List
+
+page:
+  type: integer
+  min: 0
+
+perPage:
+  type: integer
+  min: 1
+  max: 100
+
+sort:
+  type: object
+  properties:
+    field:
+      type: string
+      enum: [id, name]
+      required: true
+      description: "id = creation order, name = alphabetical"
+    direction:
+      type: string
+      enum: [asc, desc]
+      required: true

@@ -1,0 +1,11 @@
+# Bundle Item Delete
+
+bundleId:
+  type: integer
+  min: 1
+  required: true
+
+itemId:
+  type: integer
+  min: 1
+  required: true

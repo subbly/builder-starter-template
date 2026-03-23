@@ -1,0 +1,74 @@
+# Metafield Update
+
+slug:
+  type: string
+  required: true
+  description: Unique slug of the metafield to update
+
+name:
+  type: string
+
+description:
+  type: string
+
+accessLevel:
+  type: string
+  enum: [storefront, private]
+  description: storefront = visible on site/checkout, private = API/admin only
+
+dataType:
+  type: string
+  required: true
+  description: Must match the existing metafield dataType. See constraint table below
+
+unit:
+  type: string
+  description: Unit label (e.g. "kg", "liters"). Required for volume/weight, prohibited for other types
+
+values:
+  type: object
+  description: Manage predefined options. Only for preset metafields
+  properties:
+    create:
+      type: array
+      items:
+        value:
+          type: varies per dataType
+          required: true
+    update:
+      type: array
+      items:
+        value:
+          type: varies per dataType
+          required: true
+        id:
+          type: integer
+          min: 1
+          required: true
+    delete:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+
+# Constraints per dataType:
+# dataType            | unit     | values type
+# --------------------|----------|---------------------------
+# single_line_string  | NO       | [{value: string}]
+# color               | NO       | [{value: string}]
+# time                | NO       | [{value: string}]
+# integer             | NO       | [{value: integer}]
+# rating              | NO       | [{value: integer}]
+# decimal             | NO       | [{value: number}]
+# money               | NO       | [{value: number}]
+# volume              | REQUIRED | [{value: number}]
+# weight              | REQUIRED | [{value: number}]
+# date                | NO       | [{value: "YYYY-MM-DD"}]
+# datetime            | NO       | [{value: "YYYY-MM-DD HH:MM:SS"}]
+# multi_line_text     | NO       | NO (values prohibited)
+# rich_text           | NO       | NO (values prohibited)
+# boolean             | NO       | NO (values prohibited)
+# url                 | NO       | NO (values prohibited)
+# json                | NO       | NO (values prohibited)

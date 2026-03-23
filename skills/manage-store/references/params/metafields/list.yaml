@@ -1,0 +1,41 @@
+# Metafields List
+
+page:
+  type: integer
+  min: 0
+
+perPage:
+  type: integer
+  min: 1
+  max: 100
+
+ids:
+  type: array
+  items:
+    type: integer
+    min: 1
+  description: Filter by specific metafield IDs
+
+slugs:
+  type: array
+  items:
+    type: string
+  description: Filter by specific metafield slugs
+
+preset:
+  type: integer
+  enum: [0, 1]
+  description: "1 = only preset metafields, 0 = only free-form"
+
+sort:
+  type: object
+  properties:
+    field:
+      type: string
+      enum: [id, name]
+      required: true
+      description: "id = creation order, name = alphabetical"
+    direction:
+      type: string
+      enum: [asc, desc]
+      required: true

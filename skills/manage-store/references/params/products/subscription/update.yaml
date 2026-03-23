@@ -1,0 +1,119 @@
+# Subscription Product Update
+
+id:
+  type: integer
+  min: 1
+  required: true
+
+name:
+  type: string
+  maxLength: 255
+
+slug:
+  type: string
+  maxLength: 80
+  pattern: ^[a-zA-Z0-9_-]+$
+
+description:
+  type: string
+  nullable: true
+
+deliveryInfo:
+  type: string
+  nullable: true
+  maxLength: 500
+
+giftingEnabled:
+  type: integer
+  enum: [0, 1]
+  description: Prohibited for digital products
+
+preOrderEndAt:
+  type: string
+  format: date
+  nullable: true
+  description: Prohibited for digital products and products with trial plans
+
+setupFee:
+  type: integer
+  nullable: true
+  min: 0
+  description: One-time fee charged on first order
+
+pauseEnabled:
+  type: integer
+  enum: [0, 1]
+  description: 1 = subscribers can pause their subscription
+
+collectShippingAddress:
+  type: integer
+  enum: [0, 1]
+  description: 1 = collect shipping address at checkout. Only for digital products. Defaults to 1 for physical products
+
+taxProductCode:
+  type: string
+  nullable: true
+  maxLength: 30
+  description: Only available for US-based shops
+
+inventoryItemId:
+  type: integer
+  nullable: true
+  min: 1
+
+funnelId:
+  type: integer
+  nullable: true
+  min: 1
+
+tags:
+  type: object
+  properties:
+    create:
+      type: array
+      items:
+        value:
+          type: string
+          maxLength: 255
+          required: true
+    delete:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+
+images:
+  type: object
+  properties:
+    create:
+      type: array
+      maxItems: 5
+      items:
+        url:
+          type: string
+          format: uri
+          maxLength: 500
+          required: true
+        order:
+          type: integer
+          nullable: true
+    delete:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+    update:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+        order:
+          type: integer
+          min: 0
+          required: true

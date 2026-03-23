@@ -1,0 +1,6 @@
+# One-Time Product Archive
+
+id:
+  type: integer
+  min: 1
+  required: true

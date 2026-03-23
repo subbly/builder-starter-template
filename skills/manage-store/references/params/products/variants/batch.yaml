@@ -1,0 +1,122 @@
+# Variants Batch
+
+productId:
+  type: integer
+  min: 1
+  required: true
+
+inventory:
+  type: object
+  properties:
+    generate:
+      type: integer
+      enum: [0, 1]
+      required: true
+      description: 1 = automatically create inventory items for new variants
+    groupId:
+      type: integer
+      nullable: true
+      min: 1
+      description: Inventory group to assign new inventory items to
+    stockCount:
+      type: integer
+      min: 0
+      description: Initial stock count for generated inventory items
+
+create:
+  type: array
+  maxItems: 100
+  items:
+    name:
+      type: string
+      nullable: true
+      maxLength: 255
+      description: Auto-generated from option values (joined with " / ") when omitted
+    description:
+      type: string
+      nullable: true
+    price:
+      type: integer
+      min: 0
+      required: true
+    inventoryItemId:
+      type: integer
+      nullable: true
+      min: 1
+      description: Prohibited for gift card products
+    options:
+      type: object
+      required: true
+      description: Max 3 option types per product. Must match existing option names
+      properties:
+        create:
+          type: array
+          maxItems: 3
+          items:
+            name:
+              type: string
+              maxLength: 255
+              required: true
+            value:
+              type: string
+              required: true
+
+update:
+  type: array
+  maxItems: 100
+  items:
+    id:
+      type: integer
+      min: 1
+      required: true
+    name:
+      type: string
+      nullable: true
+      maxLength: 255
+    description:
+      type: string
+      nullable: true
+    price:
+      type: integer
+      nullable: true
+      min: 0
+    inventoryItemId:
+      type: integer
+      nullable: true
+      min: 1
+      description: Prohibited for gift card products
+    options:
+      type: object
+      nullable: true
+      description: Prohibited for gift card products. Create only existing option type names allowed. Update option IDs must belong to this variant
+      properties:
+        create:
+          type: array
+          maxItems: 3
+          items:
+            name:
+              type: string
+              maxLength: 255
+              required: true
+            value:
+              type: string
+              required: true
+        update:
+          type: array
+          items:
+            id:
+              type: integer
+              min: 1
+              required: true
+            value:
+              type: string
+              required: true
+
+archive:
+  type: array
+  maxItems: 100
+  items:
+    id:
+      type: integer
+      min: 1
+      required: true

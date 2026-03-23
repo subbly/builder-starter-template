@@ -1,0 +1,57 @@
+# Metafield Create
+
+name:
+  type: string
+  required: true
+
+description:
+  type: string
+
+accessLevel:
+  type: string
+  enum: [storefront, private]
+  required: true
+  description: storefront = visible on site/checkout, private = API/admin only
+
+dataType:
+  type: string
+  required: true
+  description: Determines which fields are allowed. See constraint table below
+
+multiple:
+  type: integer
+  description: Allow multiple values per entity
+
+preset:
+  type: integer
+  description: Restrict to predefined values (requires values array)
+
+unit:
+  type: string
+  description: Measurement label (e.g. "kg", "liters")
+
+values:
+  type: array
+  items:
+    value:
+      type: varies per dataType
+
+# Constraints per dataType:
+# dataType            | multiple | preset | unit     | values type
+# --------------------|----------|--------|----------|---------------------------
+# single_line_string  | 0|1      | 0|1    | NO       | [{value: string}]
+# multi_line_text     | 0        | 0      | NO       | NO
+# rich_text           | 0        | 0      | NO       | NO
+# integer             | 0|1      | 0|1    | NO       | [{value: integer}]
+# decimal             | 0|1      | 0|1    | NO       | [{value: number}]
+# datetime            | 0|1      | 0|1    | NO       | [{value: "YYYY-MM-DD HH:MM:SS"}]
+# date                | 0|1      | 0|1    | NO       | [{value: "YYYY-MM-DD"}]
+# time                | 0|1      | 0|1    | NO       | [{value: string}]
+# volume              | 0|1      | 0|1    | REQUIRED | [{value: number}]
+# weight              | 0|1      | 0|1    | REQUIRED | [{value: number}]
+# boolean             | 0        | 0      | NO       | NO
+# color               | 0|1      | 0|1    | NO       | [{value: string}]
+# rating              | 0        | 0|1    | NO       | [{value: integer}]
+# url                 | 0|1      | 0      | NO       | NO
+# money               | 0        | 0|1    | NO       | [{value: number}]
+# json                | 0        | 0      | NO       | NO

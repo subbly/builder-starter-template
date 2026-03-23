@@ -1,0 +1,11 @@
+# Bundle Get
+
+id:
+  type: integer
+  min: 1
+  required: true
+
+expand:
+  type: array
+  items:
+    type: string

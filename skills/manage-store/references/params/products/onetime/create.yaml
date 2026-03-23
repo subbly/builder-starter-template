@@ -1,0 +1,87 @@
+# One-Time Product Create
+
+name:
+  type: string
+  maxLength: 255
+  required: true
+
+slug:
+  type: string
+  maxLength: 80
+  pattern: ^[a-zA-Z0-9_-]+$
+  required: true
+
+description:
+  type: string
+  nullable: true
+
+digital:
+  type: integer
+  enum: [0, 1]
+  description: Prohibited when giftCard is set. Gift cards are implicitly digital
+
+deliveryInfo:
+  type: string
+  nullable: true
+  maxLength: 500
+  description: Shipping or delivery instructions shown to customers. Prohibited for digital and gift card products
+
+giftingEnabled:
+  type: integer
+  enum: [0, 1]
+  description: Prohibited for digital and gift card products
+
+collectShippingAddress:
+  type: integer
+  enum: [0, 1]
+  description: 1 = collect shipping address at checkout. Only for digital products. Defaults to 1 for physical products
+
+funnelId:
+  type: integer
+  nullable: true
+  min: 1
+
+taxProductCode:
+  type: string
+  nullable: true
+  maxLength: 30
+  description: Only available for US-based shops
+
+giftCard:
+  type: object
+  description: Gift card configuration. Prohibited when digital is set
+  properties:
+    expiration:
+      type: integer
+      nullable: true
+      min: 1
+      max: 36
+      description: Expiration in months
+
+tags:
+  type: object
+  properties:
+    create:
+      type: array
+      items:
+        value:
+          type: string
+          maxLength: 255
+          required: true
+
+images:
+  type: object
+  nullable: true
+  properties:
+    create:
+      type: array
+      maxItems: 5
+      items:
+        url:
+          type: string
+          format: uri
+          maxLength: 500
+          required: true
+        order:
+          type: integer
+          nullable: true

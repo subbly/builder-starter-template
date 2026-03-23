@@ -1,0 +1,109 @@
+# One-Time Product Update
+
+id:
+  type: integer
+  min: 1
+  required: true
+
+name:
+  type: string
+  maxLength: 255
+
+slug:
+  type: string
+  maxLength: 80
+  pattern: ^[a-zA-Z0-9_-]+$
+
+description:
+  type: string
+  nullable: true
+
+deliveryInfo:
+  type: string
+  nullable: true
+  maxLength: 500
+  description: Shipping or delivery instructions. Only for non-digital products
+
+giftingEnabled:
+  type: integer
+  enum: [0, 1]
+  description: Only for non-digital products
+
+giftCard:
+  type: object
+  description: Update gift card settings. Only for existing gift card products
+  properties:
+    expiration:
+      type: integer
+      nullable: true
+      min: 1
+      max: 36
+      description: Expiration in months
+
+collectShippingAddress:
+  type: integer
+  enum: [0, 1]
+  description: 1 = collect shipping address at checkout. Only for digital products. Defaults to 1 for physical products
+
+funnelId:
+  type: integer
+  nullable: true
+  min: 1
+
+taxProductCode:
+  type: string
+  nullable: true
+  maxLength: 30
+  description: Only available for US-based shops
+
+tags:
+  type: object
+  properties:
+    create:
+      type: array
+      items:
+        value:
+          type: string
+          maxLength: 255
+          required: true
+    delete:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+
+images:
+  type: object
+  properties:
+    create:
+      type: array
+      maxItems: 5
+      items:
+        url:
+          type: string
+          format: uri
+          maxLength: 500
+          required: true
+        order:
+          type: integer
+          nullable: true
+    delete:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+    update:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+        order:
+          type: integer
+          min: 0
+          required: true

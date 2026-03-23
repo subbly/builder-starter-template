@@ -1,0 +1,255 @@
+# Bundle Update
+
+id:
+  type: integer
+  min: 1
+  required: true
+
+slug:
+  type: string
+  maxLength: 70
+  pattern: ^[a-zA-Z0-9_-]+$
+
+name:
+  type: string
+  nullable: true
+  maxLength: 255
+
+hiddenItems:
+  type: integer
+  enum: [0, 1]
+
+searchable:
+  type: integer
+  enum: [0, 1]
+
+showRulesetName:
+  type: integer
+  enum: [0, 1]
+
+description:
+  type: string
+  nullable: true
+
+deliveryInfo:
+  type: string
+  nullable: true
+  maxLength: 500
+
+setupFee:
+  type: integer
+  nullable: true
+  min: 0
+
+preOrderEndAt:
+  type: string
+  format: date
+  nullable: true
+  description: Must be a future date
+
+giftingEnabled:
+  type: integer
+  enum: [0, 1]
+
+pauseEnabled:
+  type: integer
+  enum: [0, 1]
+
+priceType:
+  type: string
+  nullable: true
+  enum: [per_item, total]
+  description: Required when updating discountType or rulesetType. Prohibited when not configurable or rulesetType is total. Mutually exclusive with discountType
+
+discountType:
+  type: string
+  nullable: true
+  enum: [per_item, total, percentage]
+  description: Requires priceType in payload. Prohibited when not configurable. Mutually exclusive with priceType
+
+rulesetType:
+  type: string
+  enum: [total, quantity]
+  description: Prohibited when not configurable or single_product. Requires priceType in payload
+
+appearanceType:
+  type: string
+  enum: [one_step, two_step, without_ruleset]
+
+quantitySelectors:
+  type: array
+  nullable: true
+  items:
+    type: integer
+    min: 1
+
+collectShippingAddress:
+  type: integer
+  enum: [0, 1]
+  description: Only for digital products. Defaults to 1 for physical products
+
+funnelId:
+  type: integer
+  nullable: true
+  min: 1
+
+tags:
+  type: object
+  properties:
+    create:
+      type: array
+      items:
+        value:
+          type: string
+          maxLength: 255
+          required: true
+    delete:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+
+filters:
+  type: object
+  nullable: true
+  properties:
+    create:
+      type: array
+      maxItems: 1
+      items:
+        metadataId:
+          type: integer
+          min: 1
+          required: true
+    delete:
+      type: array
+      items:
+        metadataId:
+          type: integer
+          min: 1
+          required: true
+
+preferences:
+  type: object
+  nullable: true
+  properties:
+    create:
+      type: array
+      items:
+        attributeId:
+          type: integer
+          min: 1
+          required: true
+        title:
+          type: string
+          maxLength: 255
+          required: true
+    update:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+        title:
+          type: string
+          maxLength: 255
+          required: true
+    delete:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+
+rulesets:
+  type: object
+  nullable: true
+  properties:
+    create:
+      type: array
+      minItems: 1
+      items:
+        min:
+          type: integer
+          min: 0
+          required: true
+        max:
+          type: integer
+          nullable: true
+          min: 1
+        name:
+          type: string
+          nullable: true
+          maxLength: 255
+        ctaText:
+          type: string
+          nullable: true
+          maxLength: 255
+    update:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+        min:
+          type: integer
+          min: 0
+          required: true
+        max:
+          type: integer
+          nullable: true
+          min: 1
+        name:
+          type: string
+          nullable: true
+          maxLength: 255
+        ctaText:
+          type: string
+          nullable: true
+          maxLength: 255
+    delete:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+
+images:
+  type: object
+  properties:
+    create:
+      type: array
+      maxItems: 5
+      items:
+        url:
+          type: string
+          format: uri
+          maxLength: 500
+          required: true
+        order:
+          type: integer
+          nullable: true
+    delete:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+    update:
+      type: array
+      items:
+        id:
+          type: integer
+          min: 1
+          required: true
+        order:
+          type: integer
+          min: 0
+          required: true

@@ -1,0 +1,50 @@
+# Bundle Items List
+
+page:
+  type: integer
+  min: 0
+
+perPage:
+  type: integer
+  min: 1
+  max: 500
+
+bundleId:
+  type: integer
+  min: 1
+  required: true
+
+filters:
+  type: array
+  items:
+    type: object
+    properties:
+      attributeId:
+        type: integer
+        min: 1
+        description: Deprecated. Use metafieldId instead
+      metafieldId:
+        type: integer
+        min: 1
+      values:
+        type: array
+        required: true
+        items:
+          type: integer
+          min: 1
+
+variantIds:
+  type: array
+  items:
+    type: integer
+    min: 1
+
+query:
+  type: string
+  maxLength: 50
+
+expand:
+  type: array
+  items:
+    type: string
+  description: "Relations to expand: variant, product"
