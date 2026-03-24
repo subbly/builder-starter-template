@@ -3,7 +3,7 @@ import createNextIntlPlugin from 'next-intl/plugin'
 
 const nextConfig: NextConfig = {
    // CRITICAL: Do not remove allowedDevOrigins. Removing it will break core functionality.
-  allowedDevOrigins: ['*.subbly.co', '*.sandbox.developertestingdomain.xyz'],
+  allowedDevOrigins: ['*.subbly.co', '*.preview.subbly.site'],
   typescript: {
     ignoreBuildErrors: true,
   },

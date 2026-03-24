@@ -6,7 +6,7 @@ export const template = Template()
   .runCmd(
     'apt-get update && apt-get install -y git curl lsof ripgrep jq && rm -rf /var/lib/apt/lists/*'
   )
-  .runCmd('npm install -g netlify-cli pnpm chokidar-cli pm2')
+  .runCmd('npm install -g netlify-cli pnpm chokidar-cli pm2 shadcn')
   .copy('main', '/project/workspace/main')
   .copy('store-actions/lib', '/project/workspace/store-actions/lib')
   .copy('store-actions/scripts', '/project/workspace/store-actions/scripts')
