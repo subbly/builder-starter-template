@@ -12,11 +12,10 @@ Sync workflow to copy updated files from the `/var/www/subbly-private-api-client
 | Source (subbly-private-api-client)  | Destination (this project) |
 |-------------------------------------|----------------------------|
 | `skills/manage-store/`              | `skills/manage-store/`     |
-| `skills/create-bundle/`             | `skills/create-bundle/`    |
-| `skills/create-product/`            | `skills/create-product/`   |
+| `skills/manage-product/`            | `skills/manage-product/`   |
 | `packages/store-actions/`           | `store-actions/`           |
 
-**Only the three skills above are synced.** Other skills in `skills/` (e.g. localization, cms-integration, frontend-design, troubleshooting) are local-only and must not be touched during sync.
+**Only the two skills above are synced.** Other skills in `skills/` (e.g. localization, cms-integration, frontend-design, troubleshooting) are local-only and must not be touched during sync.
 
 ## Sync Procedure
 
@@ -26,7 +25,7 @@ Before copying, compare both trees to find files that exist locally but were rem
 
 ```bash
 # Check for stale skills files (only synced skills)
-for skill in manage-store create-bundle create-product; do
+for skill in manage-store manage-product; do
   diff <(cd /var/www/subbly-private-api-client/skills/$skill && find . -type f | sort) \
        <(cd /var/www/subbly-builder-default/skills/$skill && find . -type f | sort)
 done
@@ -41,7 +40,7 @@ Lines prefixed with `>` are files that exist locally but not upstream — delete
 ### 2. Sync skills
 
 ```bash
-for skill in manage-store create-bundle create-product; do
+for skill in manage-store manage-product; do
   cp -r /var/www/subbly-private-api-client/skills/$skill/* /var/www/subbly-builder-default/skills/$skill/
 done
 ```

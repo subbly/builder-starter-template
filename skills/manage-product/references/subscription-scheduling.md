@@ -1,6 +1,6 @@
 # Subscription Plan Scheduling
 
-Technical detail for physical subscription plan scheduling via `products/plans/create.js`.
+Technical detail for physical subscription plan scheduling via `products/plans/create.js` and `bundles/plans/create.js`.
 
 ## Billing Types
 
@@ -25,7 +25,7 @@ Buffered shipping offsets shipment dates from the billing start:
 Adhoc, buffered shipping, coherent. Monthly coffee subscription, ships 5 days after billing.
 frequencyUnit: "month", frequencyCount: 1
 shipmentSchedule: [{ addUnit: "day", addCount: 5 }]
-Subscriber signs up Jan 10 → billed Jan 10, ships Jan 15. Next bill Feb 10, ships Feb 15.
+Subscriber signs up Jan 10 -> billed Jan 10, ships Jan 15. Next bill Feb 10, ships Feb 15.
 </example>
 
 Anchored shipping pins shipments to fixed days within the billing period:
@@ -42,7 +42,7 @@ Adhoc, anchored shipping, coherent. Monthly box, always ships on the 15th.
 frequencyUnit: "month", frequencyCount: 1
 shipmentSchedule: [{ unitDay: 15, unitOffset: 0 }]
 cutOffDays: 5
-Subscriber signs up Jan 8 → ships Jan 15 (signed up before cutoff of Jan 10). Subscriber signs up Jan 12 → misses Jan 15 cutoff, ships Feb 15 instead.
+Subscriber signs up Jan 8 -> ships Jan 15 (signed up before cutoff of Jan 10). Subscriber signs up Jan 12 -> misses Jan 15 cutoff, ships Feb 15 instead.
 </example>
 
 `anchorDate` (set to `"today"`) pins all subscribers to the same shipping period boundaries regardless of signup date. Requires `frequencyCount` > 1. Without it, shipping dates are relative to each subscriber's billing date. When a subscriber signs up after a shipment's cutoff has passed within the current period, that shipment is deferred to the next eligible anchored shipment slot in the following shipping period.
@@ -70,8 +70,8 @@ shipmentSchedule: [
 ]
 cutOffDays: 14
 Shipment dates: Mar 15, Jun 15, Sep 15, Dec 15. Cutoffs: Mar 1, Jun 1, Sep 1, Dec 1.
-Subscriber signs up Jan 1 → before all cutoffs, receives all 4 shipments: Mar 15, Jun 15, Sep 15, Dec 15.
-Subscriber signs up Jun 5 → after Mar 1 and Jun 1 cutoffs. Mar 15 and Jun 15 shipments deferred individually to next period (Mar 15 and Jun 15 next year). Receives Sep 15 and Dec 15 this period.
+Subscriber signs up Jan 1 -> before all cutoffs, receives all 4 shipments: Mar 15, Jun 15, Sep 15, Dec 15.
+Subscriber signs up Jun 5 -> after Mar 1 and Jun 1 cutoffs. Mar 15 and Jun 15 shipments deferred individually to next period (Mar 15 and Jun 15 next year). Receives Sep 15 and Dec 15 this period.
 </example>
 
 ### Synchronized Cycles (Anchored Billing)
@@ -94,9 +94,9 @@ frequencyUnit: "month", frequencyCount: 1
 rebillingDayOfMonth: 1
 shipmentSchedule: [{ unitDay: 5, unitOffset: 0 }]
 cutOffDays: 3
-Subscriber signs up Dec 28 → before cutoff (Jan 1 minus 3 days = Dec 29). Billed Jan 1, ships Jan 5.
-Subscriber signs up Dec 30 → after cutoff. Entire cycle defers to Feb 1.
-Subscriber signs up Jan 2 → after billing date (1st) but before cutoff (Jan 5 minus 3 = Jan 2). Forces charge immediately, ships Jan 5.
+Subscriber signs up Dec 28 -> before cutoff (Jan 1 minus 3 days = Dec 29). Billed Jan 1, ships Jan 5.
+Subscriber signs up Dec 30 -> after cutoff. Entire cycle defers to Feb 1.
+Subscriber signs up Jan 2 -> after billing date (1st) but before cutoff (Jan 5 minus 3 = Jan 2). Forces charge immediately, ships Jan 5.
 </example>
 
 #### Beginning of a New Cycle (Hard Anchored)
@@ -109,7 +109,7 @@ frequencyUnit: "month", frequencyCount: 2, anchorDate: "2025-01-01"
 rebillingDayOfMonth: 1
 shipmentSchedule: [{ unitDay: 10, unitOffset: 0 }]
 cutOffDays: 5
-All subscribers share the same cycle: Jan 1 to Mar 1. Subscriber signs up Jan 15 → after billing date but before cutoff (Feb 10 minus 5 = Feb 5), forces charge immediately, ships Feb 10. Subscriber signs up Feb 8 → after cutoff, entire cycle defers to Mar 1.
+All subscribers share the same cycle: Jan 1 to Mar 1. Subscriber signs up Jan 15 -> after billing date but before cutoff (Feb 10 minus 5 = Feb 5), forces charge immediately, ships Feb 10. Subscriber signs up Feb 8 -> after cutoff, entire cycle defers to Mar 1.
 </example>
 
 <example>
@@ -123,8 +123,8 @@ shipmentSchedule: [
 ]
 cutOffDays: 5
 Cycle: Jan 1 to Apr 1. Cutoff: Dec 27 (Jan 1 minus 5 days).
-Subscriber signs up Dec 20 → before cutoff. Billed Jan 1, ships Jan 10, Feb 10, Mar 10.
-Subscriber signs up Dec 29 → after cutoff. Entire cycle defers to Apr 1. Billed Apr 1, ships Apr 10, May 10, Jun 10. All 3 shipments move together, not individually like in adhoc.
+Subscriber signs up Dec 20 -> before cutoff. Billed Jan 1, ships Jan 10, Feb 10, Mar 10.
+Subscriber signs up Dec 29 -> after cutoff. Entire cycle defers to Apr 1. Billed Apr 1, ships Apr 10, May 10, Jun 10. All 3 shipments move together, not individually like in adhoc.
 </example>
 
 Trials are not available with anchored billing.
@@ -168,4 +168,3 @@ Mutually exclusive. Use one based on the `frequencyUnit`:
 - `rebillingDay`: for daily frequency (must be 1)
 - `rebillingDayOfMonth`: for monthly frequency (1 to 31, must match `anchorDate` day if set)
 - `rebillingDayOfWeek`: for weekly frequency (1 to 7 ISO, must match `anchorDate` weekday if set)
-
