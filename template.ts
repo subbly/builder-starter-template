@@ -15,10 +15,10 @@ export const template = Template()
   .copy('.subbly', '/project/workspace/.subbly')
   .copy('skills', '/project/workspace/skills')
   .copy('ecosystem.config.js', '/project/workspace/ecosystem.config.js')
-  .runCmd('cd /project/workspace/main && pnpm install --dangerously-allow-all-builds')
-  .runCmd('cd /project/workspace/store-actions && pnpm install --dangerously-allow-all-builds')
   .runCmd('chown -R user:user /project/workspace')
   .setUser('user')
+  .runCmd('cd /project/workspace/main && pnpm install --dangerously-allow-all-builds')
+  .runCmd('cd /project/workspace/store-actions && pnpm install --dangerously-allow-all-builds')
   .runCmd(
     'pm2 install pm2-logrotate && ' +
     'pm2 set pm2-logrotate:max_size 5M && ' +
@@ -28,4 +28,4 @@ export const template = Template()
     'pm2 kill'
   )
   .setWorkdir('/project/workspace/main')
-  .setStartCmd('pm2 start /project/workspace/ecosystem.config.js --no-daemon', waitForPort(3000))
+  .setStartCmd('pm2 start /project/workspace/ecosystem.config.js --attach -s', waitForPort(3000))
