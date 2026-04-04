@@ -6,7 +6,7 @@ module.exports = {
       args: '-c "rm -rf .next && pnpm run dev"',
       cwd: '/project/workspace/main',
       interpreter: 'none',
-      autorestart: false,
+      autorestart: true,
       exp_backoff_restart_delay: 1000,
       log_file: '/project/workspace/.subbly/logs/output.log',
       merge_logs: true,
@@ -26,6 +26,7 @@ module.exports = {
       interpreter: 'none',
       log_file: '/project/workspace/.subbly/logs/css-watcher.log',
       merge_logs: true,
+      log_date_format: 'YYYY-MM-DDTHH:mm:ss.SSS',
       env: {
         SHELL: '/bin/bash',
       },
@@ -39,6 +40,7 @@ module.exports = {
       interpreter: 'none',
       log_file: '/project/workspace/.subbly/logs/deps-watcher.log',
       merge_logs: true,
+      log_date_format: 'YYYY-MM-DDTHH:mm:ss.SSS',
       env: {
         CI: 'true',
         SHELL: '/bin/bash',
