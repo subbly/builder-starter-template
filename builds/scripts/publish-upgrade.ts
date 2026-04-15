@@ -49,15 +49,7 @@ function buildArchive(version: string): string {
 
   const excludes = ['store-actions/node_modules']
 
-  const includes = [
-    'skills/',
-    'store-actions/',
-    '.codesandbox/tasks.json',
-    '.devcontainer/Dockerfile',
-    'ecosystem.config.js',
-    '.gitignore',
-    '.csbignore',
-  ]
+  const includes = ['skills/', 'store-actions/', 'ecosystem.config.js']
 
   const excludeArgs = excludes.map((path) => `--exclude=${path}`).join(' ')
   const tarCommand = `tar -czf ${outputPath} ${excludeArgs} ${includes.join(' ')}`
