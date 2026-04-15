@@ -47,9 +47,11 @@ function buildArchive(version: string): string {
 
   console.log(`Building migration archive v${version}...`)
 
+  const excludes = ['store-actions/node_modules']
+
   const includes = [
     'skills/',
-    'store-actions/ --exclude=store-actions/node_modules',
+    'store-actions/',
     '.codesandbox/tasks.json',
     '.devcontainer/Dockerfile',
     'ecosystem.config.js',
@@ -57,7 +59,8 @@ function buildArchive(version: string): string {
     '.csbignore',
   ]
 
-  const tarCommand = `tar -czf ${outputPath} ${includes.join(' ')}`
+  const excludeArgs = excludes.map((path) => `--exclude=${path}`).join(' ')
+  const tarCommand = `tar -czf ${outputPath} ${excludeArgs} ${includes.join(' ')}`
 
   execSync(tarCommand, { cwd: WORKSPACE_ROOT, stdio: 'inherit' })
 
