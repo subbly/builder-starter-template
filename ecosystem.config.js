@@ -23,6 +23,7 @@ module.exports = {
       args: '"src/**/*.css" "src/**/*.scss" --ignore "**/node_modules/**" --ignore "**/.next/**" --ignore "**/.git/**" --ignore "**/.subbly/**" --debounce 1000 -c "rm -rf .next && pm2 restart subbly-dev"',
       cwd: '/project/workspace/main',
       autorestart: true,
+      max_memory_restart: '200M',
       interpreter: 'none',
       log_file: '/project/workspace/.subbly/logs/css-watcher.log',
       merge_logs: true,
