@@ -1,6 +1,6 @@
 'use client'
 
-import { useBundleForm, useBundleReceipt, useBundleValidation, useBundleProductGroupedItemsForm } from '@subbly/react'
+import { useBundleForm, useBundleReceipt, useBundleValidation, useBundleProductGroupedItemsForm, type BundleForm } from '@subbly/react'
 import type { Bundle } from '@subbly/react'
 import { QuantitySelectBlock } from './quantity-select-block'
 import { SizeSelectBlock } from './size-select-block'
@@ -20,6 +20,7 @@ import { FixedLayout } from './layouts/fixed-layout'
 import { SingleProductLayout } from './layouts/single-product-layout'
 import type { BundleLayoutProps } from './layouts/layout-props'
 import { Button } from '@/components/ui/button'
+import { useEffect } from 'react'
 
 type BundleMode = 'fixed' | 'single-product' | 'multi-product'
 
@@ -102,13 +103,22 @@ function SingleProductBundleMode({ bundle }: { bundle: Bundle }) {
     planOptions,
     planPriceCalculatorMap,
     itemsPrice,
+    selectedRuleset,
+    hasGroupOutOfStock,
     addToCart,
   } = useBundleForm({
     bundle
   })
 
+  const { validation } = useBundleValidation({
+    bundle,
+    form,
+    ruleset: selectedRuleset,
+  })
+
   const {
     getSelectedItemForProduct,
+    selectExplicitItems,
     selectItem,
   } = useBundleProductGroupedItemsForm({
     bundle,
@@ -117,7 +127,15 @@ function SingleProductBundleMode({ bundle }: { bundle: Bundle }) {
     allowMultipleItemsInGroup: false
   })
 
-  const showGroupProduct = groups.length > 1
+  useEffect(() => {
+    if (groups.length > 0) {
+      selectExplicitItems(groups)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [groups])
+
+  const showGroupProduct = groups.length > 1 || groups[0]?.items?.length === 1
+  const submitDisabled = !!validation || hasGroupOutOfStock
 
   const planSelectBlock = planOptions.length > 0 ? (
     <div className="bg-background p-4 rounded-xl">
@@ -132,7 +150,11 @@ function SingleProductBundleMode({ bundle }: { bundle: Bundle }) {
   ) : null
 
   const confirmBlock = (
-    <Button className="h-10 w-full" onClick={() => addToCart()}>
+    <Button
+      className="h-10 w-full"
+      disabled={submitDisabled}
+      onClick={() => addToCart()}
+    >
       <span className="capitalize">Add to cart</span>
     </Button>
   )
@@ -191,7 +213,7 @@ function MultiProductBundleMode(props: CustomizeBundleProps) {
     payload: {
       productId: form.productId,
       quantity: form.quantity,
-      items: form.items.map((item) => ({
+      items: (form as BundleForm).items.map((item) => ({
         productId: item.item.productId,
         quantity: item.quantity
       })),
