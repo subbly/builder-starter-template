@@ -32,7 +32,7 @@ export const ProductForm = (props: ProductGroupFormProps) => {
     variants
   })
 
-  const { productForm, plans, selectedProduct, priceFrom, setProductForm, selectProduct, addToCart } = useProductForm({
+  const { productForm, plans, selectedProduct, priceFrom, outOfStock, setProductForm, selectProduct, addToCart } = useProductForm({
     product
   })
 
@@ -56,7 +56,7 @@ export const ProductForm = (props: ProductGroupFormProps) => {
 
   return (
     <div className="grid grid-cols-1 gap-6 md:gap-6">
-      {product.type === 'one_time' && !selectedProduct ? (
+      {product.type === 'one_time' && !selectedProduct && priceFrom ? (
         <div>From {formatAmount(priceFrom)}</div>
       ) : product.type === 'one_time' && selectedProduct ? (
         <div>{formatAmount(selectedProduct.price * productForm.quantity)}</div>
@@ -81,7 +81,7 @@ export const ProductForm = (props: ProductGroupFormProps) => {
         </>
       )}
 
-      {product.type === 'one_time' && (
+      {product.type === 'one_time' && !outOfStock && (
         <div className="flex items-center space-x-2">
           <div className="flex-shrink-0 text-sm font-medium">Quantity:</div>
           <QuantitySelector
@@ -96,8 +96,12 @@ export const ProductForm = (props: ProductGroupFormProps) => {
         </div>
       )}
 
-      <Button className="h-10 w-full" onClick={() => onAddToCart()}>
-        <span className="capitalize">Add to cart</span>
+      <Button
+        className="h-10 w-full"
+        disabled={outOfStock}
+        onClick={() => onAddToCart()}
+      >
+        <span className="capitalize">{outOfStock ? 'Out of stock' : 'Add to cart'}</span>
       </Button>
     </div>
   )
