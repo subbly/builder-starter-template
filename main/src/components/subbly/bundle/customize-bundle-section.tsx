@@ -131,7 +131,7 @@ function SingleProductBundleMode({ bundle }: { bundle: Bundle }) {
     if (groups.length > 0) {
       selectExplicitItems(groups)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [groups])
 
   const showGroupProduct = groups.length > 1 || groups[0]?.items?.length === 1
