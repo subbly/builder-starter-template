@@ -1,12 +1,12 @@
 import { Template, waitForPort } from 'e2b'
 
-export const template = Template()
+export const createTemplate = ({ dev }: { dev: boolean }) => Template()
   .fromImage('node:22-slim')
   .setUser('root')
   .runCmd(
     'apt-get update && apt-get install -y git curl lsof ripgrep jq && rm -rf /var/lib/apt/lists/*'
   )
-  .runCmd('npm install -g netlify-cli pnpm chokidar-cli pm2 shadcn')
+  .runCmd(`npm install -g ${getGlobalPackages(dev).join(' ')}`)
   .copy('main', '/project/workspace/main')
   .copy('store-actions/lib', '/project/workspace/store-actions/lib')
   .copy('store-actions/scripts', '/project/workspace/store-actions/scripts')
@@ -29,3 +29,13 @@ export const template = Template()
   )
   .setWorkdir('/project/workspace/main')
   .setStartCmd('pm2 start /project/workspace/ecosystem.config.js --attach -s', waitForPort(3000))
+
+const getGlobalPackages = (dev: boolean) => {
+  const base = ['netlify-cli', 'pnpm', 'chokidar-cli', 'pm2', 'shadcn']
+
+  if (!dev) {
+    return base
+  }
+
+  return [...base, '@typescript/native-preview']
+}

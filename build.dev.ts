@@ -1,8 +1,8 @@
 import { Template, defaultBuildLogger } from 'e2b'
-import { template } from './template'
+import { createTemplate } from './template'
 
 async function main() {
-  await Template.build(template, 'subbly-workspace-dev', {
+  await Template.build(createTemplate({ dev: true }), 'subbly-workspace-dev', {
     cpuCount: 4,
     memoryMB: 6144,
     onBuildLogs: defaultBuildLogger(),
