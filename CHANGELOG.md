@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.6
+
+### Patch Changes
+
+- Remove llms.md
+
 ## 0.0.5
 
 ### Patch Changes
