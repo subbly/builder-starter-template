@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.5
+
+### Patch Changes
+
+- Replace eslint with oxlint with custom rules.
+
 ## 0.0.4
 
 ### Patch Changes

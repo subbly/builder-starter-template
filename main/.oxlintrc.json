@@ -20,7 +20,16 @@
     "typescript/no-require-imports": "error",
     "typescript/no-unnecessary-type-constraint": "error",
     "typescript/no-unsafe-function-type": "error",
-    "eslint/no-array-constructor": "error"
+    "eslint/no-array-constructor": "error",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/anchor-has-content": "off",
+    "jsx-a11y/no-redundant-roles": "off",
+    "jsx-a11y/prefer-tag-over-role": "off",
+    "jsx-a11y/html-has-lang": "off",
+    "jsx-a11y/lang": "off",
+    "eslint/no-useless-rename": "off",
+    "eslint/no-extra-boolean-cast": "off"
   },
   "ignorePatterns": [
     ".next/**",
