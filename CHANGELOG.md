@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.4
+
+### Patch Changes
+
+- Add noUncheckedSideEffectImports=false for tsconfig.json. Note: prepare for tsgo.
+
 ## 0.0.3
 
 ### Patch Changes

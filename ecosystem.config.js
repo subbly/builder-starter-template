@@ -20,9 +20,10 @@ module.exports = {
     {
       name: 'css-watcher',
       script: 'chokidar',
-      args: '"**/*.css" "**/*.scss" --ignore node_modules --ignore .next -c "rm -rf .next && pm2 restart subbly-dev"',
+      args: '"src/**/*.css" "src/**/*.scss" --ignore "**/node_modules/**" --ignore "**/.next/**" --ignore "**/.git/**" --ignore "**/.subbly/**" --debounce 1000 -c "rm -rf .next && pm2 restart subbly-dev"',
       cwd: '/project/workspace/main',
       autorestart: true,
+      max_memory_restart: '200M',
       interpreter: 'none',
       log_file: '/project/workspace/.subbly/logs/css-watcher.log',
       merge_logs: true,
@@ -34,7 +35,7 @@ module.exports = {
     {
       name: 'deps-watcher',
       script: 'chokidar',
-      args: '"pnpm-lock.yaml" "package.json" -c "pnpm install --dangerously-allow-all-builds && pm2 restart subbly-dev"',
+      args: '"pnpm-lock.yaml" "package.json" --polling --poll-interval 500 --debounce 1000 -c "pnpm install --dangerously-allow-all-builds && pm2 restart subbly-dev"',
       cwd: '/project/workspace/main',
       autorestart: true,
       interpreter: 'none',
