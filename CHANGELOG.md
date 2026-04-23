@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.7
+
+### Patch Changes
+
+- Bump @subbly/kit@0.0.30, @subbly/react@0.0.30
+
 ## 0.0.6
 
 ### Patch Changes
