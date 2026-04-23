@@ -1,11 +1,15 @@
 {
+  "version": "0.0.3",
   "name": "subbly-builder-default",
   "private": true,
   "scripts": {
     "e2b:build:dev": "npx tsx build.dev.ts",
-    "e2b:build:prod": "npx tsx build.prod.ts"
+    "e2b:build:prod": "npx tsx build.prod.ts",
+    "changelog": "pnpm changeset",
+    "release": "pnpm changeset version"
   },
   "dependencies": {
+    "@changesets/cli": "^2.31.0",
     "e2b": "^2.19.0"
   },
   "packageManager": "pnpm@10.20.0"

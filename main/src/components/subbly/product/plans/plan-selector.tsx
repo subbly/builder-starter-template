@@ -26,7 +26,12 @@ export const PlanSelector = (props: PlanSelectorProps) => {
               selected={props.value === option.id}
               description={
                 option.description ? (
-                  <div className="px-3 pb-3 text-sm text-gray-600">{option.description}</div>
+                  <div
+                    className="px-3 pb-3 text-sm text-gray-600"
+                    dangerouslySetInnerHTML={{
+                      __html: option.description
+                    }}
+                  />
                 ) : undefined
               }
               onSelect={() => {
