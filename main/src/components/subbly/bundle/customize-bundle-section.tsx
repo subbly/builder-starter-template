@@ -63,7 +63,7 @@ function FixedBundleMode({ bundle }: { bundle: Bundle }) {
   })
 
   const planSelectBlock = planOptions.length > 0 ? (
-    <div className="bg-background rounded-xl">
+    <div>
       <PlanSelector
         subtotal={0}
         options={planOptions}
@@ -137,7 +137,7 @@ function SingleProductBundleMode({ bundle }: { bundle: Bundle }) {
   const submitDisabled = !!validation || hasGroupOutOfStock
 
   const planSelectBlock = planOptions.length > 0 ? (
-    <div className="bg-background rounded-xl">
+    <div>
       <PlanSelector
         subtotal={itemsPrice}
         options={planOptions}
