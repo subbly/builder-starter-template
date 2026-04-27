@@ -2,6 +2,7 @@ import type { BundleRuleset } from '@subbly/react'
 import { useCallback } from 'react'
 import { useFormatAmount } from '@/hooks/use-format-amount'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 type BundleSizeOptionProps = {
   ruleset: BundleRuleset
@@ -61,7 +62,11 @@ export const SizeOptionCard = (props: BundleSizeOptionProps) => {
   return (
     <Button
       aria-pressed={props.selected}
-      variant={props.selected ? 'default' : 'outline'}
+      variant="outline"
+      className={cn(
+        props.selected &&
+          'bg-primary text-primary-foreground border-primary hover:bg-primary/90 hover:text-primary-foreground'
+      )}
       onClick={() => props.onSelect()}
     >
       {title}

@@ -63,7 +63,7 @@ function FixedBundleMode({ bundle }: { bundle: Bundle }) {
   })
 
   const planSelectBlock = planOptions.length > 0 ? (
-    <div className="bg-background p-4 rounded-xl">
+    <div className="bg-background rounded-xl">
       <PlanSelector
         subtotal={0}
         options={planOptions}
@@ -81,12 +81,11 @@ function FixedBundleMode({ bundle }: { bundle: Bundle }) {
   )
 
   return (
-    <div className="container mx-auto">
-      <FixedLayout
-        planSelectBlock={planSelectBlock}
-        confirmBlock={confirmBlock}
-      />
-    </div>
+    <FixedLayout
+      bundle={bundle}
+      planSelectBlock={planSelectBlock}
+      confirmBlock={confirmBlock}
+    />
   )
 }
 
@@ -138,7 +137,7 @@ function SingleProductBundleMode({ bundle }: { bundle: Bundle }) {
   const submitDisabled = !!validation || hasGroupOutOfStock
 
   const planSelectBlock = planOptions.length > 0 ? (
-    <div className="bg-background p-4 rounded-xl">
+    <div className="bg-background rounded-xl">
       <PlanSelector
         subtotal={itemsPrice}
         options={planOptions}
@@ -160,20 +159,18 @@ function SingleProductBundleMode({ bundle }: { bundle: Bundle }) {
   )
 
   return (
-    <div className="container mx-auto">
-      <SingleProductLayout
-        groups={groups}
-        showGroupProduct={showGroupProduct}
-        getSelectedItem={(groupId) => {
-          const group = groups.find(g => g.id === groupId)
-          if (!group) return null
-          return getSelectedItemForProduct(group.productId)
-        }}
-        selectItem={(item) => selectItem(item.item)}
-        planSelectBlock={planSelectBlock}
-        confirmBlock={confirmBlock}
-      />
-    </div>
+    <SingleProductLayout
+      groups={groups}
+      showGroupProduct={showGroupProduct}
+      getSelectedItem={(groupId) => {
+        const group = groups.find(g => g.id === groupId)
+        if (!group) return null
+        return getSelectedItemForProduct(group.productId)
+      }}
+      selectItem={(item) => selectItem(item.item)}
+      planSelectBlock={planSelectBlock}
+      confirmBlock={confirmBlock}
+    />
   )
 }
 
@@ -365,18 +362,14 @@ function MultiProductBundleMode(props: CustomizeBundleProps) {
     confirmBlock
   }
 
-  return (
-    <div className="container mx-auto">
-      {appearanceType.two_step || appearanceType.after_checkout ? (
-        <TwoStepLayout
-          {...sharedLayoutProps}
-          skipItems={appearanceType.after_checkout}
-        />
-      ) : (
-        <OneStepLayout
-          {...sharedLayoutProps}
-        />
-      )}
-    </div>
+  return appearanceType.two_step || appearanceType.after_checkout ? (
+    <TwoStepLayout
+      {...sharedLayoutProps}
+      skipItems={appearanceType.after_checkout}
+    />
+  ) : (
+    <OneStepLayout
+      {...sharedLayoutProps}
+    />
   )
 }

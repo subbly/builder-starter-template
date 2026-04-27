@@ -32,9 +32,9 @@ export const SelectionProgress = (props: SelectionProgressProps) => {
 
   return (
     <div className="mt-4">
-      <div className="relative mb-2 h-2 w-full bg-gray-200 rounded-xl overflow-hidden">
+      <div className="relative mb-2 h-2 w-full bg-muted rounded-xl overflow-hidden">
         <div
-          className="absolute left-0 top-0 h-2 bg-black rounded-xl transition-all"
+          className="absolute left-0 top-0 h-2 bg-primary rounded-xl transition-all"
           style={{
             width: trackWidth
           }}

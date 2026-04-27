@@ -27,7 +27,7 @@ export const PlanSelector = (props: PlanSelectorProps) => {
               description={
                 option.description ? (
                   <div
-                    className="px-3 pb-3 text-sm text-gray-600"
+                    className="px-3 pb-3 text-sm text-muted-foreground"
                     dangerouslySetInnerHTML={{
                       __html: option.description
                     }}

@@ -1,5 +1,6 @@
 import type { BundleItemsParamFilter, BundleFilter, AttributeValue } from '@subbly/react'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 type FilterAttributesFieldProps = {
   filter: BundleFilter
@@ -32,7 +33,11 @@ export const FilterAttributesField = (props: FilterAttributesFieldProps) => {
           <Button
             key={attributeValue.id}
             aria-pressed={isValueSelected(attributeValue.id)}
-            variant={isValueSelected(attributeValue.id) ? 'default' : 'outline'}
+            variant="outline"
+            className={cn(
+              isValueSelected(attributeValue.id) &&
+                'bg-primary text-primary-foreground border-primary hover:bg-primary/90 hover:text-primary-foreground'
+            )}
             onClick={() => selectValue(attributeValue.id)}
           >
             {attributeValue.value}

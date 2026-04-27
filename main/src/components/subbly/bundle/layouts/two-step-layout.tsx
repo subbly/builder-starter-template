@@ -14,7 +14,7 @@ export const TwoStepLayout = (props: TwoStepLayoutProps) => {
   return (
     <div>
       {!itemStepActive ? (
-        <div className="max-w-[1024px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_328px] items-start lg:gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_328px] items-start lg:gap-10">
           <div className="grid grid-cols-1 gap-3">
             {props.quantitySelectBlock}
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 import { Minus, Plus } from 'lucide-react'
 
 export interface QuantitySelectorProps {
@@ -43,33 +43,49 @@ export const QuantitySelector = ({
     }
   }
 
+  const decreaseDisabled = value <= min
+  const increaseDisabled = maxDisabled || (max !== undefined && value >= max)
+
   return (
-    <div className={`flex items-center ${className || ''}`}>
+    <div
+      className={cn(
+        'inline-flex items-center rounded-md border border-input bg-background shadow-xs transition-[color,box-shadow] has-[input:focus-visible]:border-ring has-[input:focus-visible]:ring-ring/50 has-[input:focus-visible]:ring-[3px]',
+        className
+      )}
+    >
       <Button
-        variant="outline"
-        size="icon"
-        className="h-8 w-8 rounded-r-none"
+        type="button"
+        variant="ghost"
+        size="icon-sm"
+        className="rounded-r-none rounded-l-md text-muted-foreground hover:text-foreground disabled:opacity-40"
         onClick={handleDecrease}
-        disabled={value <= min}
+        disabled={decreaseDisabled}
+        aria-label="Decrease quantity"
       >
-        <Minus className="h-4 w-4" />
+        <Minus className="size-4" />
       </Button>
-      <Input
+
+      <input
         type="number"
+        inputMode="numeric"
         min={min}
         max={max}
         value={value}
         onChange={handleChange}
-        className="h-8 w-16 rounded-none text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        aria-label="Quantity"
+        className="h-8 w-10 border-0 bg-transparent text-center text-sm font-medium tabular-nums outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
       />
+
       <Button
-        variant="outline"
-        size="icon"
-        className="h-8 w-8 rounded-l-none"
+        type="button"
+        variant="ghost"
+        size="icon-sm"
+        className="rounded-l-none rounded-r-md text-muted-foreground hover:text-foreground disabled:opacity-40"
         onClick={handleIncrease}
-        disabled={maxDisabled || (max !== undefined && value >= max)}
+        disabled={increaseDisabled}
+        aria-label="Increase quantity"
       >
-        <Plus className="h-4 w-4" />
+        <Plus className="size-4" />
       </Button>
     </div>
   )

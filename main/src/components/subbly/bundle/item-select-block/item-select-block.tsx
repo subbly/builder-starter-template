@@ -72,7 +72,7 @@ export const ItemSelectBlock = (props: ItemSelectBlockProps) => {
               key="items-loading"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="min-h-[120px] flex items-center justify-center"
+              className="grid grid-cols-1 gap-2"
             >
               <LoadingProgress />
             </motion.div>
@@ -81,9 +81,14 @@ export const ItemSelectBlock = (props: ItemSelectBlockProps) => {
               key="items-empty"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="min-h-[120px] flex items-center justify-center"
+              className="grid grid-cols-1 gap-2 relative"
             >
-              No matching products
+              <div className="invisible" aria-hidden="true">
+                <LoadingProgress />
+              </div>
+              <div className="absolute inset-x-0 top-0 flex justify-center">
+                No matching products
+              </div>
             </motion.div>
           ) : (
             <motion.div

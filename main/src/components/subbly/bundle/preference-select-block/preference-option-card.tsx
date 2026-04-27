@@ -1,5 +1,6 @@
 import type { BundlePreference, BundlePayloadPreference, AttributeValue } from '@subbly/react'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 type BundlePreferenceOptionProps = {
   option: BundlePreference
@@ -30,7 +31,11 @@ export const PreferenceOptionCard = (props: BundlePreferenceOptionProps) => {
           <Button
             key={attrValue.id}
             aria-pressed={isValueSelected(attrValue)}
-            variant={isValueSelected(attrValue) ? 'default' : 'outline'}
+            variant="outline"
+            className={cn(
+              isValueSelected(attrValue) &&
+                'bg-primary text-primary-foreground border-primary hover:bg-primary/90 hover:text-primary-foreground'
+            )}
             onClick={() => selectValue(attrValue)}
           >
             {attrValue.value}

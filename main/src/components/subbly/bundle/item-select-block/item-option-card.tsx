@@ -38,8 +38,8 @@ export const ItemOptionCard = (props: ItemOptionCardProps) => {
 
   return (
     <div className={cn(
-      'border border-gray-200 rounded-xl grid grid-cols-1 gap-3 p-4 transition-colors',
-      props.selected && 'border-gray-900'
+      'border rounded-xl grid grid-cols-1 gap-3 p-4 transition-colors',
+      props.selected && 'border-primary'
     )}>
       {firstImage && (
         <div className="w-full h-full">

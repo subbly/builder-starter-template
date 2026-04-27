@@ -30,7 +30,11 @@ export const QuantitySelectBlock = (props: BundleQuantitySelectProps) => {
           <Button
             key={option}
             aria-pressed={isOptionSelected(option)}
-            variant={isOptionSelected(option) ? 'default' : 'outline'}
+            variant="outline"
+            className={cn(
+              isOptionSelected(option) &&
+                'bg-primary text-primary-foreground border-primary hover:bg-primary/90 hover:text-primary-foreground'
+            )}
             onClick={() => props.onSelect(option)}
           >
             {option}

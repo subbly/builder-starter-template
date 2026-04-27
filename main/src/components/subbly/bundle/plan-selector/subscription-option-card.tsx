@@ -57,7 +57,7 @@ export const SubscriptionOptionCard = (props: SubscriptionOptionCardProps) => {
               value={activeOption?.id ? `${activeOption.id}` : undefined}
               onValueChange={(value) => onFrequencySelect(value)}
             >
-              <SelectTrigger className="w-full min-h-[42px] max-w-full bg-background border text-base px-4 rounded-[8px]">
+              <SelectTrigger className="w-full min-h-[42px] max-w-full bg-background border text-base px-4">
                 <SelectValue placeholder="Select an option" />
               </SelectTrigger>
 

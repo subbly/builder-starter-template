@@ -7,6 +7,7 @@ import {
   VariantSelectorProps,
 } from './variant-selector-utils'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 export function VariantSelectorRadio({
   options,
@@ -54,7 +55,11 @@ export function VariantSelectorRadio({
             return (
               <Button
                 size={'sm'}
-                variant={selected ? 'default' : 'outline'}
+                variant="outline"
+                className={cn(
+                  selected &&
+                    'bg-primary text-primary-foreground border-primary hover:bg-primary/90 hover:text-primary-foreground'
+                )}
                 formAction={() => {
                   updateOption(optionNameLowerCase, value)
                 }}

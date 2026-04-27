@@ -24,8 +24,8 @@ export const PlanOptionCard = (props: PlanOptionCardProps) => {
             'aria-checked': props.selected,
           })}
       className={cn(
-        'w-full grid grid-cols-1 bg-background border border-transparent rounded-[8px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-950 ring-1 ring-transparent cursor-pointer',
-        props.selected && 'ring-1 ring-primary',
+        'w-full grid grid-cols-1 bg-background border border-input rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-950 cursor-pointer',
+        props.selected && 'border-primary',
         props.nestedOptions && props.selected && 'cursor-default'
       )}
       onClick={() => {
@@ -34,18 +34,22 @@ export const PlanOptionCard = (props: PlanOptionCardProps) => {
         }
       }}
     >
-      <span className={cn('p-3 grid grid-cols-1 gap-1', props.nestedOptions && 'border-b')}>
+      <span className={cn(
+        'p-3 grid grid-cols-1 gap-1 transition-colors',
+        props.nestedOptions && 'border-b',
+        props.selected && 'border-primary'
+      )}>
         <span className="flex items-center gap-4">
           <span
             className={cn(
-              '-mt-1 h-4 w-4 rounded-full inline-flex self-center justify-center items-center transition-colors border shrink-0',
+              '-mt-1 relative inline-block h-4 w-4 rounded-full transition-colors border shrink-0',
               props.selected && 'bg-background border-primary'
             )}
           >
             <AnimatePresence>
               {props.selected && (
                 <motion.span
-                  className="inline-block h-1.5 w-1.5 bg-primary rounded-full"
+                  className="absolute inset-1 bg-primary rounded-full"
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                 />

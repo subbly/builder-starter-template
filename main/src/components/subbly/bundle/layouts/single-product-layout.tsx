@@ -14,27 +14,25 @@ export type SingleProductLayoutProps = {
 
 export const SingleProductLayout = (props: SingleProductLayoutProps) => {
   return (
-    <div className="max-w-[640px] mx-auto">
-      <div className="grid grid-cols-1 gap-6">
-        {props.preferencesBlock}
+    <div className="grid grid-cols-1 gap-3">
+      {props.preferencesBlock}
 
-        {props.groups.length > 0 && (
-          <div className="grid grid-cols-1 gap-4">
-            {props.groups.map((group) => (
-              <BundleGroupSelect
-                key={group.id}
-                group={group}
-                showProduct={props.showGroupProduct}
-                selectedItem={props.getSelectedItem(group.id)}
-                onSelectedItemChange={(item) => props.selectItem(item)}
-              />
-            ))}
-          </div>
-        )}
+      {props.groups.length > 0 && (
+        <div className="grid grid-cols-1 gap-4">
+          {props.groups.map((group) => (
+            <BundleGroupSelect
+              key={group.id}
+              group={group}
+              showProduct={props.showGroupProduct}
+              selectedItem={props.getSelectedItem(group.id)}
+              onSelectedItemChange={(item) => props.selectItem(item)}
+            />
+          ))}
+        </div>
+      )}
 
-        {props.planSelectBlock}
-        {props.confirmBlock}
-      </div>
+      {props.planSelectBlock}
+      {props.confirmBlock}
     </div>
   )
 }

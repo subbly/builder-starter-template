@@ -58,8 +58,8 @@ export const ProductOptionCard = (props: ProductOptionCardProps) => {
 
   return (
     <div className={cn(
-      'border border-gray-200 rounded-xl grid grid-cols-1 gap-3 p-4 transition-colors',
-      props.selectedItem && 'border-gray-900'
+      'border border-border rounded-xl grid grid-cols-1 gap-3 p-4 transition-colors',
+      props.selectedItem && 'border-primary'
     )}>
       {firstImage && (
         <div className="w-full h-full">
@@ -87,7 +87,9 @@ export const ProductOptionCard = (props: ProductOptionCardProps) => {
             className="w-full"
           >
             <SelectValue>
-              {currentItem.product.name} - {formatAmount(currentItem.product.price + currentItem.extraPrice)}
+              {props.showPrice
+                ? `${currentItem.product.name} - ${formatAmount(currentItem.product.price + currentItem.extraPrice)}`
+                : currentItem.product.name}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -96,7 +98,9 @@ export const ProductOptionCard = (props: ProductOptionCardProps) => {
                 key={item.id}
                 value={`${item.id}`}
               >
-                {item.product.name} - {formatAmount(item.product.price + item.extraPrice)}
+                {props.showPrice
+                  ? `${item.product.name} - ${formatAmount(item.product.price + item.extraPrice)}`
+                  : item.product.name}
               </SelectItem>
             ))}
           </SelectContent>
