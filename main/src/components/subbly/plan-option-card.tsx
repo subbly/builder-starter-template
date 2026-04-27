@@ -39,7 +39,7 @@ export const PlanOptionCard = (props: PlanOptionCardProps) => {
         props.nestedOptions && 'border-b',
         props.selected && 'border-primary'
       )}>
-        <span className="flex items-center gap-4">
+        <span className="flex items-center gap-4 min-h-7">
           <span
             className={cn(
               '-mt-1 relative inline-block h-4 w-4 rounded-full transition-colors border shrink-0',

@@ -38,7 +38,7 @@ export const ItemOptionCard = (props: ItemOptionCardProps) => {
 
   return (
     <div className={cn(
-      'border rounded-xl grid grid-cols-1 gap-3 p-4 transition-colors',
+      'border rounded-xl grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-3 p-4 transition-colors',
       props.selected && 'border-primary'
     )}>
       {firstImage && (
@@ -58,7 +58,7 @@ export const ItemOptionCard = (props: ItemOptionCardProps) => {
         <div>{name}</div>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between min-h-9">
         {props.showPrice && (
           <div>
             {showOriginalPrice && (
