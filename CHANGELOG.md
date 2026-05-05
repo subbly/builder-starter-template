@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.9
+
+### Patch Changes
+
+- Add visual-edits skill
+
 ## 0.0.8
 
 ### Patch Changes
