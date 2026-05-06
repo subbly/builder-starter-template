@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.10
+
+### Patch Changes
+
+- Update visual-content skills with actual editable fields
+
 ## 0.0.9
 
 ### Patch Changes
