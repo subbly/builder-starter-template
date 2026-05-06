@@ -5,24 +5,24 @@ description: "Guide for handling visual edits made by the user on the agentic we
 
 # Visual Edits
 
-## Text Content Update — Subbly API Dynamic Content
+## Text Content Update
 
-When a text update targets content that originates from data loaded via the Subbly API, the text cannot be changed by editing the source code — the value is fetched at runtime and any code edit will be overwritten on the next data fetch.
+When a text update targets content that originates from data loaded from an external source, the text cannot be changed by editing the source code — the value is fetched at runtime and any code edit will be overwritten on the next data fetch.
 
-### How to Identify
+### Subbly API Dynamic Content
+
+#### How to Identify
 
 The text is Subbly API content when it is rendered from data returned by Subbly API calls or hooks. Common patterns:
 
-- `product.title`, `product.description`, `product.shortDescription`
-- `bundle.title`, `bundle.description`
-- `item.title`, `item.description` (bundle items)
-- `plan.title`, `plan.description`
-- `metafield.value`, `metafield.title`
-- `survey.title`, `survey.description`
-- `tag.name`
+- `product.name`, `product.description`, `product.deliveryInfo`
+- `bundle.name, `bundle.description`, `bundle.deliveryInfo`
+- `plan.pricingName`
+- `metafield.name`, `metafield.values`
+- `survey.name`, `survey.description`
 - Any field rendered from objects fetched via `subblyApi.*` methods or Subbly React hooks (`useProduct`, `useBundle`, etc.)
 
-### How to Handle
+#### How to Handle
 
 Do NOT silently skip the change or apply a code-only edit. Present the user with three options:
 
@@ -48,10 +48,10 @@ Example structure:
 // src/lib/subbly/content-overrides.ts
 export const contentOverrides: Record<string, Record<number, Record<string, string>>> = {
   product: {
-    123: { title: 'Custom Product Title' },
+    123: { name: 'Custom Product Name' },
   },
   bundle: {
-    456: { title: 'Custom Bundle Name', description: 'Custom description' },
+    456: { name: 'Custom Bundle Name', description: 'Custom description' },
   },
 }
 ```
@@ -69,6 +69,6 @@ The user will handle the change themselves in the Subbly admin, or will make ano
 Example prompt to user:
 > The text "[current text]" comes from the [entity type] "[entity name]" (ID: [id]) loaded from Subbly. I'll skip this change — you can update it in the Subbly admin or let me know if you'd like to handle it differently.
 
-### Always Present All Three Options
+#### Always Present All Three Options
 
 When you detect that a text update targets Subbly API content, present all three options in a single message so the user can choose. Do not assume which option the user prefers.
