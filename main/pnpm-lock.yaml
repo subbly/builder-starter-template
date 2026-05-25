@@ -94,17 +94,17 @@ importers:
         specifier: ^1.2.7
         version: 1.2.7(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@subbly/api-client':
-        specifier: ^0.6.21
-        version: 0.6.21
+        specifier: ^0.6.25
+        version: 0.6.25
       '@subbly/kit':
-        specifier: ^0.0.31
-        version: 0.0.31
+        specifier: ^0.0.35
+        version: 0.0.35
       '@subbly/react':
-        specifier: ^0.0.31
-        version: 0.0.31
+        specifier: ^0.0.35
+        version: 0.0.35
       '@subbly/sdk':
-        specifier: ^0.6.21
-        version: 0.6.21
+        specifier: ^0.6.25
+        version: 0.6.25
       '@tanstack/react-query':
         specifier: ^5.74.7
         version: 5.84.1(react@19.2.4)
@@ -1855,18 +1855,18 @@ packages:
   '@standard-schema/utils@0.3.0':
     resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
 
-  '@subbly/api-client@0.6.21':
-    resolution: {integrity: sha512-L8ofLDXYBk+eJw3jfVluGDJpW4rSv7+5jBDebgqFI2EOgznE1x6I0F9nWaGR1tv2dRB8S3/xDdfI2frNKm1YqQ==}
+  '@subbly/api-client@0.6.25':
+    resolution: {integrity: sha512-D6JYWnsz9IukAmW4dESDo/vKgmu1/aUr2V3TOMTwq1zuitSzc+uKWx5p4ls67z1wh/nTV+QRM2gdSxdeLS7AoQ==}
     engines: {node: '>=16'}
 
-  '@subbly/kit@0.0.31':
-    resolution: {integrity: sha512-EHRSJpBAsp3eycIgq7rvRT2UYeq2RSMF1QeyzXEG9A/k0PtyJFyFJrUF7h81fDIMrHTJGpUPe+/2x8nFDQqUgg==}
+  '@subbly/kit@0.0.35':
+    resolution: {integrity: sha512-tUP099DZxAZDMPVhvVSmAqbjAveA3FujaCV2S2zf3DHqpE6SQ8CsW4ucmLHd5k6nAVoUy7ZHNTxModIBuudI7g==}
 
-  '@subbly/react@0.0.31':
-    resolution: {integrity: sha512-xp6hZ3UC5pHXBs8VhyWlvsWsBYuGorURCQUnVlBOkQf2EHw4A6h/A9P22ku2rYBKIKvrYzWCyJ9jQ41s4uboIg==}
+  '@subbly/react@0.0.35':
+    resolution: {integrity: sha512-8B69QEsWpVKpOY8TZ0yDW2VSOsIuqAfx6MfKjswju+LQeZwaN0Jr5hCch6vBvInP3iXrB3pJvOVMSnBN69IWgA==}
 
-  '@subbly/sdk@0.6.21':
-    resolution: {integrity: sha512-QGZDpN93YRHqKhlVE482loobP3TxXb41a5fv5/HSW0sE6v6FXDj7jIavCqN8ghS0PrveBHqcobgn2lTw55Io9Q==}
+  '@subbly/sdk@0.6.25':
+    resolution: {integrity: sha512-KlxN7rwgiB9Sk2L2AyRSoFaBBl7ncDolAfRxu2RK4gxfGgCdw4CjdxOe7UFSnLMB/WDK3bBnZCVF49Hyjsrn/A==}
     engines: {node: '>=16'}
 
   '@subbly/swc-plugin-add-element-source@0.2.0':
@@ -3053,8 +3053,8 @@ packages:
   path-to-regexp@6.3.0:
     resolution: {integrity: sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==}
 
-  path-to-regexp@8.3.0:
-    resolution: {integrity: sha512-7jdwVIRtsP8MYpdXSwOS0YdD0Du+qOoF/AEPIt88PcCFrZCzx41oxku1jD88hZBwbNUIEfpqvuhjFaMAqMTWnA==}
+  path-to-regexp@8.4.2:
+    resolution: {integrity: sha512-qRcuIdP69NPm4qbACK+aDogI5CBDMi1jKe0ry5rSQJz8JVLsC7jV8XpiJjGRLLol3N+R5ihGYcrPLTno6pAdBA==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -5348,30 +5348,31 @@ snapshots:
 
   '@standard-schema/utils@0.3.0': {}
 
-  '@subbly/api-client@0.6.21':
+  '@subbly/api-client@0.6.25':
     dependencies:
       camelcase-keys: 9.1.3
       qs: 6.14.0
       snakecase-keys: 6.0.0
 
-  '@subbly/kit@0.0.31':
+  '@subbly/kit@0.0.35':
     dependencies:
-      '@subbly/api-client': 0.6.21
-      '@subbly/sdk': 0.6.21
+      '@subbly/api-client': 0.6.25
+      '@subbly/sdk': 0.6.25
       lodash-es: 4.17.23
       tiny-typed-emitter: 2.1.0
 
-  '@subbly/react@0.0.31':
+  '@subbly/react@0.0.35':
     dependencies:
-      '@subbly/api-client': 0.6.21
-      '@subbly/kit': 0.0.31
+      '@subbly/api-client': 0.6.25
+      '@subbly/kit': 0.0.35
+      date-fns: 4.1.0
       lodash-es: 4.17.23
       react: 19.2.5
       react-dom: 19.2.4(react@19.2.5)
 
-  '@subbly/sdk@0.6.21':
+  '@subbly/sdk@0.6.25':
     dependencies:
-      '@subbly/api-client': 0.6.21
+      '@subbly/api-client': 0.6.25
 
   '@subbly/swc-plugin-add-element-source@0.2.0(next@16.1.6(@babel/core@7.28.4)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))':
     dependencies:
@@ -6438,7 +6439,7 @@ snapshots:
 
   path-to-regexp@6.3.0: {}
 
-  path-to-regexp@8.3.0: {}
+  path-to-regexp@8.4.2: {}
 
   picocolors@1.1.1: {}
 
@@ -6642,7 +6643,7 @@ snapshots:
       depd: 2.0.0
       is-promise: 4.0.0
       parseurl: 1.3.3
-      path-to-regexp: 8.3.0
+      path-to-regexp: 8.4.2
     transitivePeerDependencies:
       - supports-color
 
