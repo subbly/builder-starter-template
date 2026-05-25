@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.11
+
+### Patch Changes
+
+- Bump @subbly/api-client@0.6.25, @subbly/sdk@0.6.25, @subbly/kit@0.0.35, @subbly/react@0.0.35
+
 ## 0.0.10
 
 ### Patch Changes
