@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.12
+
+### Patch Changes
+
+- Add memory subbly-dev watchdog script
+
 ## 0.0.11
 
 ### Patch Changes
