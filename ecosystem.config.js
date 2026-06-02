@@ -47,5 +47,21 @@ module.exports = {
         SHELL: '/bin/bash',
       },
     },
+    {
+      name: 'dev-watchdog',
+      script: 'scripts/dev-watchdog.js',
+      cwd: '/project/workspace',
+      autorestart: true,
+      max_memory_restart: '100M',
+      log_file: '/project/workspace/.subbly/logs/dev-watchdog.log',
+      merge_logs: true,
+      log_date_format: 'YYYY-MM-DDTHH:mm:ss.SSS',
+      env: {
+        WATCH_TARGET: 'subbly-dev',
+        MEM_LIMIT_MB: '4500',
+        SUSTAIN_MS: '60000',
+        INTERVAL_MS: '20000',
+      },
+    },
   ],
 }
