@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.13
+
+### Patch Changes
+
+- Add project onboarding skill
+
 ## 0.0.12
 
 ### Patch Changes
