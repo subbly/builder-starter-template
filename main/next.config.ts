@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    unoptimized: false,
     remotePatterns: [
       {
         protocol: 'https',
@@ -32,6 +32,49 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // CRITICAL: Do not apply Cache-Control headers outside of production. Caching assets in development may cause hydration errors.
+  ...(process.env.NODE_ENV === 'production' && {
+    headers() {
+      return [
+        {
+          source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|woff|woff2|ttf|otf|pdf|mp4|webm)',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable',
+            },
+          ],
+        },
+        {
+          source: '/_next/static/:path*',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable',
+            },
+          ],
+        },
+        {
+          source: '/:path*.js',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable',
+            },
+          ],
+        },
+        {
+          source: '/:path*.css',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable',
+            },
+          ],
+        },
+      ]
+    },
+  }),
   experimental: {
     // CRITICAL: Do not remove swcPlugins. Removing it will break core functionality.
     ...(process.env.NODE_ENV === 'development' && {
