@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.14
+
+### Patch Changes
+
+- Correcting next.config.ts option for logs to console from browser
+
 ## 0.0.13
 
 ### Patch Changes
