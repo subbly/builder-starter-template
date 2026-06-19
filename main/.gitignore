@@ -38,6 +38,25 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+*.tar.bz2
+*.tbz2
+*.bz2
+*.tar.xz
+*.txz
+*.xz
+*.7z
+*.rar
+*.lz
+*.lzma
+*.zst
+*.Z
+
 # vercel
 .vercel
 
