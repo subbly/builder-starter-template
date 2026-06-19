@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.15
+
+### Patch Changes
+
+- Add archives extensions to gitignore
+
 ## 0.0.14
 
 ### Patch Changes
