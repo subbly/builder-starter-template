@@ -15,7 +15,7 @@ Sync workflow to copy updated files from the `/var/www/subbly-private-api-client
 | `skills/manage-product/`            | `skills/manage-product/`   |
 | `packages/store-actions/`           | `store-actions/`           |
 
-**Only the two skills above are synced.** Other skills in `skills/` (e.g. localization, cms-integration, frontend-design, troubleshooting) are local-only and must not be touched during sync.
+**Only the two skills above are synced.** Other skills in `skills/` (e.g. localization, cms-integration, troubleshooting) are local-only and must not be touched during sync.
 
 ## Sync Procedure
 

@@ -46,15 +46,6 @@ const nextConfig: NextConfig = {
           ],
         },
         {
-          source: '/_next/static/:path*',
-          headers: [
-            {
-              key: 'Cache-Control',
-              value: 'public, max-age=31536000, immutable',
-            },
-          ],
-        },
-        {
           source: '/:path*.js',
           headers: [
             {
@@ -79,6 +70,7 @@ const nextConfig: NextConfig = {
   logging: {
     browserToTerminal: true,
   },
+  reactCompiler: true,
   experimental: {
     // CRITICAL: Do not remove swcPlugins. Removing it will break core functionality.
     ...(process.env.NODE_ENV === 'development' && {
