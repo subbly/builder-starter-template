@@ -70,15 +70,13 @@ const nextConfig: NextConfig = {
   logging: {
     browserToTerminal: true,
   },
-  reactCompiler: true,
   experimental: {
     // CRITICAL: Do not remove swcPlugins. Removing it will break core functionality.
     ...(process.env.NODE_ENV === 'development' && {
       swcPlugins: [['@subbly/swc-plugin-add-element-source', {}]],
     }),
     // CRITICAL: Do not remove turbopackFileSystemCacheForDev. Removing it will slow down core functionality.
-    turbopackFileSystemCacheForDev: true,
-    viewTransition: true,
+    turbopackFileSystemCacheForDev: true
   },
 }
 
