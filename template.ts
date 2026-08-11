@@ -1,4 +1,4 @@
-import { Template, waitForPort } from 'e2b'
+import { Template, ReadyCmd } from 'e2b'
 
 export const createTemplate = ({ dev }: { dev: boolean }) => {
   let template = Template()
@@ -32,6 +32,9 @@ export const createTemplate = ({ dev }: { dev: boolean }) => {
     .runCmd('chown -R user:user /project/workspace')
     .setUser('user')
     .runCmd('cd /project/workspace/main && pnpm install --dangerously-allow-all-builds')
+    .runCmd(
+      "cat /project/workspace/main/package.json /project/workspace/main/pnpm-lock.yaml | md5sum | cut -d' ' -f1 > /project/workspace/.subbly/deps-hash"
+    )
     .runCmd('cd /project/workspace/store-actions && pnpm install --dangerously-allow-all-builds')
     .runCmd(
       'pm2 install pm2-logrotate && ' +
@@ -42,7 +45,11 @@ export const createTemplate = ({ dev }: { dev: boolean }) => {
       'pm2 kill'
     )
     .setWorkdir('/project/workspace/main')
-    .setStartCmd('pm2 start /project/workspace/ecosystem.config.js --attach -s', waitForPort(3000))
+    .setStartCmd('pm2 start /project/workspace/ecosystem.config.js --attach -s', readyWhenIdle())
+}
+
+const readyWhenIdle = () => {
+  return new ReadyCmd('ss -tuln | grep -q :3000 && ! pgrep -f "pnpm insta[l]l"')
 }
 
 const getGlobalPackages = (dev: boolean) => {

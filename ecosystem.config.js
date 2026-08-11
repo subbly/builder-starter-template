@@ -35,7 +35,7 @@ module.exports = {
     {
       name: 'deps-watcher',
       script: 'chokidar',
-      args: '"pnpm-lock.yaml" "package.json" --polling --poll-interval 500 --debounce 1000 -c "pnpm install --dangerously-allow-all-builds && pm2 restart subbly-dev"',
+      args: '"pnpm-lock.yaml" "package.json" --polling --poll-interval 500 --debounce 1000 -c "bash /project/workspace/scripts/deps-install.sh"',
       cwd: '/project/workspace/main',
       autorestart: true,
       interpreter: 'none',
