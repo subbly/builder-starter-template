@@ -1,5 +1,14 @@
 # subbly-builder-default
 
+## 0.0.16
+
+### Patch Changes
+
+- Add generate-design-inspiration-image and image-to-code skills
+- Update project onboarding skill. Added a request_info intake form and brand color role rotation across the four design-system variants
+- Skip deps-watcher installs when package.json and the lockfile are unchanged
+- Bump next@16.3.0, react@19.2.8, typescript@7
+
 ## 0.0.15
 
 ### Patch Changes
