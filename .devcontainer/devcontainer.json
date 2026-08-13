@@ -1,6 +1,0 @@
-{
-  "name": "Subbly Starter Template",
-  "build": {
-    "dockerfile": "Dockerfile"
-  }
-}

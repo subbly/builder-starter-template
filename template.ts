@@ -21,12 +21,7 @@ export const createTemplate = ({ dev }: { dev: boolean }) => {
 
   return template
     .copy('main', '/project/workspace/main')
-    .copy('store-actions/lib', '/project/workspace/store-actions/lib')
-    .copy('store-actions/scripts', '/project/workspace/store-actions/scripts')
-    .copy('store-actions/package.json', '/project/workspace/store-actions/package.json')
-    .copy('store-actions/pnpm-lock.yaml', '/project/workspace/store-actions/pnpm-lock.yaml')
     .copy('.subbly', '/project/workspace/.subbly')
-    .copy('skills', '/project/workspace/skills')
     .copy('scripts', '/project/workspace/scripts')
     .copy('ecosystem.config.js', '/project/workspace/ecosystem.config.js')
     .runCmd('chown -R user:user /project/workspace')
@@ -35,7 +30,6 @@ export const createTemplate = ({ dev }: { dev: boolean }) => {
     .runCmd(
       "cat /project/workspace/main/package.json /project/workspace/main/pnpm-lock.yaml | md5sum | cut -d' ' -f1 > /project/workspace/.subbly/deps-hash"
     )
-    .runCmd('cd /project/workspace/store-actions && pnpm install --dangerously-allow-all-builds')
     .runCmd(
       'pm2 install pm2-logrotate && ' +
       'pm2 set pm2-logrotate:max_size 5M && ' +

@@ -1,6 +1,0 @@
-# Subscription Product Publish
-
-id:
-  type: integer
-  min: 1
-  required: true
