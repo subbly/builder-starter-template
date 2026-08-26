@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.17
+
+### Patch Changes
+
+- Drop `.subbly/memory/DESIGN.md`; memory now lives on the project volume
+
 ## 0.0.16
 
 ### Patch Changes
