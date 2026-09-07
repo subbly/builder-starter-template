@@ -1,31 +1,37 @@
 import { Template, ReadyCmd } from 'e2b'
 
-export const createTemplate = ({ dev }: { dev: boolean }) => {
-  let template = Template()
+const UV_VERSION = '0.12.10'
+const PYTHON_VERSION = '3.13'
+const NETLIFY_CLI_VERSION = '27.5.0'
+const GLOBAL_PACKAGES = [
+  `netlify-cli@${NETLIFY_CLI_VERSION}`,
+  'pnpm',
+  'chokidar-cli',
+  'pm2',
+  'shadcn',
+  'tsx',
+  'agent-browser',
+]
+
+export const createTemplate = () => {
+  return Template()
     .fromImage('node:24-slim')
     .setUser('root')
     .runCmd(
-      'apt-get update && apt-get install -y git curl lsof ripgrep jq && rm -rf /var/lib/apt/lists/*'
+      'apt-get update && apt-get install -y git curl lsof ripgrep jq unzip zip file poppler-utils python3 && rm -rf /var/lib/apt/lists/*'
     )
-    .runCmd(`npm install -g ${getGlobalPackages(dev).join(' ')}`)
-
-  if (dev) {
-    // agent-browser powers the design-review skill in the dev sandbox.
-    // --with-deps installs Chromium's system libraries (needs root), and HOME is
-    // pointed at the runtime user's home so the downloaded Chrome lands where
-    // `user` can launch it; hand ownership back afterwards.
-    template = template.runCmd(
-      'HOME=/home/user agent-browser install --with-deps && chown -R user:user /home/user'
+    .runCmd(
+      `curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | env UV_INSTALL_DIR=/usr/local/bin UV_NO_MODIFY_PATH=1 sh`
     )
-  }
-
-  return template
+    .runCmd(`npm install -g ${GLOBAL_PACKAGES.join(' ')}`)
+    .runCmd('HOME=/home/user agent-browser install --with-deps && chown -R user:user /home/user')
     .copy('main', '/project/workspace/main')
     .copy('.subbly', '/project/workspace/.subbly')
     .copy('scripts', '/project/workspace/scripts')
     .copy('ecosystem.config.js', '/project/workspace/ecosystem.config.js')
     .runCmd('chown -R user:user /project/workspace')
     .setUser('user')
+    .runCmd(`uv python install ${PYTHON_VERSION}`)
     .runCmd('cd /project/workspace/main && pnpm install --dangerously-allow-all-builds')
     .runCmd(
       "cat /project/workspace/main/package.json /project/workspace/main/pnpm-lock.yaml | md5sum | cut -d' ' -f1 > /project/workspace/.subbly/deps-hash"
@@ -44,12 +50,4 @@ export const createTemplate = ({ dev }: { dev: boolean }) => {
 
 const readyWhenIdle = () => {
   return new ReadyCmd('ss -tuln | grep -q :3000 && ! pgrep -f "pnpm insta[l]l"')
-}
-
-const getGlobalPackages = (dev: boolean) => {
-  const packages = ['netlify-cli', 'pnpm', 'chokidar-cli', 'pm2', 'shadcn']
-  if (dev) {
-    packages.push('agent-browser')
-  }
-  return packages
 }
