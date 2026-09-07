@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.19
+
+### Patch Changes
+
+- Bump next@16.3.4
+
 ## 0.0.18
 
 ### Patch Changes
