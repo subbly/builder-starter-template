@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.18
+
+### Patch Changes
+
+- Pin netlify-cli to 27.5.0 and install agent-browser in the prod image too. Add Python (python3 and uv with a managed CPython 3.13), tsx, and unzip, zip, file and poppler-utils to the sandbox image so the agent can run Python and TypeScript scripts
+
 ## 0.0.17
 
 ### Patch Changes
