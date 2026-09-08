@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 0.0.20
+
+### Patch Changes
+
+- Site version 1.2.0. Align react-dom with react at ^19.2.8, fix the @types/react overrides, bump next-intl@^4.14.2, add `agentRules: false` to next.config, trim the oxlint ignore list to paths that exist in a site, and sync the Subbly components with the registry (SubblyScript config props, apiUrl in api.ts, currencyCode in useFormatAmount, quantity fallback in the product form)
+
 ## 0.0.19
 
 ### Patch Changes
