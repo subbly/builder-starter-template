@@ -56,7 +56,7 @@ export const QuantitySelector = ({
       <Button
         type="button"
         variant="ghost"
-        size="icon-sm"
+        size="sm"
         className="rounded-r-none rounded-l-md text-muted-foreground hover:text-foreground disabled:opacity-40"
         onClick={handleDecrease}
         disabled={decreaseDisabled}
@@ -79,7 +79,7 @@ export const QuantitySelector = ({
       <Button
         type="button"
         variant="ghost"
-        size="icon-sm"
+        size="sm"
         className="rounded-l-none rounded-r-md text-muted-foreground hover:text-foreground disabled:opacity-40"
         onClick={handleIncrease}
         disabled={increaseDisabled}

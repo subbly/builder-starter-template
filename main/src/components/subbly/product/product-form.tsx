@@ -59,7 +59,7 @@ export const ProductForm = (props: ProductGroupFormProps) => {
       {product.type === 'one_time' && !selectedProduct && priceFrom ? (
         <div>From {formatAmount(priceFrom)}</div>
       ) : product.type === 'one_time' && selectedProduct ? (
-        <div>{formatAmount(selectedProduct.price * productForm.quantity)}</div>
+        <div>{formatAmount(selectedProduct.price * (productForm.quantity || 1))}</div>
       ) : null}
 
       {plans.length > 0 && (
@@ -85,7 +85,7 @@ export const ProductForm = (props: ProductGroupFormProps) => {
         <div className="flex items-center space-x-2">
           <div className="flex-shrink-0 text-sm font-medium">Quantity:</div>
           <QuantitySelector
-            value={productForm.quantity}
+            value={productForm.quantity || 1}
             onChange={(quantity) => {
               setProductForm({
                 ...productForm,

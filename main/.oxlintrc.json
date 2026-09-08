@@ -36,9 +36,6 @@
     "out/**",
     "build/**",
     "next-env.d.ts",
-    ".netlify/**",
-    ".subbly/**",
-    ".codesandbox/**",
-    ".devcontainer/**"
+    ".netlify/**"
   ]
 }

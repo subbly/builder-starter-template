@@ -2,8 +2,9 @@ import type { NextConfig } from 'next'
 import createNextIntlPlugin from 'next-intl/plugin'
 
 const nextConfig: NextConfig = {
-   // CRITICAL: Do not remove allowedDevOrigins. Removing it will break core functionality.
+  // CRITICAL: Do not remove allowedDevOrigins. Removing it will break core functionality.
   allowedDevOrigins: ['*.subbly.co', '*.preview.subbly.site'],
+  agentRules: false,
   typescript: {
     ignoreBuildErrors: true,
   },

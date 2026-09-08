@@ -137,7 +137,7 @@ function SingleProductBundleMode({ bundle }: { bundle: Bundle }) {
   const submitDisabled = !!validation || hasGroupOutOfStock
 
   const planSelectBlock = planOptions.length > 0 ? (
-    <div>
+    <div className="rounded-xl">
       <PlanSelector
         subtotal={itemsPrice}
         options={planOptions}

@@ -5,7 +5,8 @@ if (!process.env.NEXT_PUBLIC_SUBBLY_API_KEY) {
 }
 
 subblyApi.initialize({
-  apiKey: process.env.NEXT_PUBLIC_SUBBLY_API_KEY as string
+  apiKey: process.env.NEXT_PUBLIC_SUBBLY_API_KEY as string,
+  apiUrl: process.env.NEXT_PUBLIC_SUBBLY_API_URL,
 })
 
 export {
