@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 1.2.1
+
+### Patch Changes
+
+- Site version 1.2.1. Align the template version with the site version so both track together from now on. Fix the `InvalidStateError: Transition was aborted because of invalid state. Document hidden` console error by skipping view transitions while the tab is hidden
+
 ## 0.0.20
 
 ### Patch Changes
