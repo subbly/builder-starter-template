@@ -12,5 +12,5 @@
     "@changesets/cli": "^2.31.0",
     "e2b": "^2.19.0"
   },
-  "packageManager": "pnpm@10.20.0"
+  "packageManager": "pnpm@12.5.1"
 }

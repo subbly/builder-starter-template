@@ -78,11 +78,5 @@
     "tw-animate-css": "^1.2.8",
     "typescript": "^7.0.2"
   },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.10",
-      "@types/react-dom": "19.2.3"
-    }
-  },
-  "packageManager": "pnpm@10.20.0"
+  "packageManager": "pnpm@12.5.1"
 }
