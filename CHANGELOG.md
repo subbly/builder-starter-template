@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 1.2.2
+
+### Patch Changes
+
+- Site version 1.2.2. Bump pnpm to 12.5.1, move the @types/react overrides to main/pnpm-workspace.yaml with dangerouslyAllowAllBuilds enabled, and remove the unused builds folder
+
 ## 1.2.1
 
 ### Patch Changes
