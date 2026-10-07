@@ -23,6 +23,9 @@ export const createTemplate = () => {
     .runCmd(
       `curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | env UV_INSTALL_DIR=/usr/local/bin UV_NO_MODIFY_PATH=1 sh`
     )
+    .runCmd(
+      `env UV_PYTHON_INSTALL_DIR=/opt/uv/python UV_PYTHON_BIN_DIR=/usr/local/bin uv python install ${PYTHON_VERSION} --default`
+    )
     .runCmd(`npm install -g ${GLOBAL_PACKAGES.join(' ')}`)
     .runCmd('HOME=/home/user agent-browser install --with-deps && chown -R user:user /home/user')
     .copy('main', '/project/workspace/main')
@@ -31,7 +34,6 @@ export const createTemplate = () => {
     .copy('ecosystem.config.js', '/project/workspace/ecosystem.config.js')
     .runCmd('chown -R user:user /project/workspace')
     .setUser('user')
-    .runCmd(`uv python install ${PYTHON_VERSION}`)
     .runCmd('cd /project/workspace/main && pnpm install --dangerously-allow-all-builds')
     .runCmd(
       "cat /project/workspace/main/package.json /project/workspace/main/pnpm-lock.yaml | md5sum | cut -d' ' -f1 > /project/workspace/.subbly/deps-hash"
