@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 1.2.3
+
+### Patch Changes
+
+- Site version 1.2.3. Install Python 3.13 for all users in the sandbox template, so `python`, `python3` and `python3.13` all run it from /usr/local/bin
+
 ## 1.2.2
 
 ### Patch Changes
