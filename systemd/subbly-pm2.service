@@ -1,0 +1,14 @@
+[Unit]
+Description=Start the Subbly pm2 apps
+After=envd.service network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=user
+Environment=HOME=/home/user PM2_HOME=/home/user/.pm2 PATH=/usr/local/bin:/usr/bin:/bin
+WorkingDirectory=/project/workspace
+ExecStart=/usr/local/bin/pm2 start /project/workspace/ecosystem.config.js -s
+
+[Install]
+WantedBy=multi-user.target

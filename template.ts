@@ -32,6 +32,8 @@ export const createTemplate = () => {
     .copy('.subbly', '/project/workspace/.subbly')
     .copy('scripts', '/project/workspace/scripts')
     .copy('ecosystem.config.js', '/project/workspace/ecosystem.config.js')
+    .copy('systemd/subbly-pm2.service', '/etc/systemd/system/subbly-pm2.service', { mode: 0o644 })
+    .runCmd('systemctl enable subbly-pm2.service')
     .runCmd('chown -R user:user /project/workspace')
     .setUser('user')
     .runCmd('cd /project/workspace/main && pnpm install --dangerously-allow-all-builds')
@@ -47,7 +49,7 @@ export const createTemplate = () => {
       'pm2 kill'
     )
     .setWorkdir('/project/workspace/main')
-    .setStartCmd('pm2 start /project/workspace/ecosystem.config.js --attach -s', readyWhenIdle())
+    .setStartCmd('sudo systemctl start subbly-pm2.service', readyWhenIdle())
 }
 
 const readyWhenIdle = () => {
