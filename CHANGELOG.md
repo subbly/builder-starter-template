@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 1.2.5
+
+### Patch Changes
+
+- Start the pm2 apps from a systemd unit, so the dev server comes back on its own when a sandbox cold-boots
+
 ## 1.2.4
 
 ### Patch Changes
