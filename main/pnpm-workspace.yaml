@@ -3,3 +3,7 @@ overrides:
   '@types/react-dom': 19.2.3
 
 dangerouslyAllowAllBuilds: true
+
+minimumReleaseAgeExclude:
+  - '@subbly/kit@0.3.3'
+  - '@subbly/react@0.3.3'
