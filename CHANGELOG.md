@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 1.2.6
+
+### Patch Changes
+
+- Site version 1.2.6. Bump @subbly/kit and @subbly/react from 0.3.2 to 0.3.3, next from 16.3.4 to 16.4.4, react and react-dom from 19.2.8 to 19.3.1, @types/react and @types/react-dom to 19.3.0, and zod from 3.25.76 to 4.6.7
+
 ## 1.2.5
 
 ### Patch Changes
