@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 1.2.7
+
+### Patch Changes
+
+- Site version 1.2.7. Bump @subbly/kit from 0.3.3 to 0.3.4 and @subbly/api-client from 0.6.25 to 0.9.2
+
 ## 1.2.6
 
 ### Patch Changes
