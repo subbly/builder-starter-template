@@ -258,8 +258,8 @@ importers:
         specifier: ^0.3.4
         version: 0.3.4
       '@subbly/react':
-        specifier: ^0.3.3
-        version: 0.3.3
+        specifier: ^0.3.4
+        version: 0.3.4
       '@subbly/sdk':
         specifier: ^0.6.25
         version: 0.6.25
@@ -1818,8 +1818,8 @@ packages:
   '@subbly/kit@0.3.4':
     resolution: {integrity: sha512-nwPzl5qw2k/ygE3tX9AXOC+BXGnICcLjl6LUmW09cuRgmZZV6YJM9aHy19BuCL9x3xDXVydWvqJRN7h9S641yw==}
 
-  '@subbly/react@0.3.3':
-    resolution: {integrity: sha512-PNCl5S315X7rZOSpUUr4h66XyXGUNUm3WxdhRqvG4e0fbkJbs7WC87mEmOEbY/azLSP3rvXJOjRyziWlTJWK5g==}
+  '@subbly/react@0.3.4':
+    resolution: {integrity: sha512-zhY53dZuX7gacXHHo1OprpImpxukz4MJcOR253dCptS5HFtIaSQsfDYQkarXudv3OnpB80wHMi1mZb3zLx5wXw==}
 
   '@subbly/sdk@0.6.25':
     resolution: {integrity: sha512-KlxN7rwgiB9Sk2L2AyRSoFaBBl7ncDolAfRxu2RK4gxfGgCdw4CjdxOe7UFSnLMB/WDK3bBnZCVF49Hyjsrn/A==}
@@ -5091,7 +5091,7 @@ snapshots:
       lodash-es: 4.17.23
       tiny-typed-emitter: 2.1.0
 
-  '@subbly/react@0.3.3':
+  '@subbly/react@0.3.4':
     dependencies:
       '@subbly/api-client': 0.9.2
       '@subbly/kit': 0.3.4
