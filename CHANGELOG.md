@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 1.2.9
+
+### Patch Changes
+
+- Site version 1.2.9. Bump @subbly/react from 0.3.3 to 0.3.4
+
 ## 1.2.8
 
 ### Patch Changes
