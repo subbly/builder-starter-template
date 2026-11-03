@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 1.2.8
+
+### Patch Changes
+
+- Site version 1.2.8. Bump @subbly/swc-plugin-add-element-source from 0.3.0 to 0.4.0, and let all @subbly packages skip the pnpm minimum release age check
+
 ## 1.2.7
 
 ### Patch Changes
