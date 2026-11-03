@@ -334,8 +334,8 @@ importers:
         version: 4.6.7
     devDependencies:
       '@subbly/swc-plugin-add-element-source':
-        specifier: ^0.3.0
-        version: 0.3.0(next@16.4.4(@babel/core@7.28.4)(@types/node@20.19.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        specifier: ^0.4.0
+        version: 0.4.0(next@16.4.4(@babel/core@7.28.4)(@types/node@20.19.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.11
@@ -1825,10 +1825,10 @@ packages:
     resolution: {integrity: sha512-KlxN7rwgiB9Sk2L2AyRSoFaBBl7ncDolAfRxu2RK4gxfGgCdw4CjdxOe7UFSnLMB/WDK3bBnZCVF49Hyjsrn/A==}
     engines: {node: '>=16'}
 
-  '@subbly/swc-plugin-add-element-source@0.3.0':
-    resolution: {integrity: sha512-hdMjUl3SrJ80Qw8CV+Nb+DohihvGWrmR983g7caZk2iX6teLlpIt1pooG9jQgRxAPVs7EBWls/3NydGOMSvBMg==}
+  '@subbly/swc-plugin-add-element-source@0.4.0':
+    resolution: {integrity: sha512-yrc95JE20br/gqjHtALl9tdE77KI+KV9UukIHmqwGkljs2cjrdTgcuZh6xCNbAvnt+jB7HBNEZNpA+SvVKEooA==}
     peerDependencies:
-      next: ^16.1.0
+      next: ^16.4.0
 
   '@swc/core-darwin-arm64@1.16.2':
     resolution: {integrity: sha512-i/j0HNbnn79qnTVPicvay92Nark8fW8NQqn1e2mGERjUXNpBV0+SwQxlRpk2zBhn6laJ8PDI6Kn1nHZhnz3LCA==}
@@ -5104,7 +5104,7 @@ snapshots:
     dependencies:
       '@subbly/api-client': 0.6.25
 
-  '@subbly/swc-plugin-add-element-source@0.3.0(next@16.4.4(@babel/core@7.28.4)(@types/node@20.19.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
+  '@subbly/swc-plugin-add-element-source@0.4.0(next@16.4.4(@babel/core@7.28.4)(@types/node@20.19.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))':
     dependencies:
       next: 16.4.4(@babel/core@7.28.4)(@types/node@20.19.9)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
 
