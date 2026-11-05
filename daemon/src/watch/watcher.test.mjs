@@ -328,9 +328,10 @@ test('a scanned folder renamed before parcel reports its children still swaps ou
     unsubscribe: async () => {},
   }
   const seen = []
-  let watched = new Set()
 
   mkdirSync(join(root, 'src'), { recursive: true })
+
+  let watched = new Set([lstatSync(root).ino, lstatSync(join(root, 'src')).ino])
 
   const watcher = watch(root, { events: (list) => seen.push(...list), overflow: () => {}, restarted: () => {} }, { ...timing, parcel, watchedInodes: () => watched })
 
@@ -351,6 +352,92 @@ test('a scanned folder renamed before parcel reports its children still swaps ou
 
     assert.ok(has(seen, 'src/x', 'remove'))
     assert.ok(has(seen, 'src/renamed/y/a.ts', 'add', 'file'))
+  } finally {
+    watcher.close()
+  }
+})
+
+const scripted = async (name) => {
+  const root = join(base, name)
+  const subscriptions = []
+  const pending = []
+  const parcel = {
+    subscribe: async (dir, listener) => {
+      subscriptions.push({ dir, listener })
+
+      if (subscriptions.length > 1) {
+        await new Promise((resolve) => pending.push(resolve))
+      }
+    },
+    unsubscribe: async () => {},
+  }
+  const seen = []
+
+  mkdirSync(join(root, 'src'), { recursive: true })
+
+  const state = { watched: new Set([lstatSync(root).ino, lstatSync(join(root, 'src')).ino]) }
+
+  const watcher = watch(root, { events: (list) => seen.push(...list), overflow: () => {}, restarted: () => {} }, { ...timing, parcel, watchedInodes: () => state.watched })
+
+  await watcher.ready
+
+  const inodes = (...paths) => paths.map((path) => lstatSync(join(root, path)).ino)
+  const release = async () => {
+    await until(() => pending.length > 0, 'a fresh subscription')
+    pending.shift()()
+    await sleep(10)
+  }
+
+  return { root, subscriptions, seen, state, watcher, inodes, release, path: (path) => join(root, path) }
+}
+
+test('the new-directory scan reports a folder made while the watch swaps subscriptions', async () => {
+  const { subscriptions, seen, state, watcher, inodes, release, path } = await scripted('swap-made')
+
+  try {
+    const [{ dir, listener }] = subscriptions
+
+    mkdirSync(path('src/x/y'), { recursive: true })
+    state.watched = new Set(inodes('src/x'))
+    listener(null, [{ path: `${dir}/src/x`, type: 'create' }])
+
+    mkdirSync(path('src/many/1/inner'), { recursive: true })
+    writeFileSync(path('src/many/1/inner/f.txt'), 'x')
+    state.watched = new Set(inodes('src/x', 'src/x/y', 'src/many', 'src/many/1', 'src/many/1/inner'))
+    await release()
+
+    listener(null, [{ path: `${dir}/src/many`, type: 'create' }])
+    await until(() => has(seen, 'src/many/1/inner/f.txt', 'add', 'file'), 'the adds under the folder made during the swap', 1000)
+
+    for (const folder of ['src/many', 'src/many/1', 'src/many/1/inner']) {
+      assert.ok(has(seen, folder, 'add', 'directory'), folder)
+    }
+  } finally {
+    watcher.close()
+  }
+})
+
+test('a folder the fresh subscription missed is found by the swap scan and watched by another swap', async () => {
+  const { subscriptions, seen, state, watcher, inodes, release, path } = await scripted('swap-missed')
+
+  try {
+    const [{ dir, listener }] = subscriptions
+
+    mkdirSync(path('src/x/y'), { recursive: true })
+    state.watched = new Set(inodes('src/x'))
+    listener(null, [{ path: `${dir}/src/x`, type: 'create' }])
+
+    mkdirSync(path('src/x/y/late'))
+    state.watched = new Set(inodes('src/x', 'src/x/y'))
+    await release()
+
+    assert.ok(has(seen, 'src/x/y/late', 'add', 'directory'))
+    await until(() => subscriptions.length === 3, 'a swap that watches the missed folder', 1000)
+
+    writeFileSync(path('src/x/y/late/after.txt'), 'x')
+    state.watched = new Set(inodes('src/x', 'src/x/y', 'src/x/y/late'))
+    await release()
+    assert.ok(has(seen, 'src/x/y/late/after.txt', 'add', 'file'))
   } finally {
     watcher.close()
   }

@@ -83,9 +83,33 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     }
   }
 
+  const read = (dir, entry) => {
+    let watched = null
+    let unwatched = false
+
+    walk(dir, {
+      directory: (path, found) => {
+        dirs.set(path, identity(found))
+        watched ??= watchedInodes()
+
+        if (!watched.has(found.ino)) {
+          unwatched = true
+        }
+      },
+      entry,
+    })
+
+    return unwatched
+  }
+
   const index = () => {
+    const found = new Set()
+
     dirs.clear()
-    walk('', { directory: (dir, found) => dirs.set(dir, identity(found)) })
+
+    if (read('', (path) => found.add(path))) {
+      requestSwap({ rescan: new Map([['', found]]) })
+    }
   }
 
   const subscribe = async () => {
@@ -200,9 +224,9 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     previous = replaced
     previous.ignored = swap.overflow
     swap.ready = true
-    index()
 
     if (swap.overflow) {
+      index()
       overflow()
     } else {
       rescan(swap.rescan)
@@ -222,6 +246,7 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
 
   const rescan = (subtrees) => {
     const out = []
+    const missed = new Map()
 
     for (const [dir, seen] of subtrees) {
       if (!stat(dir)?.isDirectory()) {
@@ -229,22 +254,24 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
       }
 
       const found = new Set()
+      const unwatched = read(dir, (path, directory) => {
+        found.add(path)
 
-      walk(dir, {
-        entry: (path, directory) => {
-          found.add(path)
-
-          if (!seen.has(path)) {
-            lately.add(path)
-            out.push({ path, op: 'add', entry: directory ? 'directory' : 'file' })
-          }
-        },
+        if (!seen.has(path)) {
+          lately.add(path)
+          out.push({ path, op: 'add', entry: directory ? 'directory' : 'file' })
+        }
       })
 
       for (const path of seen) {
         if (!found.has(path)) {
+          dirs.delete(path)
           out.push({ path, op: 'remove' })
         }
+      }
+
+      if (unwatched) {
+        missed.set(dir, found)
       }
     }
 
@@ -252,6 +279,10 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
       overflow()
     } else if (out.length > 0) {
       events(out)
+    }
+
+    if (missed.size > 0) {
+      requestSwap({ rescan: missed })
     }
   }
 
@@ -349,7 +380,6 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     const scanned = new Map()
     let stale = false
     let orphaned = false
-    let watched = null
 
     const add = (path, directory) => {
       sent.add(path)
@@ -372,24 +402,14 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     const scan = (dir) => {
       const seen = new Set()
 
-      walk(dir, {
-        directory: (path, found) => {
-          dirs.set(path, identity(found))
-          watched ??= watchedInodes()
+      orphaned = read(dir, (path, directory) => {
+        seen.add(path)
 
-          if (!watched.has(found.ino)) {
-            orphaned = true
-          }
-        },
-        entry: (path, directory) => {
-          seen.add(path)
-
-          if (!sent.has(path)) {
-            lately.add(path)
-            add(path, directory)
-          }
-        },
-      })
+        if (!sent.has(path)) {
+          lately.add(path)
+          add(path, directory)
+        }
+      }) || orphaned
       scanned.set(dir, seen)
     }
 
