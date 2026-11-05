@@ -12,7 +12,7 @@ let roots = 0
 
 after(() => rmSync(base, { recursive: true, force: true }))
 
-const timing = { burstQuiet: 100, burstWait: 1000, grace: 150, rootPoll: 50 }
+const timing = { burstQuiet: 100, burstWait: 1000, hold: 400, grace: 150, rootPoll: 50 }
 
 const start = async (options = {}) => {
   const root = join(base, `root-${roots++}`)
@@ -73,7 +73,7 @@ test('a new empty folder shows as a folder', async () => {
 
 test('the new-directory scan sends every add in a deep new tree, and its directories stay watched', async () => {
   const { seen, watcher, write } = await start()
-  const count = 200
+  const count = 150
 
   try {
     for (let i = 0; i < count; i++) {
@@ -96,6 +96,8 @@ test('the new-directory scan sends every add in a deep new tree, and its directo
       assert.ok(has(seen.events, `d${i}/x/y/z/early.txt`, 'add', 'file'), `d${i} early`)
       assert.ok(has(seen.events, `d${i}/x/y/z/late.txt`, 'add', 'file'), `d${i} late`)
     }
+
+    assert.equal(seen.overflows, 0)
 
   } finally {
     watcher.close()
@@ -344,20 +346,21 @@ test('a scanned folder renamed before parcel reports its children still swaps ou
     watched = new Set([lstatSync(join(root, 'src/x')).ino, lstatSync(join(root, 'src/x/y')).ino])
 
     listener(null, [{ path: `${dir}/src/x`, type: 'create' }])
+    await until(() => seen.length === 3, 'the scanned adds')
     assert.deepEqual(seen.map((event) => event.path), ['src/x', 'src/x/y', 'src/x/y/a.ts'])
 
     renameSync(join(root, 'src/x'), join(root, 'src/renamed'))
     listener(null, [{ path: `${dir}/src/renamed`, type: 'create' }, { path: `${dir}/src/x`, type: 'delete' }])
     await until(() => subscriptions.length === 2, 'the swap to a fresh subscription')
+    await until(() => has(seen, 'src/renamed/y/a.ts', 'add', 'file'), 'the renamed adds')
 
     assert.ok(has(seen, 'src/x', 'remove'))
-    assert.ok(has(seen, 'src/renamed/y/a.ts', 'add', 'file'))
   } finally {
     watcher.close()
   }
 })
 
-const scripted = async (name) => {
+const scripted = async (name, options = {}) => {
   const root = join(base, name)
   const subscriptions = []
   const pending = []
@@ -375,9 +378,9 @@ const scripted = async (name) => {
 
   mkdirSync(join(root, 'src'), { recursive: true })
 
-  const state = { watched: new Set([lstatSync(root).ino, lstatSync(join(root, 'src')).ino]) }
+  const state = { watched: new Set([lstatSync(root).ino, lstatSync(join(root, 'src')).ino]), overflows: 0 }
 
-  const watcher = watch(root, { events: (list) => seen.push(...list), overflow: () => {}, restarted: () => {} }, { ...timing, parcel, watchedInodes: () => state.watched })
+  const watcher = watch(root, { events: (list) => seen.push(...list), overflow: () => state.overflows++, restarted: () => {} }, { ...timing, ...options, parcel, watchedInodes: () => state.watched })
 
   await watcher.ready
 
@@ -431,13 +434,71 @@ test('a folder the fresh subscription missed is found by the swap scan and watch
     state.watched = new Set(inodes('src/x', 'src/x/y'))
     await release()
 
-    assert.ok(has(seen, 'src/x/y/late', 'add', 'directory'))
+    await until(() => has(seen, 'src/x/y/late', 'add', 'directory'), 'the missed folder', 1000)
     await until(() => subscriptions.length === 3, 'a swap that watches the missed folder', 1000)
 
     writeFileSync(path('src/x/y/late/after.txt'), 'x')
     state.watched = new Set(inodes('src/x', 'src/x/y', 'src/x/y/late'))
     await release()
-    assert.ok(has(seen, 'src/x/y/late/after.txt', 'add', 'file'))
+    await until(() => has(seen, 'src/x/y/late/after.txt', 'add', 'file'), 'the add under the missed folder', 1000)
+  } finally {
+    watcher.close()
+  }
+})
+
+test('a burst sends nothing before its one overflow reset, even when its first batch is small', async () => {
+  const { subscriptions, seen, state, watcher, release, path } = await scripted('burst-held', { maxEvents: 50 })
+
+  try {
+    const [{ dir, listener }] = subscriptions
+
+    writeFileSync(path('src/first.ts'), 'x')
+    listener(null, [{ path: `${dir}/src/first.ts`, type: 'create' }])
+    await sleep(30)
+    listener(null, Array.from({ length: 60 }, (_, i) => ({ path: `${dir}/src/burst-${i}.ts`, type: 'create' })))
+    await release()
+
+    await until(() => state.overflows === 1, 'the overflow')
+    assert.deepEqual(seen, [])
+  } finally {
+    watcher.close()
+  }
+})
+
+test('a lone edit waits one quiet window, and a steady stream waits no longer than the hold', async () => {
+  const { subscriptions, seen, watcher, path } = await scripted('hold-bound')
+
+  try {
+    const [{ dir, listener }] = subscriptions
+    const edit = [{ path: `${dir}/src/page.tsx`, type: 'update' }]
+
+    writeFileSync(path('src/page.tsx'), 'x')
+
+    const edited = Date.now()
+
+    listener(null, edit)
+    await until(() => seen.length > 0, 'the edit')
+
+    const waited = Date.now() - edited
+
+    assert.deepEqual(seen, [{ path: 'src/page.tsx', op: 'change' }])
+    assert.ok(waited >= timing.burstQuiet && waited < timing.hold, `the edit waited ${waited} ms`)
+
+    seen.length = 0
+
+    const begun = Date.now()
+    let first = null
+
+    for (let i = 0; i < 16; i++) {
+      listener(null, edit)
+      await sleep(50)
+
+      if (first === null && seen.length > 0) {
+        first = Date.now() - begun
+      }
+    }
+
+    assert.ok(first !== null && first >= timing.hold && first < timing.hold + 150, `the stream waited ${first} ms`)
   } finally {
     watcher.close()
   }

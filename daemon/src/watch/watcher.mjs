@@ -8,13 +8,14 @@ const serial = (call) => (queue = queue.then(call, call))
 const IGNORED = '(?:.*/)?(?:node_modules|\\.next|\\.git|\\.env[^/]*|\\.npmrc|[^/]*\\.pem|[^/]*\\.key)'
 
 const BATCH_EVENTS = 1000
-const BURST_QUIET = 300
+const BURST_QUIET = 600
 const BURST_WAIT = 5000
+const HOLD = 2000
 const GRACE = 600
 const ROOT_POLL = 1000
 
 export function watcher(root, { events, overflow, restarted }, options = {}) {
-  const { maxEvents = BATCH_EVENTS, burstQuiet = BURST_QUIET, burstWait = BURST_WAIT, grace = GRACE, rootPoll = ROOT_POLL, parcel = binding, watchedInodes = inotifyInodes } = options
+  const { maxEvents = BATCH_EVENTS, burstQuiet = BURST_QUIET, burstWait = BURST_WAIT, hold = HOLD, grace = GRACE, rootPoll = ROOT_POLL, parcel = binding, watchedInodes = inotifyInodes } = options
   const dirs = new Map()
   let generation = 0
   let current = null
@@ -27,6 +28,7 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
   let closed = false
   let lately = new Set()
   let window = null
+  let lost = false
 
   const absolute = (path) => (path ? `${root}/${path}` : root)
   const child = (dir, name) => (dir ? `${dir}/${name}` : name)
@@ -154,6 +156,15 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     clearTimeout(burst?.quiet)
     clearTimeout(burst?.wait)
     burst = null
+
+    if (window && !lost && window.held.length > 0) {
+      events(window.held)
+    }
+
+    clearTimeout(window?.quiet)
+    clearTimeout(window?.hold)
+    window = null
+    lost = false
     dirs.clear()
 
     if (closed || pollTimer) {
@@ -178,6 +189,10 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
   }
 
   const requestSwap = (changes) => {
+    if (changes.overflow) {
+      lose()
+    }
+
     if (swap && !swap.ready) {
       merge(swap, changes)
     } else if (swap) {
@@ -211,6 +226,7 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
       }
 
       swap.overflow = true
+      lose()
       graceTimer = setTimeout(runSwap, 100)
       return
     }
@@ -227,7 +243,7 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
 
     if (swap.overflow) {
       index()
-      overflow()
+      reset()
     } else {
       rescan(swap.rescan)
     }
@@ -276,14 +292,61 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     }
 
     if (out.length > maxEvents) {
-      overflow()
-    } else if (out.length > 0) {
-      events(out)
+      reset()
+    } else {
+      send(out)
     }
 
     if (missed.size > 0) {
       requestSwap({ rescan: missed })
     }
+  }
+
+  const send = (out) => {
+    if (lost || out.length === 0) {
+      return
+    }
+
+    if (window) {
+      window.held.push(...out)
+    } else {
+      events(out)
+    }
+  }
+
+  const release = () => {
+    if (!window) {
+      return
+    }
+
+    const { held } = window
+
+    clearTimeout(window.quiet)
+    clearTimeout(window.hold)
+    window = null
+
+    if (held.length > maxEvents) {
+      requestSwap({ overflow: true })
+    } else if (held.length > 0) {
+      events(held)
+    }
+  }
+
+  const lose = () => {
+    lost = true
+
+    if (window) {
+      window.held = []
+    }
+  }
+
+  const reset = () => {
+    if (window) {
+      window.held = []
+    }
+
+    lost = false
+    overflow()
   }
 
   const endBurst = () => {
@@ -309,16 +372,15 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
       return
     }
 
-    const now = Date.now()
-
-    if (!window || now - window.last > burstQuiet || now - window.start > burstWait) {
-      window = { start: now, last: now, count: 0 }
-    }
-
-    window.last = now
+    window ??= { count: 0, held: [], hold: setTimeout(release, hold) }
+    clearTimeout(window.quiet)
+    window.quiet = setTimeout(release, burstQuiet)
     window.count += list.length
 
     if (window.count > maxEvents) {
+      lose()
+      clearTimeout(window.quiet)
+      clearTimeout(window.hold)
       window = null
       burst = { quiet: setTimeout(endBurst, burstQuiet), wait: setTimeout(endBurst, burstWait) }
       return
@@ -355,10 +417,7 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
 
       const removes = batch.filter(([path, type]) => path && type === 'delete').map(([path]) => ({ path, op: 'remove' }))
 
-      if (removes.length > 0) {
-        events(removes)
-      }
-
+      send(removes)
       end()
       return
     }
@@ -475,9 +534,7 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
       return
     }
 
-    if (out.length > 0) {
-      events(out)
-    }
+    send(out)
 
     if (stale || orphaned || (swap && !swap.ready && scanned.size > 0)) {
       requestSwap({ rescan: scanned })
@@ -498,6 +555,8 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
       clearTimeout(graceTimer)
       clearTimeout(burst?.quiet)
       clearTimeout(burst?.wait)
+      clearTimeout(window?.quiet)
+      clearTimeout(window?.hold)
       unsubscribe(current)
       unsubscribe(previous)
     },
