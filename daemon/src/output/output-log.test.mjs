@@ -187,14 +187,25 @@ test('a cursor the daemon cannot read gets an unknown reset', () => {
   assert.deepEqual(OutputLog.location({ at: OutputLog.position('0123456789abcdef.10.0123456789abcdef'), files: OutputLog.segments(path, SANDBOX), behindBytes: OutputLog.BEHIND_BYTES }), { reset: 'unknown' })
 })
 
-test('a cursor more than 256 KiB behind gets a behind reset', () => {
+test('a cursor a 10,000-line flood left behind resumes without a reset', () => {
   const path = logFile()
 
   writeFileSync(path, lines(1, 10))
   const at = cursorAfter(path, 10)
-  appendFileSync(path, lines(11, 6000, 'x'.repeat(40)))
+  appendFileSync(path, Array.from({ length: 500 }, (_, record) => pm2Line(Array.from({ length: 20 }, (_, line) => `FLOOD cutflood12345 ${record * 20 + line} \n`).join(''))).join(''))
 
-  assert.ok(OutputLog.segments(path, SANDBOX).at(-1).size - at.offset > OutputLog.BEHIND_BYTES)
+  assert.ok(OutputLog.segments(path, SANDBOX).at(-1).size - at.offset > 256 * 1024)
+  assert.deepEqual(OutputLog.location({ at, files: OutputLog.segments(path, SANDBOX), behindBytes: OutputLog.BEHIND_BYTES }), { index: 0, offset: at.offset })
+})
+
+test('a cursor more than 1 MiB behind gets a behind reset', () => {
+  const path = logFile()
+
+  writeFileSync(path, lines(1, 10))
+  const at = cursorAfter(path, 10)
+  appendFileSync(path, lines(11, 8000, 'x'.repeat(100)))
+
+  assert.ok(OutputLog.segments(path, SANDBOX).at(-1).size - at.offset > 1024 * 1024)
   assert.deepEqual(OutputLog.location({ at, files: OutputLog.segments(path, SANDBOX), behindBytes: OutputLog.BEHIND_BYTES }), { reset: 'behind' })
 })
 

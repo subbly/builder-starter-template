@@ -6,7 +6,7 @@ import { basename, dirname, join } from 'node:path'
 import { record } from './record.mjs'
 
 export const REPLAY_BYTES = 64 * 1024
-export const BEHIND_BYTES = 256 * 1024
+export const BEHIND_BYTES = 1024 * 1024
 const NONE = 'none'
 
 const SCAN_BYTES = 32 * 1024
