@@ -4,7 +4,7 @@ unset NODE_CHANNEL_FD NODE_CHANNEL_SERIALIZATION_MODE
 . /project/workspace/scripts/events.sh
 cd /project/workspace/main || exit 1
 
-open_events css-watcher -r -e close_write,moved_to,moved_from,delete --format '%w%f' --exclude '(^|/)(node_modules|\.next|\.git|\.subbly)(/|$)' src
+open_events css-watcher -r -e close_write,moved_to,moved_from,delete --format '%w%f' --include '^\./src(/|$)' . @./node_modules @./.next @./.git @./.subbly
 
 while read -r path <&9; do
   case $path in
