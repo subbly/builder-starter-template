@@ -6,7 +6,6 @@ const NETLIFY_CLI_VERSION = '27.5.0'
 const GLOBAL_PACKAGES = [
   `netlify-cli@${NETLIFY_CLI_VERSION}`,
   'pnpm',
-  'chokidar-cli',
   'pm2',
   'shadcn',
   'tsx',
@@ -18,7 +17,7 @@ export const createTemplate = () => {
     .fromImage('node:24-slim')
     .setUser('root')
     .runCmd(
-      'apt-get update && apt-get install -y git curl lsof ripgrep jq unzip zip file poppler-utils python3 && rm -rf /var/lib/apt/lists/*'
+      'apt-get update && apt-get install -y git curl lsof ripgrep jq unzip zip file poppler-utils python3 inotify-tools && rm -rf /var/lib/apt/lists/*'
     )
     .runCmd(
       `curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | env UV_INSTALL_DIR=/usr/local/bin UV_NO_MODIFY_PATH=1 sh`
