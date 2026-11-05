@@ -1,0 +1,11 @@
+{
+  "iss": "subbly-builder-dev",
+  "keys": [
+    {
+      "kid": "dev-2026-11",
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "vBtkXjJQyMrXdoJaiiBvQl7P0SltV0L1CrqQR50RocY"
+    }
+  ]
+}

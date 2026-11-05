@@ -12,7 +12,9 @@ const GLOBAL_PACKAGES = [
   'agent-browser',
 ]
 
-export const createTemplate = () => {
+export type Environment = 'dev' | 'production'
+
+export const createTemplate = (environment: Environment) => {
   return Template()
     .fromImage('node:24-slim')
     .setUser('root')
@@ -33,6 +35,7 @@ export const createTemplate = () => {
     .copy('ecosystem.config.js', '/project/workspace/ecosystem.config.js')
     .copy('systemd/subbly-pm2.service', '/etc/systemd/system/subbly-pm2.service', { mode: 0o644 })
     .runCmd('systemctl enable subbly-pm2.service')
+    .copy(`daemon/keys/${environment}.json`, '/etc/subbly/daemon-keys.json', { mode: 0o644 })
     .copy('daemon/bundle', '/tmp/subbly-daemon')
     .runCmd('sh /tmp/subbly-daemon/install.sh')
     .runCmd('chown -R user:user /project/workspace')

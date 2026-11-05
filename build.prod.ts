@@ -1,3 +1,3 @@
 import { buildTemplate } from './build'
 
-buildTemplate('subbly-workspace').catch(console.error)
+buildTemplate('subbly-workspace', 'production').catch(console.error)
