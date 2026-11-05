@@ -17,3 +17,4 @@ export const BOOT_ID = '/proc/sys/kernel/random/boot_id'
 export const DEV_APP = 'subbly-dev'
 export const DEV_PORT = 3000
 export const DEV_PROBE = '/__nextjs_original-stack-frames'
+export const WATCH_ROOT = '/project/workspace/main'

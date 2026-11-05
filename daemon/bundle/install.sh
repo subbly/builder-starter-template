@@ -10,7 +10,7 @@ exec 9> "$target/.install.lock"
 flock -w 120 9
 
 mkdir -p "$target/$build"
-cp "$source"/*.mjs "$source/manifest.json" "$target/$build/"
+cp "$source"/*.mjs "$source"/*.node "$source/manifest.json" "$target/$build/"
 chmod 0755 "$target/$build"
 chmod 0644 "$target/$build"/*
 ln -sfn "$build" "$target/current.next"

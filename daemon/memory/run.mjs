@@ -45,7 +45,7 @@ try {
   const staging = `/tmp/subbly-daemon-${manifest.build}`
 
   await sandbox.files.write([
-    ...readdirSync(bundle).map((name) => ({ path: `${staging}/${name}`, data: readFileSync(join(bundle, name), 'utf8') })),
+    ...readdirSync(bundle).map((name) => ({ path: `${staging}/${name}`, data: name.endsWith('.node') ? new Uint8Array(readFileSync(join(bundle, name))).buffer : readFileSync(join(bundle, name), 'utf8') })),
     { path: `${REMOTE}/soak.mjs`, data: readFileSync(join(root, 'memory/soak.mjs'), 'utf8') },
 ])
   await sandbox.commands.run(`sh ${staging}/install.sh`, { user: 'root', timeoutMs: 120_000 })
