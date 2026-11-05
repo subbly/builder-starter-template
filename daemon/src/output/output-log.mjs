@@ -17,6 +17,7 @@ const CHECK_BYTES = 256
 const HEAD_BYTES = 64 * 1024
 const NEWLINE = 0x0a
 const CURSOR = /^(none|[0-9a-f]{16})\.(\d{1,15})\.([0-9a-f]{16}|0)$/
+const scratch = Buffer.allocUnsafeSlow(LINE_BYTES)
 
 export function segments(path, sandboxId) {
   const directory = dirname(path)
@@ -108,9 +109,8 @@ export function tail(files, bytes) {
 export function chunk(file, offset) {
   const start = Math.max(0, offset - CHECK_BYTES)
   const head = offset - start
-  const buffer = Buffer.alloc(head + READ_BYTES)
-  const length = bytes(file.path, buffer, start)
-  const data = buffer.subarray(head, Math.max(head, length))
+  const buffer = bytes(file.path, start, head + READ_BYTES)
+  const data = buffer.subarray(Math.min(head, buffer.length))
   const records = []
   let consumed = 0
 
@@ -137,11 +137,9 @@ export function chunk(file, offset) {
     return { records }
   }
 
-  const line = Buffer.alloc(Math.min(end - offset, LINE_BYTES))
+  const line = record(bytes(file.path, offset, Math.min(end - offset, LINE_BYTES)), end - offset)
 
-  bytes(file.path, line, offset)
-
-  return { records: [record(line, end - offset)], offset: end + 1, check: check(file.path, end + 1) }
+  return { records: [line], offset: end + 1, check: check(file.path, end + 1) }
 }
 
 export function check(path, offset) {
@@ -150,9 +148,9 @@ export function check(path, offset) {
   }
 
   const start = Math.max(0, offset - CHECK_BYTES)
-  const buffer = Buffer.alloc(offset - start)
+  const buffer = bytes(path, start, offset - start)
 
-  if (bytes(path, buffer, start) < buffer.length || buffer[buffer.length - 1] !== NEWLINE) {
+  if (buffer.length < offset - start || buffer[buffer.length - 1] !== NEWLINE) {
     return null
   }
 
@@ -174,29 +172,26 @@ const segment = (path, sandboxId) => {
 
   try {
     const size = fstatSync(fd).size
-    const head = Buffer.alloc(Math.min(size, HEAD_BYTES))
-    const length = readSync(fd, head, 0, head.length, 0)
-    const end = head.subarray(0, length).indexOf(NEWLINE)
-    const first = end === -1 && length === HEAD_BYTES ? head : head.subarray(0, end)
+    const head = scratch.subarray(0, readSync(fd, scratch, 0, Math.min(size, HEAD_BYTES), 0))
+    const end = head.indexOf(NEWLINE)
+    const first = end === -1 && head.length === HEAD_BYTES ? head : head.subarray(0, end)
 
-    return { path, size, epoch: end === -1 && length < HEAD_BYTES ? NONE : digest(Buffer.concat([Buffer.from(`${sandboxId}\0`), first])) }
+    return { path, size, epoch: end === -1 && head.length < HEAD_BYTES ? NONE : digest(`${sandboxId}\0`, first) }
   } finally {
     closeSync(fd)
   }
 }
 
 const nextNewline = (path, from) => {
-  const buffer = Buffer.alloc(SCAN_BYTES)
-
   for (let start = from; ; start += SCAN_BYTES) {
-    const length = bytes(path, buffer, start)
-    const end = buffer.subarray(0, length).indexOf(NEWLINE)
+    const buffer = bytes(path, start, SCAN_BYTES)
+    const end = buffer.indexOf(NEWLINE)
 
     if (end !== -1) {
       return start + end
     }
 
-    if (length < SCAN_BYTES) {
+    if (buffer.length < SCAN_BYTES) {
       return -1
     }
   }
@@ -205,8 +200,7 @@ const nextNewline = (path, from) => {
 const previousNewline = (path, before) => {
   for (let end = before; end > 0; end -= SCAN_BYTES) {
     const start = Math.max(0, end - SCAN_BYTES)
-    const buffer = Buffer.alloc(end - start)
-    const found = buffer.subarray(0, bytes(path, buffer, start)).lastIndexOf(NEWLINE)
+    const found = bytes(path, start, end - start).lastIndexOf(NEWLINE)
 
     if (found !== -1) {
       return start + found
@@ -216,15 +210,15 @@ const previousNewline = (path, before) => {
   return -1
 }
 
-const bytes = (path, buffer, position) => {
+const bytes = (path, position, length) => {
   const fd = descriptor(path)
 
   if (fd === null) {
-    return 0
+    return scratch.subarray(0, 0)
   }
 
   try {
-    return readSync(fd, buffer, 0, buffer.length, position)
+    return scratch.subarray(0, readSync(fd, scratch, 0, length, position))
   } finally {
     closeSync(fd)
   }
@@ -246,4 +240,4 @@ const entries = (directory) => {
   }
 }
 
-const digest = (buffer) => createHash('sha256').update(buffer).digest('hex').slice(0, 16)
+const digest = (...parts) => parts.reduce((hash, part) => hash.update(part), createHash('sha256')).digest('hex').slice(0, 16)

@@ -261,3 +261,38 @@ test('the cursor a frame issues verifies on the next attach', () => {
 
   assert.deepEqual(OutputLog.location({ at, files, behindBytes: OutputLog.BEHIND_BYTES }), { index: 0, offset: chunk.offset })
 })
+
+test('a catch-up reads through one buffer, so a burst leaves no native memory waiting for a full collection', () => {
+  const path = logFile()
+
+  writeFileSync(path, lines(1, 5000, 'archived'))
+  rotate(path)
+  writeFileSync(path, `${lines(1, 5000)}${pm2Line(`${'w'.repeat(70_000)}\n`)}${lines(5001, 6000)}`)
+
+  const files = OutputLog.segments(path, SANDBOX)
+  let at = { epoch: files[0].epoch, offset: 0, check: '0' }
+  let reads = 0
+
+  for (;;) {
+    const before = process.memoryUsage().arrayBuffers
+    const current = OutputLog.segments(path, SANDBOX)
+    const found = OutputLog.location({ at, files: current, behindBytes: Infinity })
+    const chunk = OutputLog.chunk(current[found.index], found.offset)
+
+    assert.ok(process.memoryUsage().arrayBuffers <= before, `read ${reads} left ${process.memoryUsage().arrayBuffers - before} bytes of buffers`)
+    reads += 1
+
+    if (chunk.records.length > 0) {
+      at = { epoch: current[found.index].epoch, offset: chunk.offset, check: chunk.check }
+      continue
+    }
+
+    if (found.index === current.length - 1) {
+      break
+    }
+
+    at = { epoch: current[found.index + 1].epoch, offset: 0, check: '0' }
+  }
+
+  assert.ok(reads > 40)
+})
