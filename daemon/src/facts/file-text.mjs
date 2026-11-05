@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-export function sandboxId(path) {
+export function fileText(path) {
   try {
     return readFileSync(path, 'utf8').trim()
   } catch {

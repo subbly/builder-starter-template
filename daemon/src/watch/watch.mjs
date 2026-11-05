@@ -1,11 +1,9 @@
-import { readFileSync } from 'node:fs'
 import { eventStream } from '../server/event-stream.mjs'
 import { Ring } from './ring.mjs'
-import { sandboxId } from '../token/sandbox-id.mjs'
+import { fileText } from '../facts/file-text.mjs'
 import { chunker, snapshot } from './snapshot.mjs'
-import { watcher } from './watcher.mjs'
 
-export function watch({ root, sandboxIdFile, bootIdFile, starts, options = {} }) {
+export function watch({ root, sandboxIdFile, bootIdFile, starts, chunk, subscribe }) {
   let log = Ring.empty()
   let generation = 0
   let wake = signal()
@@ -17,7 +15,7 @@ export function watch({ root, sandboxIdFile, bootIdFile, starts, options = {} })
     woken.resolve()
   }
 
-  const subscription = watcher(root, {
+  subscribe({
     events: (list) => {
       log.append(list)
       notify()
@@ -31,11 +29,11 @@ export function watch({ root, sandboxIdFile, bootIdFile, starts, options = {} })
       log = Ring.empty()
       notify()
     },
-  }, options)
+  })
 
   const route = (request, response, claims) => {
     const stream = eventStream(response, claims)
-    const identity = { sandboxId: claims?.aud ?? sandboxId(sandboxIdFile), bootId: text(bootIdFile), starts }
+    const identity = { sandboxId: claims?.aud ?? fileText(sandboxIdFile), bootId: fileText(bootIdFile), starts }
     const closed = new Promise((resolve) => response.once('close', resolve))
 
     follow({ stream, closed, identity, from: request.headers['last-event-id'] ?? null }).catch((error) => {
@@ -45,41 +43,35 @@ export function watch({ root, sandboxIdFile, bootIdFile, starts, options = {} })
   }
 
   const follow = async ({ stream, closed, identity, from }) => {
-    const send = async (frame) => {
-      if (!stream.send(frame)) {
-        await stream.drained()
-      }
-    }
-
     let at = null
 
     const resync = async (reason) => {
-      const cut = { generation, seq: log.head(), epoch: Ring.epoch({ ...identity, generation }) }
+      const cut = { generation, sequence: log.head(), epoch: Ring.epoch({ ...identity, generation }) }
 
       if (reason) {
-        await send({ type: 'reset', reason, cursor: Ring.cursor(cut.epoch, cut.seq) })
+        await stream.deliver({ type: 'reset', reason, cursor: Ring.cursor(cut.epoch, cut.sequence) })
       }
 
-      for await (const entries of snapshot(root, options)) {
+      for await (const entries of snapshot(root, chunk)) {
         if (!stream.isOpen()) {
           return
         }
 
-        await send({ type: 'snapshot', entries })
+        await stream.deliver({ type: 'snapshot', entries })
       }
 
-      await send({ type: 'caught-up', cursor: Ring.cursor(cut.epoch, cut.seq) })
+      await stream.deliver({ type: 'caught-up', cursor: Ring.cursor(cut.epoch, cut.sequence) })
       at = cut
     }
 
     const replay = async (list) => {
-      const frames = chunker(options)
-      let seq = at.seq
+      const frames = chunker(chunk)
+      let sequence = at.sequence
 
       const flush = async (events) => {
         if (events) {
-          seq += events.length
-          await send({ type: 'watch', events, cursor: Ring.cursor(at.epoch, seq) })
+          sequence += events.length
+          await stream.deliver({ type: 'watch', events, cursor: Ring.cursor(at.epoch, sequence) })
         }
       }
 
@@ -88,7 +80,7 @@ export function watch({ root, sandboxIdFile, bootIdFile, starts, options = {} })
       }
 
       await flush(frames.flush())
-      at = { ...at, seq }
+      at = { ...at, sequence }
     }
 
     const opened = Ring.epoch({ ...identity, generation })
@@ -97,9 +89,9 @@ export function watch({ root, sandboxIdFile, bootIdFile, starts, options = {} })
     if (decision.snapshot) {
       await resync(decision.reason)
     } else {
-      at = { generation, seq: log.head() - decision.replay.length, epoch: opened }
+      at = { generation, sequence: log.head() - decision.replay.length, epoch: opened }
       await replay(decision.replay)
-      await send({ type: 'caught-up', cursor: Ring.cursor(at.epoch, at.seq) })
+      await stream.deliver({ type: 'caught-up', cursor: Ring.cursor(at.epoch, at.sequence) })
     }
 
     while (stream.isOpen()) {
@@ -108,7 +100,7 @@ export function watch({ root, sandboxIdFile, bootIdFile, starts, options = {} })
         continue
       }
 
-      const answer = log.since(at.seq)
+      const answer = log.since(at.sequence)
 
       if (answer.reason) {
         await resync(answer.reason)
@@ -119,9 +111,6 @@ export function watch({ root, sandboxIdFile, bootIdFile, starts, options = {} })
       }
     }
   }
-
-  route.close = () => subscription.close()
-  route.ready = subscription.ready
 
   return route
 }
@@ -134,12 +123,4 @@ const signal = () => {
   })
 
   return { promise, resolve }
-}
-
-const text = (path) => {
-  try {
-    return readFileSync(path, 'utf8').trim()
-  } catch {
-    return ''
-  }
 }

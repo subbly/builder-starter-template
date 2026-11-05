@@ -1,19 +1,16 @@
 import { opendir } from 'node:fs/promises'
 import { Paths } from './paths.mjs'
 
-const CHUNK_ENTRIES = 500
-const CHUNK_BYTES = 32 * 1024
-
-export async function* snapshot(root, { maxEntries = CHUNK_ENTRIES, maxBytes = CHUNK_BYTES } = {}) {
-  const chunk = chunker({ maxEntries, maxBytes })
+export async function* snapshot(root, limits) {
+  const chunk = chunker(limits)
   const pending = ['']
 
   while (pending.length > 0) {
-    const dir = pending.pop()
+    const folder = pending.pop()
     let handle
 
     try {
-      handle = await opendir(dir ? `${root}/${dir}` : root)
+      handle = await opendir(folder ? `${root}/${folder}` : root)
     } catch {
       continue
     }
@@ -24,7 +21,7 @@ export async function* snapshot(root, { maxEntries = CHUNK_ENTRIES, maxBytes = C
           continue
         }
 
-        const path = dir ? `${dir}/${dirent.name}` : dirent.name
+        const path = folder ? `${folder}/${dirent.name}` : dirent.name
         const entry = dirent.isDirectory() ? 'directory' : 'file'
 
         if (entry === 'directory') {
@@ -48,7 +45,7 @@ export async function* snapshot(root, { maxEntries = CHUNK_ENTRIES, maxBytes = C
   }
 }
 
-export function chunker({ maxEntries = CHUNK_ENTRIES, maxBytes = CHUNK_BYTES } = {}) {
+export function chunker({ maxEntries, maxBytes }) {
   let items = []
   let bytes = 0
 

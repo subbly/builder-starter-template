@@ -20,10 +20,10 @@ const tree = (base, files) => {
   }
 }
 
-const collect = async (dir, caps) => {
+const collect = async (dir, limits = { maxEntries: 500, maxBytes: 32 * 1024 }) => {
   const chunks = []
 
-  for await (const chunk of snapshot(dir, caps)) {
+  for await (const chunk of snapshot(dir, limits)) {
     chunks.push(chunk)
   }
 

@@ -1,4 +1,4 @@
-import { sandboxId } from '../token/sandbox-id.mjs'
+import { fileText } from '../facts/file-text.mjs'
 import { verdict } from '../token/verdict.mjs'
 
 export function guard({ keyring, sandboxIdFile }) {
@@ -13,7 +13,7 @@ export function guard({ keyring, sandboxIdFile }) {
       return { reason: 'missing' }
     }
 
-    return verdict(token, { keys: keyring.current(), sandboxId: sandboxId(sandboxIdFile), now: Math.floor(Date.now() / 1000) })
+    return verdict(token, { keys: keyring.current(), sandboxId: fileText(sandboxIdFile), now: Math.floor(Date.now() / 1000) })
   }
 }
 

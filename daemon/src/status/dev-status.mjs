@@ -4,7 +4,7 @@ import { Status } from './status.mjs'
 export function devStatus({ pm2, probe, holder, bootId }, timing) {
   const listeners = new Set()
   let run = 0
-  let running = false
+  let isRunning = false
   let processes
   let listening
   let frame = null
@@ -82,7 +82,7 @@ export function devStatus({ pm2, probe, holder, bootId }, timing) {
 
   const start = () => {
     run += 1
-    running = true
+    isRunning = true
     processes = undefined
     listening = undefined
     probedLife = null
@@ -93,7 +93,7 @@ export function devStatus({ pm2, probe, holder, bootId }, timing) {
 
   const stop = () => {
     run += 1
-    running = false
+    isRunning = false
     clearTimeout(pollTimer)
     clearTimeout(probeTimer)
     pm2.close()
@@ -104,7 +104,7 @@ export function devStatus({ pm2, probe, holder, bootId }, timing) {
       clearTimeout(lingerTimer)
       listeners.add(listener)
 
-      if (!running) {
+      if (!isRunning) {
         start()
       } else if (frame) {
         listener(frame)
@@ -116,7 +116,6 @@ export function devStatus({ pm2, probe, holder, bootId }, timing) {
         }
       }
     },
-    current: () => frame,
   }
 }
 

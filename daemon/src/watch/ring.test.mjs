@@ -70,7 +70,7 @@ test('the ring keeps at most 256 KB, whichever limit comes first', () => {
 
   log.append(Array.from({ length: 300 }, (_, i) => long(i)))
 
-  const oldest = Array.from({ length: 301 }, (_, seq) => seq).find((seq) => !log.since(seq).reason)
+  const oldest = Array.from({ length: 301 }, (_, sequence) => sequence).find((sequence) => !log.since(sequence).reason)
   const replay = log.since(oldest).events
 
   assert.deepEqual(log.since(oldest - 1), { reason: 'behind' })

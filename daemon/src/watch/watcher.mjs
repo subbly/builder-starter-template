@@ -1,22 +1,13 @@
-import { lstatSync, opendirSync, readFileSync, readdirSync, readlinkSync } from 'node:fs'
-import { createRequire } from 'node:module'
+import { lstatSync, opendirSync } from 'node:fs'
 import { Paths } from './paths.mjs'
 
-const binding = createRequire(import.meta.url)('../../vendor/parcel-watcher.node')
 let queue = Promise.resolve()
 const serial = (call) => (queue = queue.then(call, call))
-const IGNORED = '(?:.*/)?(?:node_modules|\\.next|\\.git|\\.env[^/]*|\\.npmrc|[^/]*\\.pem|[^/]*\\.key)'
 
-const BATCH_EVENTS = 1000
-const BURST_QUIET = 600
-const BURST_WAIT = 5000
-const HOLD = 2000
-const GRACE = 600
-const ROOT_POLL = 1000
-
-export function watcher(root, { events, overflow, restarted }, options = {}) {
-  const { maxEvents = BATCH_EVENTS, burstQuiet = BURST_QUIET, burstWait = BURST_WAIT, hold = HOLD, grace = GRACE, rootPoll = ROOT_POLL, parcel = binding, watchedInodes = inotifyInodes } = options
-  const dirs = new Map()
+export function watcher({ root, callbacks, parcel, watchedInodes, limits }) {
+  const { events, overflow, restarted } = callbacks
+  const { maxEvents, burstQuiet, burstWait, hold, grace, rootPoll } = limits
+  const folders = new Map()
   let generation = 0
   let current = null
   let previous = null
@@ -25,14 +16,14 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
   let burst = null
   let pollTimer = null
   let graceTimer = null
-  let closed = false
-  let lately = new Set()
-  let window = null
-  let lost = false
+  let isClosed = false
+  let scanAdds = new Set()
+  let burstWindow = null
+  let isDiscarding = false
 
   const absolute = (path) => (path ? `${root}/${path}` : root)
-  const child = (dir, name) => (dir ? `${dir}/${name}` : name)
-  const under = (path, dir) => !dir || path === dir || path.startsWith(`${dir}/`)
+  const child = (folder, name) => (folder ? `${folder}/${name}` : name)
+  const under = (path, folder) => !folder || path === folder || path.startsWith(`${folder}/`)
   const identity = (found) => `${found.ino}:${found.birthtimeMs}`
 
   const stat = (path) => {
@@ -43,8 +34,8 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     }
   }
 
-  const walk = (dir, visit) => {
-    const stack = [dir]
+  const walk = (folder, visit) => {
+    const stack = [folder]
 
     while (stack.length > 0) {
       const current = stack.pop()
@@ -85,29 +76,29 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     }
   }
 
-  const read = (dir, entry) => {
+  const read = (folder, entry) => {
     let watched = null
-    let unwatched = false
+    let hasUnwatched = false
 
-    walk(dir, {
+    walk(folder, {
       directory: (path, found) => {
-        dirs.set(path, identity(found))
-        watched ??= watchedInodes()
+        folders.set(path, identity(found))
+        watched ??= new Set(watchedInodes())
 
         if (!watched.has(found.ino)) {
-          unwatched = true
+          hasUnwatched = true
         }
       },
       entry,
     })
 
-    return unwatched
+    return hasUnwatched
   }
 
   const index = () => {
     const found = new Set()
 
-    dirs.clear()
+    folders.clear()
 
     if (read('', (path) => found.add(path))) {
       requestSwap({ rescan: new Map([['', found]]) })
@@ -115,18 +106,18 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
   }
 
   const subscribe = async () => {
-    const dir = ++generation % 2 ? root : `${root}/.`
-    const subscription = { dir, drop: new Set(), options: { ignoreGlobs: [IGNORED], ignorePaths: [`${dir}/.git/subbly-watch-${generation}`] } }
+    const folder = ++generation % 2 ? root : `${root}/.`
+    const subscription = { folder, drop: new Set(), options: { ignoreGlobs: [Paths.IGNORE_PATTERN], ignorePaths: [`${folder}/.git/subbly-watch-${generation}`] } }
 
     subscription.listener = (error, list) => received(subscription, error, list)
-    await serial(() => parcel.subscribe(dir, subscription.listener, subscription.options))
+    await serial(() => parcel.subscribe(folder, subscription.listener, subscription.options))
 
     return subscription
   }
 
   const unsubscribe = (subscription) => {
     if (subscription) {
-      serial(() => parcel.unsubscribe(subscription.dir, subscription.listener, subscription.options)).catch(() => {})
+      serial(() => parcel.unsubscribe(subscription.folder, subscription.listener, subscription.options)).catch(() => {})
     }
   }
 
@@ -137,7 +128,7 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
       return false
     }
 
-    if (closed) {
+    if (isClosed) {
       unsubscribe(current)
       return false
     }
@@ -151,23 +142,23 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     unsubscribe(current)
     unsubscribe(previous)
     current = previous = swap = next = null
-    lately = new Set()
+    scanAdds = new Set()
     clearTimeout(graceTimer)
     clearTimeout(burst?.quiet)
     clearTimeout(burst?.wait)
     burst = null
 
-    if (window && !lost && window.held.length > 0) {
-      events(window.held)
+    if (burstWindow && !isDiscarding && burstWindow.held.length > 0) {
+      events(burstWindow.held)
     }
 
-    clearTimeout(window?.quiet)
-    clearTimeout(window?.hold)
-    window = null
-    lost = false
-    dirs.clear()
+    clearTimeout(burstWindow?.quiet)
+    clearTimeout(burstWindow?.hold)
+    burstWindow = null
+    isDiscarding = false
+    folders.clear()
 
-    if (closed || pollTimer) {
+    if (isClosed || pollTimer) {
       return
     }
 
@@ -193,7 +184,7 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
       lose()
     }
 
-    if (swap && !swap.ready) {
+    if (swap && !swap.isReady) {
       merge(swap, changes)
     } else if (swap) {
       next = merge(next ?? { rescan: new Map(), overflow: false }, changes)
@@ -203,12 +194,12 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     }
   }
 
-  const merge = (target, { rescan = new Map(), overflow: lost = false }) => {
-    for (const [dir, seen] of rescan) {
-      target.rescan.set(dir, seen)
+  const merge = (target, { rescan = new Map(), overflow = false }) => {
+    for (const [folder, seen] of rescan) {
+      target.rescan.set(folder, seen)
     }
 
-    target.overflow ||= lost
+    target.overflow ||= overflow
 
     return target
   }
@@ -220,7 +211,7 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     try {
       fresh = await subscribe()
     } catch {
-      if (closed || !stat('')?.isDirectory()) {
+      if (isClosed || !stat('')?.isDirectory()) {
         end()
         return
       }
@@ -231,15 +222,15 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
       return
     }
 
-    if (closed || replaced !== current) {
+    if (isClosed || replaced !== current) {
       unsubscribe(fresh)
       return
     }
 
     current = fresh
     previous = replaced
-    previous.ignored = swap.overflow
-    swap.ready = true
+    previous.isIgnored = swap.overflow
+    swap.isReady = true
 
     if (swap.overflow) {
       index()
@@ -264,30 +255,30 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     const out = []
     const missed = new Map()
 
-    for (const [dir, seen] of subtrees) {
-      if (!stat(dir)?.isDirectory()) {
+    for (const [folder, seen] of subtrees) {
+      if (!stat(folder)?.isDirectory()) {
         continue
       }
 
       const found = new Set()
-      const unwatched = read(dir, (path, directory) => {
+      const hasUnwatched = read(folder, (path, isDirectory) => {
         found.add(path)
 
         if (!seen.has(path)) {
-          lately.add(path)
-          out.push({ path, op: 'add', entry: directory ? 'directory' : 'file' })
+          scanAdds.add(path)
+          out.push({ path, op: 'add', entry: isDirectory ? 'directory' : 'file' })
         }
       })
 
       for (const path of seen) {
         if (!found.has(path)) {
-          dirs.delete(path)
+          folders.delete(path)
           out.push({ path, op: 'remove' })
         }
       }
 
-      if (unwatched) {
-        missed.set(dir, found)
+      if (hasUnwatched) {
+        missed.set(folder, found)
       }
     }
 
@@ -303,27 +294,27 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
   }
 
   const send = (out) => {
-    if (lost || out.length === 0) {
+    if (isDiscarding || out.length === 0) {
       return
     }
 
-    if (window) {
-      window.held.push(...out)
+    if (burstWindow) {
+      burstWindow.held.push(...out)
     } else {
       events(out)
     }
   }
 
   const release = () => {
-    if (!window) {
+    if (!burstWindow) {
       return
     }
 
-    const { held } = window
+    const { held } = burstWindow
 
-    clearTimeout(window.quiet)
-    clearTimeout(window.hold)
-    window = null
+    clearTimeout(burstWindow.quiet)
+    clearTimeout(burstWindow.hold)
+    burstWindow = null
 
     if (held.length > maxEvents) {
       requestSwap({ overflow: true })
@@ -333,19 +324,19 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
   }
 
   const lose = () => {
-    lost = true
+    isDiscarding = true
 
-    if (window) {
-      window.held = []
+    if (burstWindow) {
+      burstWindow.held = []
     }
   }
 
   const reset = () => {
-    if (window) {
-      window.held = []
+    if (burstWindow) {
+      burstWindow.held = []
     }
 
-    lost = false
+    isDiscarding = false
     overflow()
   }
 
@@ -357,7 +348,7 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
   }
 
   const received = (subscription, error, list) => {
-    if (closed || (subscription !== current && subscription !== previous) || subscription.ignored) {
+    if (isClosed || (subscription !== current && subscription !== previous) || subscription.isIgnored) {
       return
     }
 
@@ -372,16 +363,16 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
       return
     }
 
-    window ??= { count: 0, held: [], hold: setTimeout(release, hold) }
-    clearTimeout(window.quiet)
-    window.quiet = setTimeout(release, burstQuiet)
-    window.count += list.length
+    burstWindow ??= { count: 0, held: [], hold: setTimeout(release, hold) }
+    clearTimeout(burstWindow.quiet)
+    burstWindow.quiet = setTimeout(release, burstQuiet)
+    burstWindow.count += list.length
 
-    if (window.count > maxEvents) {
+    if (burstWindow.count > maxEvents) {
       lose()
-      clearTimeout(window.quiet)
-      clearTimeout(window.hold)
-      window = null
+      clearTimeout(burstWindow.quiet)
+      clearTimeout(burstWindow.hold)
+      burstWindow = null
       burst = { quiet: setTimeout(endBurst, burstQuiet), wait: setTimeout(endBurst, burstWait) }
       return
     }
@@ -389,13 +380,13 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     const batch = []
 
     for (const { path, type } of list) {
-      if (path !== subscription.dir && !path.startsWith(`${subscription.dir}/`)) {
+      if (path !== subscription.folder && !path.startsWith(`${subscription.folder}/`)) {
         continue
       }
 
-      const relative = path.slice(subscription.dir.length + 1)
+      const relative = path.slice(subscription.folder.length + 1)
 
-      if (relative && (relative.split('/').some(Paths.isSkipped) || [...subscription.drop].some((dir) => under(relative, dir)))) {
+      if (relative && (Paths.isSkippedPath(relative) || [...subscription.drop].some((folder) => under(relative, folder)))) {
         continue
       }
 
@@ -406,27 +397,27 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
   }
 
   const apply = (subscription, batch) => {
-    if (batch.some(([path, type]) => path === '' && type === 'delete')) {
-      if (stat('')?.isDirectory()) {
-        end()
-        clearInterval(pollTimer)
-        pollTimer = null
-        resume()
-        return
-      }
+    const isRootDeleted = batch.some(([path, type]) => path === '' && type === 'delete')
 
-      const removes = batch.filter(([path, type]) => path && type === 'delete').map(([path]) => ({ path, op: 'remove' }))
+    if (isRootDeleted && stat('')?.isDirectory()) {
+      end()
+      clearInterval(pollTimer)
+      pollTimer = null
+      resume()
+      return
+    }
 
-      send(removes)
+    if (isRootDeleted) {
+      send(batch.filter(([path, type]) => path && type === 'delete').map(([path]) => ({ path, op: 'remove' })))
       end()
       return
     }
 
-    const earlier = lately
+    const earlier = scanAdds
     const reported = new Set(batch.map(([path]) => path))
     const deleted = new Set(batch.filter(([, type]) => type === 'delete').map(([path]) => path))
 
-    lately = new Set()
+    scanAdds = new Set()
 
     for (const path of earlier) {
       if (!reported.has(path) && !stat(path)) {
@@ -437,49 +428,45 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
     const out = []
     const sent = new Set()
     const scanned = new Map()
-    let stale = false
-    let orphaned = false
+    let isStale = false
+    let hasUnwatched = false
 
-    const add = (path, directory) => {
+    const add = (path, isDirectory) => {
       sent.add(path)
-      out.push({ path, op: 'add', entry: directory ? 'directory' : 'file' })
+      out.push({ path, op: 'add', entry: isDirectory ? 'directory' : 'file' })
     }
 
-    const forget = (dir) => {
-      for (const path of [...dirs.keys()]) {
-        if (under(path, dir)) {
-          if (path !== dir && !deleted.has(path)) {
-            stale = true
-            subscription.drop.add(dir)
-          }
-
-          dirs.delete(path)
+    const forget = (folder) => {
+      for (const path of [...folders.keys()].filter((path) => under(path, folder))) {
+        if (path !== folder && !deleted.has(path)) {
+          isStale = true
+          subscription.drop.add(folder)
         }
+
+        folders.delete(path)
       }
     }
 
-    const scan = (dir) => {
+    const scan = (folder) => {
       const seen = new Set()
 
-      orphaned = read(dir, (path, directory) => {
+      hasUnwatched = read(folder, (path, isDirectory) => {
         seen.add(path)
 
         if (!sent.has(path)) {
-          lately.add(path)
-          add(path, directory)
+          scanAdds.add(path)
+          add(path, isDirectory)
         }
-      }) || orphaned
-      scanned.set(dir, seen)
+      }) || hasUnwatched
+      scanned.set(folder, seen)
     }
 
-    for (const [path, type] of batch) {
-      if (path && type === 'delete') {
-        if (dirs.has(path)) {
-          forget(path)
-        }
-
-        out.push({ path, op: 'remove' })
+    for (const [path] of batch.filter(([path, type]) => path && type === 'delete')) {
+      if (folders.has(path)) {
+        forget(path)
       }
+
+      out.push({ path, op: 'remove' })
     }
 
     for (const [path, type] of batch) {
@@ -493,25 +480,33 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
         continue
       }
 
-      const known = dirs.get(path)
+      const known = folders.get(path)
+      const isFolder = found.isDirectory()
+      const isScanAdd = type === 'create' && earlier.has(path)
 
-      if (type === 'create' && earlier.has(path) && (!found.isDirectory() || known === identity(found))) {
-        if (!found.isDirectory()) {
-          out.push({ path, op: 'change' })
-        }
+      if (isScanAdd && isFolder && known === identity(found)) {
         continue
       }
 
-      if (!found.isDirectory()) {
-        if (known !== undefined) {
-          forget(path)
-          out.push({ path, op: 'remove' })
-          add(path, false)
-        } else if (type === 'create') {
-          add(path, false)
-        } else {
-          out.push({ path, op: 'change' })
-        }
+      if (isScanAdd && !isFolder) {
+        out.push({ path, op: 'change' })
+        continue
+      }
+
+      if (!isFolder && known !== undefined) {
+        forget(path)
+        out.push({ path, op: 'remove' })
+        add(path, false)
+        continue
+      }
+
+      if (!isFolder && type === 'create') {
+        add(path, false)
+        continue
+      }
+
+      if (!isFolder) {
+        out.push({ path, op: 'change' })
         continue
       }
 
@@ -536,13 +531,13 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
 
     send(out)
 
-    if (stale || orphaned || (swap && !swap.ready && scanned.size > 0)) {
+    if (isStale || hasUnwatched || (swap && !swap.isReady && scanned.size > 0)) {
       requestSwap({ rescan: scanned })
     }
   }
 
   const ready = start().then((started) => {
-    if (!started && !closed) {
+    if (!started && !isClosed) {
       end()
     }
   })
@@ -550,34 +545,15 @@ export function watcher(root, { events, overflow, restarted }, options = {}) {
   return {
     ready,
     close() {
-      closed = true
+      isClosed = true
       clearInterval(pollTimer)
       clearTimeout(graceTimer)
       clearTimeout(burst?.quiet)
       clearTimeout(burst?.wait)
-      clearTimeout(window?.quiet)
-      clearTimeout(window?.hold)
+      clearTimeout(burstWindow?.quiet)
+      clearTimeout(burstWindow?.hold)
       unsubscribe(current)
       unsubscribe(previous)
     },
   }
-}
-
-const inotifyInodes = () => {
-  const inodes = new Set()
-
-  for (const fd of readdirSync('/proc/self/fd')) {
-    try {
-      if (readlinkSync(`/proc/self/fd/${fd}`) !== 'anon_inode:inotify') {
-        continue
-      }
-
-      for (const match of readFileSync(`/proc/self/fdinfo/${fd}`, 'utf8').matchAll(/^inotify wd:\S+ ino:([0-9a-f]+)/gm)) {
-        inodes.add(Number.parseInt(match[1], 16))
-      }
-    } catch {
-    }
-  }
-
-  return inodes
 }

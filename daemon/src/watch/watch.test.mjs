@@ -6,7 +6,10 @@ import { join } from 'node:path'
 import { after, test } from 'node:test'
 import { Ring } from './ring.mjs'
 import { listen } from '../server/server.mjs'
+import { watchedInodes } from '../facts/inotify.mjs'
+import { parcel } from './parcel.mjs'
 import { watch } from './watch.mjs'
+import { watcher } from './watcher.mjs'
 
 const ORIGIN = 'https://builder.subbly.test'
 const directory = realpathSync(mkdtempSync(join(tmpdir(), 'daemon-watch-route-')))
@@ -21,13 +24,23 @@ writeFileSync(join(root, '.env.local'), 'SECRET=1')
 writeFileSync(sandboxIdFile, claims.aud)
 writeFileSync(bootIdFile, 'boot-1\n')
 
-const route = watch({ root, sandboxIdFile, bootIdFile, starts: 7, options: { maxEvents: 40, burstQuiet: 100, grace: 150, rootPoll: 50, maxEntries: 2 } })
+let files
+const route = watch({
+  root,
+  sandboxIdFile,
+  bootIdFile,
+  starts: 7,
+  chunk: { maxEntries: 2, maxBytes: 32 * 1024 },
+  subscribe: (callbacks) => {
+    files = watcher({ root, callbacks, parcel, watchedInodes, limits: { maxEvents: 40, burstQuiet: 100, burstWait: 5000, hold: 2000, grace: 150, rootPoll: 50 } })
+  },
+})
 const server = listen(0, { routes: { '/watch': route }, guard: () => ({ claims }), origins: [ORIGIN] })
 
-await Promise.all([route.ready, once(server, 'listening')])
+await Promise.all([files.ready, once(server, 'listening')])
 after(() => {
   server.close()
-  route.close()
+  files.close()
   rmSync(directory, { recursive: true, force: true })
 })
 

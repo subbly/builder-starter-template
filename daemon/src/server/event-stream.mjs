@@ -15,13 +15,13 @@ export function eventStream(response, claims) {
     response.end()
   }
 
+  const expire = () => {
+    send({ type: 'expired' })
+    close()
+  }
+
   const heartbeat = setInterval(() => send({ type: 'heartbeat' }), HEARTBEAT_MS)
-  const expiry = claims
-    ? setTimeout(() => {
-      send({ type: 'expired' })
-      close()
-    }, Math.max(0, claims.exp * 1000 - Date.now()))
-    : undefined
+  const expiry = claims ? setTimeout(expire, Math.max(0, claims.exp * 1000 - Date.now())) : undefined
 
   response.on('close', () => {
     isOpen = false
@@ -29,16 +29,22 @@ export function eventStream(response, claims) {
     clearTimeout(expiry)
   })
 
-  const drained = () => new Promise((resolve) => {
-    const done = () => {
-      response.off('drain', done)
-      response.off('close', done)
-      resolve()
+  const deliver = async (frame) => {
+    if (send(frame)) {
+      return
     }
 
-    response.on('drain', done)
-    response.on('close', done)
-  })
+    await new Promise((resolve) => {
+      const done = () => {
+        response.off('drain', done)
+        response.off('close', done)
+        resolve()
+      }
 
-  return { send, drained, close, isOpen: () => isOpen }
+      response.on('drain', done)
+      response.on('close', done)
+    })
+  }
+
+  return { send, deliver, close, isOpen: () => isOpen }
 }

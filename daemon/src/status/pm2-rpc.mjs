@@ -4,36 +4,39 @@ import { dirname, join } from 'node:path'
 
 export function pm2Rpc({ bin, socket, timeout }) {
   let modules = null
-  let loadFailed = false
+  let hasLoadFailed = false
   let link = null
   let inflight = null
   let epoch = 0
 
   const load = () => {
-    if (!modules) {
-      try {
-        const require = createRequire(join(dirname(realpathSync(bin)), '..', 'package.json'))
+    if (modules) {
+      return modules
+    }
 
-        modules = { axon: require('./modules/pm2-axon'), rpc: require('./modules/pm2-axon-rpc') }
-      } catch (error) {
-        if (!loadFailed) {
-          console.error(`pm2's axon modules did not load from ${bin}: ${error.message}`)
-          loadFailed = true
-        }
+    try {
+      const require = createRequire(join(dirname(realpathSync(bin)), '..', 'package.json'))
+
+      modules = { axon: require('./modules/pm2-axon'), rpc: require('./modules/pm2-axon-rpc') }
+    } catch (error) {
+      if (!hasLoadFailed) {
+        console.error(`pm2's axon modules did not load from ${bin}: ${error.message}`)
       }
+
+      hasLoadFailed = true
     }
 
     return modules
   }
 
-  const connect = () =>
-    new Promise((resolve) => {
-      const req = modules.axon.socket('req')
-      const opened = { req, client: new modules.rpc.Client(req), pending: null }
+  const connect = () => {
+    return new Promise((resolve) => {
+      const requester = modules.axon.socket('req')
+      const opened = { requester, client: new modules.rpc.Client(requester), pending: null }
 
-      req.set('retry timeout', 0)
-      req.once('connect', () => resolve(opened))
-      req.once('close', () => {
+      requester.set('retry timeout', 0)
+      requester.once('connect', () => resolve(opened))
+      requester.once('close', () => {
         if (link === opened) {
           link = null
         }
@@ -41,13 +44,14 @@ export function pm2Rpc({ bin, socket, timeout }) {
         opened.pending?.(null)
         resolve(null)
       })
-      req.on('error', () => req.close())
-      req.connect(socket)
+      requester.on('error', () => requester.close())
+      requester.connect(socket)
     })
+  }
 
-  const call = (opened) =>
-    new Promise((resolve) => {
-      const timer = setTimeout(() => opened.req.close(), timeout)
+  const call = (opened) => {
+    return new Promise((resolve) => {
+      const timer = setTimeout(() => opened.requester.close(), timeout)
 
       opened.pending = (processes) => {
         clearTimeout(timer)
@@ -58,45 +62,50 @@ export function pm2Rpc({ bin, socket, timeout }) {
         opened.pending?.(error || !Array.isArray(list) ? null : list.map((process) => ({ name: process.name, pid: process.pid, status: process.pm2_env?.status })))
       })
     })
+  }
 
   const read = async () => {
     if (!load()) {
       return null
     }
 
-    if (!link) {
-      const at = epoch
-      const opened = await connect()
-
-      if (at !== epoch) {
-        opened?.req.close()
-        return null
-      }
-
-      link = opened
+    if (link) {
+      return call(link)
     }
+
+    const at = epoch
+    const opened = await connect()
+
+    if (at !== epoch) {
+      opened?.requester.close()
+      return null
+    }
+
+    link = opened
 
     return link ? call(link) : null
   }
 
   return {
     processes() {
-      if (!inflight) {
-        const current = read().finally(() => {
-          if (inflight === current) {
-            inflight = null
-          }
-        })
-
-        inflight = current
+      if (inflight) {
+        return inflight
       }
+
+      const current = read().finally(() => {
+        if (inflight === current) {
+          inflight = null
+        }
+      })
+
+      inflight = current
 
       return inflight
     },
     close() {
       epoch += 1
       inflight = null
-      link?.req.close()
+      link?.requester.close()
       link = null
     },
   }

@@ -9,11 +9,11 @@ export function epoch({ sandboxId, bootId, starts, generation }) {
   return createHash('sha256').update([sandboxId, bootId, starts, generation].join('\n')).digest('base64url').slice(0, 16)
 }
 
-export function cursor(epoch, seq) {
-  return `${epoch}.${seq}`
+export function cursor(epoch, sequence) {
+  return `${epoch}.${sequence}`
 }
 
-export function empty({ maxEvents = RING_EVENTS, maxBytes = RING_BYTES } = {}) {
+export function empty() {
   let events = []
   let bytes = 0
   let head = 0
@@ -30,13 +30,13 @@ export function empty({ maxEvents = RING_EVENTS, maxBytes = RING_BYTES } = {}) {
 
       head += batch.length
 
-      let drop = Math.max(0, events.length - maxEvents)
+      let drop = Math.max(0, events.length - RING_EVENTS)
 
       for (let i = 0; i < drop; i++) {
         bytes -= size(events[i])
       }
 
-      while (bytes > maxBytes) {
+      while (bytes > RING_BYTES) {
         bytes -= size(events[drop++])
       }
 
@@ -56,18 +56,18 @@ export function empty({ maxEvents = RING_EVENTS, maxBytes = RING_BYTES } = {}) {
       return head
     },
 
-    since(seq) {
-      if (!Number.isSafeInteger(seq) || seq < 0 || seq > head) {
+    since(sequence) {
+      if (!Number.isSafeInteger(sequence) || sequence < 0 || sequence > head) {
         return { reason: 'unknown' }
       }
 
       const first = head - events.length + 1
 
-      if (seq < first - 1) {
-        return { reason: seq < overflowAt ? 'overflow' : 'behind' }
+      if (sequence < first - 1) {
+        return { reason: sequence < overflowAt ? 'overflow' : 'behind' }
       }
 
-      return { events: events.slice(seq - first + 1) }
+      return { events: events.slice(sequence - first + 1) }
     },
   }
 }

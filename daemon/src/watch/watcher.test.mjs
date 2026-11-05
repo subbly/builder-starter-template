@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict'
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, readlinkSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { after, test } from 'node:test'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { lstatSync } from 'node:fs'
+import { watchedInodes } from '../facts/inotify.mjs'
+import { parcel } from './parcel.mjs'
 import { watcher as watch } from './watcher.mjs'
 
 const base = realpathSync(mkdtempSync(join(tmpdir(), 'daemon-watch-')))
@@ -12,19 +14,25 @@ let roots = 0
 
 after(() => rmSync(base, { recursive: true, force: true }))
 
-const timing = { burstQuiet: 100, burstWait: 1000, hold: 400, grace: 150, rootPoll: 50 }
+const timing = { maxEvents: 1000, burstQuiet: 100, burstWait: 1000, hold: 400, grace: 150, rootPoll: 50 }
 
-const start = async (options = {}) => {
+const start = async (limits = {}) => {
   const root = join(base, `root-${roots++}`)
   const seen = { events: [], overflows: 0, restarts: 0 }
 
   mkdirSync(root)
 
-  const watcher = watch(root, {
-    events: (list) => seen.events.push(...list),
-    overflow: () => seen.overflows++,
-    restarted: () => seen.restarts++,
-  }, { ...timing, ...options })
+  const watcher = watch({
+    root,
+    callbacks: {
+      events: (list) => seen.events.push(...list),
+      overflow: () => seen.overflows++,
+      restarted: () => seen.restarts++,
+    },
+    parcel,
+    watchedInodes,
+    limits: { ...timing, ...limits },
+  })
 
   await watcher.ready
 
@@ -50,15 +58,6 @@ const until = async (check, what, timeout = 3000) => {
 
 const settle = () => sleep(250)
 const has = (events, path, op, entry) => events.some((event) => event.path === path && event.op === op && (entry === undefined || event.entry === entry))
-
-const inotifyWatches = () =>
-  readdirSync('/proc/self/fd').reduce((count, fd) => {
-    try {
-      return readlinkSync(`/proc/self/fd/${fd}`) === 'anon_inode:inotify' ? count + readFileSync(`/proc/self/fdinfo/${fd}`, 'utf8').split('\n').filter((line) => line.startsWith('inotify wd:')).length : count
-    } catch {
-      return count
-    }
-  }, 0)
 
 test('a new empty folder shows as a folder', async () => {
   const { seen, watcher, path } = await start()
@@ -229,7 +228,7 @@ test('a tree moved in from outside is scanned and watched', async () => {
 test('a tree moved out reports one remove, then nothing, and its watches go away', async () => {
   const { seen, watcher, write, path } = await start()
   const outside = join(base, 'moved-out')
-  const before = inotifyWatches()
+  const before = watchedInodes().length
 
   try {
     write('lib/deep/inner/f.ts')
@@ -246,7 +245,7 @@ test('a tree moved out reports one remove, then nothing, and its watches go away
     await settle()
 
     assert.deepEqual(seen.events, [{ path: 'lib', op: 'remove' }])
-    assert.ok(inotifyWatches() <= before + 1, 'parcel keeps the kernel watch of the moved folder itself, and only that one')
+    assert.ok(watchedInodes().length <= before + 1, 'parcel keeps the kernel watch of the moved folder itself, and only that one')
   } finally {
     watcher.close()
     rmSync(outside, { recursive: true, force: true })
@@ -255,7 +254,7 @@ test('a tree moved out reports one remove, then nothing, and its watches go away
 
 test('never-watched trees cost no watch, and secret files are never reported', async () => {
   const { seen, watcher, write } = await start()
-  const before = inotifyWatches()
+  const before = watchedInodes().length
 
   try {
     for (const file of ['node_modules/react/index.js', 'node_modules/react/cjs/a.js', '.next/cache/webpack/x', '.git/objects/ab/cd', 'packages/ui/node_modules/x/index.js', '.env.local', '.env', 'certs/server.pem', 'certs/server.key', '.npmrc', 'src/app/page.tsx']) {
@@ -266,7 +265,7 @@ test('never-watched trees cost no watch, and secret files are never reported', a
     await settle()
 
     assert.deepEqual(seen.events.map((event) => event.path).sort(), ['certs', 'packages', 'packages/ui', 'src', 'src/app', 'src/app/page.tsx'])
-    assert.equal(inotifyWatches() - before, 5)
+    assert.equal(watchedInodes().length - before, 5)
   } finally {
     watcher.close()
   }
@@ -325,7 +324,7 @@ test('a removed root ends the watch until it returns, then restarts it', async (
 test('a scanned folder renamed before parcel reports its children still swaps out the stale watches', async () => {
   const root = join(base, 'scripted')
   const subscriptions = []
-  const parcel = {
+  const scriptedParcel = {
     subscribe: async (dir, listener) => subscriptions.push({ dir, listener }),
     unsubscribe: async () => {},
   }
@@ -335,7 +334,7 @@ test('a scanned folder renamed before parcel reports its children still swaps ou
 
   let watched = new Set([lstatSync(root).ino, lstatSync(join(root, 'src')).ino])
 
-  const watcher = watch(root, { events: (list) => seen.push(...list), overflow: () => {}, restarted: () => {} }, { ...timing, parcel, watchedInodes: () => watched })
+  const watcher = watch({ root, callbacks: { events: (list) => seen.push(...list), overflow: () => {}, restarted: () => {} }, parcel: scriptedParcel, watchedInodes: () => watched, limits: timing })
 
   try {
     await watcher.ready
@@ -360,11 +359,11 @@ test('a scanned folder renamed before parcel reports its children still swaps ou
   }
 })
 
-const scripted = async (name, options = {}) => {
+const scripted = async (name, limits = {}) => {
   const root = join(base, name)
   const subscriptions = []
   const pending = []
-  const parcel = {
+  const scriptedParcel = {
     subscribe: async (dir, listener) => {
       subscriptions.push({ dir, listener })
 
@@ -380,7 +379,7 @@ const scripted = async (name, options = {}) => {
 
   const state = { watched: new Set([lstatSync(root).ino, lstatSync(join(root, 'src')).ino]), overflows: 0 }
 
-  const watcher = watch(root, { events: (list) => seen.push(...list), overflow: () => state.overflows++, restarted: () => {} }, { ...timing, ...options, parcel, watchedInodes: () => state.watched })
+  const watcher = watch({ root, callbacks: { events: (list) => seen.push(...list), overflow: () => state.overflows++, restarted: () => {} }, parcel: scriptedParcel, watchedInodes: () => state.watched, limits: { ...timing, ...limits } })
 
   await watcher.ready
 

@@ -23,12 +23,14 @@ for (const name of shipped) {
 
 const manifest = { build: hash.digest('hex').slice(0, 12), protocol: values.protocol ? Number(values.protocol) : committed.protocol }
 
-if (values.check) {
-  if (manifest.build !== committed.build || manifest.protocol !== committed.protocol) {
-    console.error(`daemon/src/manifest.json says ${JSON.stringify(committed)}, the files are ${JSON.stringify(manifest)}. Run node daemon/manifest.mjs and commit it.`)
-    process.exit(1)
-  }
-} else {
+const isStale = manifest.build !== committed.build || manifest.protocol !== committed.protocol
+
+if (values.check && isStale) {
+  console.error(`daemon/src/manifest.json says ${JSON.stringify(committed)}, the files are ${JSON.stringify(manifest)}. Run node daemon/manifest.mjs and commit it.`)
+  process.exit(1)
+}
+
+if (!values.check) {
   writeFileSync(path, JSON.stringify(manifest, null, 2) + '\n')
   console.log(JSON.stringify(manifest))
 }
