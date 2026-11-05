@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { sandboxId } from './sandbox-id.mjs'
 import { verify } from './token.mjs'
 
 export function guard({ keyring, sandboxIdFile }) {
@@ -17,10 +17,3 @@ export function guard({ keyring, sandboxIdFile }) {
   }
 }
 
-const sandboxId = (path) => {
-  try {
-    return readFileSync(path, 'utf8').trim()
-  } catch {
-    return null
-  }
-}

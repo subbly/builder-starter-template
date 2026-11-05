@@ -15,7 +15,9 @@ Never bump one file without the other.
 
 ## Sandbox daemon
 
-`daemon/` holds the sandbox daemon: a small Node 24 server that runs under its own systemd unit, outside pm2 and `main`, and serves `/version` and `/stats` on `/run/subbly/daemon.sock` and `/version` on port 29170. Every other TCP path needs a daemon token (`Authorization: Bearer`), checked by `bundle/token.mjs`; a refused token gets a 401 with its reason.
+`daemon/` holds the sandbox daemon: a small Node 24 server that runs under its own systemd unit, outside pm2 and `main`. It serves `/version`, `/stats` and `/output` on `/run/subbly/daemon.sock`, and `/version` and `/output` on port 29170. Every other TCP path needs a daemon token (`Authorization: Bearer`), checked by `bundle/token.mjs`; a refused token gets a 401 with its reason. Every TCP response, the `OPTIONS` preflight included, carries exact-origin CORS for the Builder origins in `bundle/contract.mjs`.
+
+- `/output` streams the dev server output (`.subbly/logs/output.log`) as SSE with a resumable cursor in `Last-Event-ID`: `bundle/output-log.mjs` resolves a cursor against the live file and pm2-logrotate's archives, `bundle/output.mjs` follows the file, and `bundle/event-stream.mjs` writes the first comment, the heartbeats and the `expired` frame at the token's `exp`. The cursor needs plain archives: `template.ts` pins pm2 and pm2-logrotate and sets `compress false`. Change those pins only with the cursor tests and a rotation check.
 
 - `daemon/bundle/` is every file the sandbox gets: the `.mjs` sources (plain ESM, no dependencies, no build step), `install.sh`, `subbly-daemon.service` and the committed `manifest.json` (`{ build, protocol }`).
 - After any change under `daemon/bundle/`, run `pnpm daemon:manifest` and commit the new `manifest.json`. The build is a hash of the other files. Bump the protocol (`node daemon/manifest.mjs --protocol <n>`) only on a contract break. The template build refuses a stale manifest.

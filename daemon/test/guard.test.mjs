@@ -13,7 +13,7 @@ const vectors = JSON.parse(readFileSync(new URL('./token-vectors.json', import.m
 const ring = { current: () => keys(JSON.stringify(vectors.keyFile)) }
 const sandboxIdFile = join(mkdtempSync(join(tmpdir(), 'daemon-sandbox-')), '.E2B_SANDBOX_ID')
 const now = Math.floor(Date.now() / 1000)
-const server = listen(0, { '/version': (_request, response) => respond(response, { build: 'test' }), '/claims': (_request, response, claims) => respond(response, claims) }, guard({ keyring: ring, sandboxIdFile }))
+const server = listen(0, { routes: { '/version': (_request, response) => respond(response, { build: 'test' }), '/claims': (_request, response, claims) => respond(response, claims) }, guard: guard({ keyring: ring, sandboxIdFile }), origins: [] })
 
 await once(server, 'listening')
 after(() => server.close())

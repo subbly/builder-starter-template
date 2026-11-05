@@ -3,10 +3,12 @@ import { Template, ReadyCmd } from 'e2b'
 const UV_VERSION = '0.12.10'
 const PYTHON_VERSION = '3.13'
 const NETLIFY_CLI_VERSION = '27.5.0'
+const PM2_VERSION = '7.0.4'
+const PM2_LOGROTATE_VERSION = '3.0.0'
 const GLOBAL_PACKAGES = [
   `netlify-cli@${NETLIFY_CLI_VERSION}`,
   'pnpm',
-  'pm2',
+  `pm2@${PM2_VERSION}`,
   'shadcn',
   'tsx',
   'agent-browser',
@@ -45,10 +47,10 @@ export const createTemplate = (environment: Environment) => {
       "cat /project/workspace/main/package.json /project/workspace/main/pnpm-lock.yaml | md5sum | cut -d' ' -f1 > /project/workspace/.subbly/deps-hash"
     )
     .runCmd(
-      'pm2 install pm2-logrotate && ' +
+      `pm2 install pm2-logrotate@${PM2_LOGROTATE_VERSION} && ` +
       'pm2 set pm2-logrotate:max_size 5M && ' +
       'pm2 set pm2-logrotate:retain 2 && ' +
-      'pm2 set pm2-logrotate:compress true && ' +
+      'pm2 set pm2-logrotate:compress false && ' +
       'pm2 set pm2-logrotate:workerInterval 30 && ' +
       'pm2 kill'
     )
