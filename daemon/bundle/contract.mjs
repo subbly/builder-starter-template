@@ -11,3 +11,9 @@ export const ORIGINS = [
   'http://localhost:3001',
   'http://localhost:3002',
 ]
+export const PM2_BIN = '/usr/local/bin/pm2'
+export const PM2_RPC = '/home/user/.pm2/rpc.sock'
+export const BOOT_ID = '/proc/sys/kernel/random/boot_id'
+export const DEV_APP = 'subbly-dev'
+export const DEV_PORT = 3000
+export const DEV_PROBE = '/__nextjs_original-stack-frames'
