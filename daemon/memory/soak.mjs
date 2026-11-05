@@ -122,7 +122,7 @@ const load = async (until) => {
 const writer = async (until) => {
   let line = 0
   let rotated = false
-  const write = (lines, width = 60) => appendFileSync(OUTPUT_LOG, Array.from({ length: lines }, () => `${new Date().toISOString().slice(0, 23)}: SEQ ${++line} ${'x'.repeat(width)}\n`).join(''))
+  const write = (lines, width = 60) => appendFileSync(OUTPUT_LOG, Array.from({ length: lines }, () => `${JSON.stringify({ message: `SEQ ${++line} ${'x'.repeat(width)}\n`, timestamp: new Date().toISOString(), type: 'out', process_id: 0, app_name: 'subbly-dev' })}\n`).join(''))
 
   while (now() < until) {
     write(1)

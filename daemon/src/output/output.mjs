@@ -60,10 +60,10 @@ const follow = async ({ events, path, sandboxId, from }) => {
     const file = files[found.index]
     const chunk = OutputLog.chunk(file, found.offset)
 
-    if (chunk.lines.length > 0) {
+    if (chunk.records.length > 0) {
       at = { epoch: file.epoch, offset: chunk.offset, check: chunk.check }
 
-      if (!events.send({ type: 'output', lines: chunk.lines, cursor: OutputLog.cursor(at) })) {
+      if (!events.send({ type: 'output', records: chunk.records, cursor: OutputLog.cursor(at) })) {
         await events.drained()
       }
 

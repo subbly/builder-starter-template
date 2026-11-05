@@ -10,7 +10,7 @@ module.exports = {
       exp_backoff_restart_delay: 1000,
       log_file: '/project/workspace/.subbly/logs/output.log',
       merge_logs: true,
-      log_date_format: 'YYYY-MM-DDTHH:mm:ss.SSS',
+      log_type: 'json',
       instances: 1,
       env: {
         FORCE_COLOR: '1',

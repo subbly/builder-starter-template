@@ -9,7 +9,9 @@ const SANDBOX = 'itestsandbox000000001'
 
 const logFile = () => join(mkdtempSync(join(tmpdir(), 'daemon-output-')), 'output.log')
 
-const lines = (from, to, text = 'line') => Array.from({ length: to - from + 1 }, (_, index) => `2026-11-05T12:00:00.${String((from + index) % 1000).padStart(3, '0')}: ${text} ${from + index}\n`).join('')
+const pm2Line = (message, type = 'out') => `${JSON.stringify({ message, timestamp: '2026-11-05T12:00:00.250Z', type, process_id: 1, app_name: 'subbly-dev' })}\n`
+
+const lines = (from, to, text = 'line') => Array.from({ length: to - from + 1 }, (_, index) => pm2Line(`${text} ${from + index}\n`)).join('')
 
 let rotations = 0
 
@@ -39,8 +41,8 @@ const texts = (path, at) => {
 
     const chunk = OutputLog.chunk(files[found.index], found.offset)
 
-    if (chunk.lines.length > 0) {
-      seen.push(...chunk.lines.map((line) => line.text))
+    if (chunk.records.length > 0) {
+      seen.push(...chunk.records.map((record) => record.text.replace(/\n$/, '')))
       current = { epoch: files[found.index].epoch, offset: chunk.offset, check: chunk.check }
       continue
     }
@@ -118,7 +120,7 @@ test('an empty file has no epoch yet, and its cursor starts from byte 0 once lin
 test('a partial first line is not an epoch yet', () => {
   const path = logFile()
 
-  writeFileSync(path, '2026-11-05T12:00:00.000: no newline yet')
+  writeFileSync(path, pm2Line('no newline yet').trimEnd())
 
   assert.equal(OutputLog.segments(path, SANDBOX).at(-1).epoch, 'none')
 })
@@ -214,38 +216,39 @@ test('a first attach replays the last 64 KiB from a line boundary, across an arc
   assert.match(replayed[0], /^x+ \d+$/)
 })
 
-test('a frame holds whole lines with the pm2 stamp parsed, and a long line is cut and marked', () => {
+test('a frame holds whole records, and a line longer than a read is read whole', () => {
   const path = logFile()
+  const long = pm2Line(`${'y'.repeat(100_000)}\n`, 'err')
 
-  writeFileSync(path, `2026-11-05T12:00:00.250: \u001b[32mready\u001b[39m\n${'y'.repeat(20_000)}\nplain\npartial`)
-  const chunk = OutputLog.chunk(OutputLog.segments(path, SANDBOX).at(-1), 0)
+  writeFileSync(path, `${pm2Line('\u001b[32mready\u001b[39m\n')}${long}${pm2Line('partial')}`)
+  const file = OutputLog.segments(path, SANDBOX).at(-1)
+  const first = OutputLog.chunk(file, 0)
+  const second = OutputLog.chunk(file, first.offset)
 
-  assert.deepEqual(chunk.lines[0], { ts: Date.parse('2026-11-05T12:00:00.250Z'), text: '\u001b[32mready\u001b[39m' })
-  assert.equal(chunk.lines[1].text.length, 8 * 1024)
-  assert.equal(chunk.lines[1].truncated, true)
-  assert.deepEqual(chunk.lines[2], { ts: null, text: 'plain' })
-  assert.equal(chunk.lines.length, 3)
-  assert.equal(chunk.offset, Buffer.byteLength(`2026-11-05T12:00:00.250: \u001b[32mready\u001b[39m\n${'y'.repeat(20_000)}\nplain\n`))
+  assert.deepEqual(first.records, [{ ts: Date.parse('2026-11-05T12:00:00.250Z'), stream: 'out', text: '\u001b[32mready\u001b[39m\n' }])
+  assert.deepEqual(second.records, [{ ts: Date.parse('2026-11-05T12:00:00.250Z'), stream: 'err', text: `${'y'.repeat(100_000)}\n` }])
+  assert.equal(second.offset, Buffer.byteLength(pm2Line('\u001b[32mready\u001b[39m\n') + long))
+  assert.deepEqual(OutputLog.chunk(file, second.offset).records.map((record) => record.text), ['partial'])
 })
 
-test('a line longer than a read is cut, and the cursor moves past all of it', () => {
+test('a line longer than the read limit is cut, and the cursor moves past all of it', () => {
   const path = logFile()
 
-  writeFileSync(path, `${'z'.repeat(100_000)}\nnext\n`)
+  writeFileSync(path, `${'z'.repeat(2_000_000)}\n${pm2Line('next\n')}`)
   const first = OutputLog.chunk(OutputLog.segments(path, SANDBOX).at(-1), 0)
 
-  assert.equal(first.lines.length, 1)
-  assert.equal(first.lines[0].truncated, true)
-  assert.equal(first.offset, 100_001)
-  assert.deepEqual(OutputLog.chunk(OutputLog.segments(path, SANDBOX).at(-1), first.offset).lines, [{ ts: null, text: 'next' }])
+  assert.equal(first.records.length, 1)
+  assert.equal(first.records[0].truncated, true)
+  assert.equal(first.offset, 2_000_001)
+  assert.deepEqual(OutputLog.chunk(OutputLog.segments(path, SANDBOX).at(-1), first.offset).records.map((record) => record.text), ['next\n'])
 })
 
-test('a frame holds at most 256 lines', () => {
+test('a frame holds at most 256 records', () => {
   const path = logFile()
 
   writeFileSync(path, lines(1, 600))
 
-  assert.equal(OutputLog.chunk(OutputLog.segments(path, SANDBOX).at(-1), 0).lines.length, 256)
+  assert.equal(OutputLog.chunk(OutputLog.segments(path, SANDBOX).at(-1), 0).records.length, 256)
 })
 
 test('the cursor a frame issues verifies on the next attach', () => {

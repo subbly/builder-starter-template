@@ -22,7 +22,7 @@ await once(server, 'listening')
 after(() => server.close())
 
 const base = `http://127.0.0.1:${server.address().port}`
-const lines = (from, to) => Array.from({ length: to - from + 1 }, (_, index) => `2026-11-05T12:00:00.000: line ${from + index}\n`).join('')
+const lines = (from, to) => Array.from({ length: to - from + 1 }, (_, index) => `${JSON.stringify({ message: `line ${from + index}\n`, timestamp: '2026-11-05T12:00:00.000Z', type: 'out', process_id: 1, app_name: 'subbly-dev' })}\n`).join('')
 
 const attach = async (headers = {}) => {
   const controller = new AbortController()
@@ -71,7 +71,7 @@ const attach = async (headers = {}) => {
   return { response, until, text: () => text, isDone: () => isDone, close: () => controller.abort(), pump }
 }
 
-const texts = (frames) => frames.filter((frame) => frame.type === 'output').flatMap((frame) => frame.lines.map((line) => line.text))
+const texts = (frames) => frames.filter((frame) => frame.type === 'output').flatMap((frame) => frame.records.map((record) => record.text.replace(/\n$/, '')))
 const last = (frames, type) => frames.findLast((frame) => frame.type === type)
 
 test('a preflight from the Builder origin is answered with exact-origin CORS', async () => {

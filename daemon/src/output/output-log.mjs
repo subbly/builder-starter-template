@@ -3,18 +3,19 @@ export * as OutputLog from './output-log.mjs'
 import { createHash } from 'node:crypto'
 import { closeSync, fstatSync, openSync, readSync, readdirSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
+import { record } from './record.mjs'
 
 export const REPLAY_BYTES = 64 * 1024
 export const BEHIND_BYTES = 256 * 1024
 const NONE = 'none'
 
-const CHUNK_BYTES = 32 * 1024
-const LINE_BYTES = 8 * 1024
-const FRAME_LINES = 256
+const SCAN_BYTES = 32 * 1024
+const READ_BYTES = 64 * 1024
+const LINE_BYTES = 1024 * 1024
+const FRAME_RECORDS = 256
 const CHECK_BYTES = 256
 const HEAD_BYTES = 64 * 1024
 const NEWLINE = 0x0a
-const STAMP = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}): ?/
 const CURSOR = /^(none|[0-9a-f]{16})\.(\d{1,15})\.([0-9a-f]{16}|0)$/
 
 export function segments(path, sandboxId) {
@@ -107,36 +108,40 @@ export function tail(files, bytes) {
 export function chunk(file, offset) {
   const start = Math.max(0, offset - CHECK_BYTES)
   const head = offset - start
-  const buffer = Buffer.alloc(head + CHUNK_BYTES)
+  const buffer = Buffer.alloc(head + READ_BYTES)
   const length = bytes(file.path, buffer, start)
   const data = buffer.subarray(head, Math.max(head, length))
-  const lines = []
+  const records = []
   let consumed = 0
 
-  while (lines.length < FRAME_LINES) {
+  while (records.length < FRAME_RECORDS) {
     const end = data.indexOf(NEWLINE, consumed)
 
     if (end === -1) {
       break
     }
 
-    lines.push(line(data.subarray(consumed, end)))
+    records.push(record(data.subarray(consumed, end), end - consumed))
     consumed = end + 1
   }
 
-  if (lines.length > 0) {
+  if (records.length > 0) {
     const next = offset + consumed
 
-    return { lines, offset: next, check: digest(buffer.subarray(Math.max(0, next - CHECK_BYTES) - start, next - start)) }
+    return { records, offset: next, check: digest(buffer.subarray(Math.max(0, next - CHECK_BYTES) - start, next - start)) }
   }
 
-  const end = data.length < CHUNK_BYTES ? -1 : nextNewline(file.path, offset + CHUNK_BYTES)
+  const end = data.length < READ_BYTES ? -1 : nextNewline(file.path, offset + READ_BYTES)
 
   if (end === -1) {
-    return { lines }
+    return { records }
   }
 
-  return { lines: [line(data.subarray(0, end - offset))], offset: end + 1, check: check(file.path, end + 1) }
+  const line = Buffer.alloc(Math.min(end - offset, LINE_BYTES))
+
+  bytes(file.path, line, offset)
+
+  return { records: [record(line, end - offset)], offset: end + 1, check: check(file.path, end + 1) }
 }
 
 export function check(path, offset) {
@@ -160,19 +165,6 @@ const within = ({ files, index, offset, behindBytes }) => {
 
 const remaining = (files, index) => files.slice(index).reduce((sum, file) => sum + file.size, 0)
 
-const line = (raw) => {
-  const isTruncated = raw.length > LINE_BYTES
-  const text = raw.subarray(0, LINE_BYTES).toString('utf8')
-  const stamp = STAMP.exec(text)
-  const ts = stamp ? Date.parse(`${stamp[1]}Z`) : null
-
-  return {
-    ts: Number.isNaN(ts) ? null : ts,
-    text: stamp ? text.slice(stamp[0].length) : text,
-    ...(isTruncated ? { truncated: true } : {}),
-  }
-}
-
 const segment = (path, sandboxId) => {
   const fd = descriptor(path)
 
@@ -194,9 +186,9 @@ const segment = (path, sandboxId) => {
 }
 
 const nextNewline = (path, from) => {
-  const buffer = Buffer.alloc(CHUNK_BYTES)
+  const buffer = Buffer.alloc(SCAN_BYTES)
 
-  for (let start = from; ; start += CHUNK_BYTES) {
+  for (let start = from; ; start += SCAN_BYTES) {
     const length = bytes(path, buffer, start)
     const end = buffer.subarray(0, length).indexOf(NEWLINE)
 
@@ -204,15 +196,15 @@ const nextNewline = (path, from) => {
       return start + end
     }
 
-    if (length < CHUNK_BYTES) {
+    if (length < SCAN_BYTES) {
       return -1
     }
   }
 }
 
 const previousNewline = (path, before) => {
-  for (let end = before; end > 0; end -= CHUNK_BYTES) {
-    const start = Math.max(0, end - CHUNK_BYTES)
+  for (let end = before; end > 0; end -= SCAN_BYTES) {
+    const start = Math.max(0, end - SCAN_BYTES)
     const buffer = Buffer.alloc(end - start)
     const found = buffer.subarray(0, bytes(path, buffer, start)).lastIndexOf(NEWLINE)
 
