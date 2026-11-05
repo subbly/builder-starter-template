@@ -1,9 +1,7 @@
-// The memory smoke (--minutes 10) and soak (--minutes 60) of the sandbox daemon on a fresh dev sandbox, killed at the end.
-// usage: node daemon/memory/run.mjs --minutes <n> [--template <name>-dev[:tag]] [--out <dir>]
 import { execFileSync } from 'node:child_process'
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 import { parseArgs } from 'node:util'
 import { Sandbox } from 'e2b'
 
@@ -35,8 +33,11 @@ if (!/-dev(:|$)/.test(template)) {
 
 execFileSync('node', [join(root, 'manifest.mjs'), '--check'], { stdio: 'inherit' })
 
-const bundle = join(root, 'bundle')
-const manifest = JSON.parse(readFileSync(join(bundle, 'manifest.json'), 'utf8'))
+const manifest = JSON.parse(readFileSync(join(root, 'src/manifest.json'), 'utf8'))
+const staged = ['src', 'vendor', 'install']
+  .flatMap((folder) => readdirSync(join(root, folder), { recursive: true, withFileTypes: true }))
+  .filter((entry) => entry.isFile())
+  .map((entry) => relative(root, join(entry.parentPath, entry.name)))
 const sandbox = await Sandbox.create(template, { apiKey, domain: DOMAIN, timeoutMs: (minutes + 20) * 60_000 })
 
 console.log(`sandbox ${sandbox.sandboxId} from ${template}, daemon ${manifest.build}, ${minutes} min, results in ${out}`)
@@ -45,10 +46,10 @@ try {
   const staging = `/tmp/subbly-daemon-${manifest.build}`
 
   await sandbox.files.write([
-    ...readdirSync(bundle).map((name) => ({ path: `${staging}/${name}`, data: name.endsWith('.node') ? new Uint8Array(readFileSync(join(bundle, name))).buffer : readFileSync(join(bundle, name), 'utf8') })),
+    ...staged.map((name) => ({ path: `${staging}/${name}`, data: name.endsWith('.node') ? new Uint8Array(readFileSync(join(root, name))).buffer : readFileSync(join(root, name), 'utf8') })),
     { path: `${REMOTE}/soak.mjs`, data: readFileSync(join(root, 'memory/soak.mjs'), 'utf8') },
 ])
-  await sandbox.commands.run(`sh ${staging}/install.sh`, { user: 'root', timeoutMs: 120_000 })
+  await sandbox.commands.run(`sh ${staging}/install/install.sh`, { user: 'root', timeoutMs: 120_000 })
 
   const version = await sandbox.commands.run('for attempt in 1 2 3 4 5 6 7 8 9 10; do curl -sf --unix-socket /run/subbly/daemon.sock http://daemon/version && exit 0; sleep 1; done; exit 1')
 

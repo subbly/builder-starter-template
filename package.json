@@ -8,7 +8,7 @@
     "changelog": "pnpm changeset",
     "release": "pnpm changeset version",
     "daemon:manifest": "node daemon/manifest.mjs",
-    "daemon:test": "node --test 'daemon/test/*.test.mjs'",
+    "daemon:test": "node --test 'daemon/src/**/*.test.mjs'",
     "daemon:smoke": "node --env-file-if-exists=.env daemon/memory/run.mjs --minutes 10",
     "daemon:soak": "node --env-file-if-exists=.env daemon/memory/run.mjs --minutes 60"
   },

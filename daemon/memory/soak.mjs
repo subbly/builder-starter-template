@@ -1,5 +1,3 @@
-// Runs inside the sandbox: samples the daemon every 10 s and drives its routes, the dev server output log and file churn.
-// usage: node soak.mjs <minutes> <out dir>   (tickets that add stream routes add their clients to the clients table)
 import { execFileSync } from 'node:child_process'
 import { appendFileSync, mkdirSync, readFileSync, readdirSync, readlinkSync, rmSync, writeFileSync } from 'node:fs'
 import { request } from 'node:http'
