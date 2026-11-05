@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import { Template, defaultBuildLogger } from 'e2b'
 import { createTemplate } from './template'
 
@@ -14,6 +15,7 @@ export function getVersionArg(): string {
 
 export async function buildTemplate(name: string) {
   const version = getVersionArg()
+  execFileSync('node', ['daemon/manifest.mjs', '--check'], { stdio: 'inherit' })
   const info = await Template.build(createTemplate(), name, {
     tags: [version, 'latest'],
     cpuCount: 4,

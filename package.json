@@ -6,7 +6,10 @@
     "e2b:build:dev": "npx tsx build.dev.ts",
     "e2b:build:prod": "npx tsx build.prod.ts",
     "changelog": "pnpm changeset",
-    "release": "pnpm changeset version"
+    "release": "pnpm changeset version",
+    "daemon:manifest": "node daemon/manifest.mjs",
+    "daemon:smoke": "node --env-file-if-exists=.env daemon/memory/run.mjs --minutes 10",
+    "daemon:soak": "node --env-file-if-exists=.env daemon/memory/run.mjs --minutes 60"
   },
   "dependencies": {
     "@changesets/cli": "^2.31.0",
