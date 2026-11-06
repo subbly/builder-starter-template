@@ -30,7 +30,7 @@ export function eventStream(response, claims) {
   })
 
   const deliver = async (frame) => {
-    if (send(frame)) {
+    if (!isOpen || send(frame)) {
       return
     }
 
