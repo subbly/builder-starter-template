@@ -6,19 +6,20 @@ const NETLIFY_CLI_VERSION = '27.5.0'
 const GLOBAL_PACKAGES = [
   `netlify-cli@${NETLIFY_CLI_VERSION}`,
   'pnpm',
-  'chokidar-cli',
-  'pm2',
+  'pm2@7.0.4',
   'shadcn',
   'tsx',
   'agent-browser',
 ]
 
-export const createTemplate = () => {
+export type Environment = 'dev' | 'production'
+
+export const createTemplate = (environment: Environment) => {
   return Template()
     .fromImage('node:24-slim')
     .setUser('root')
     .runCmd(
-      'apt-get update && apt-get install -y git curl lsof ripgrep jq unzip zip file poppler-utils python3 && rm -rf /var/lib/apt/lists/*'
+      'apt-get update && apt-get install -y git curl lsof ripgrep jq unzip zip file poppler-utils python3 inotify-tools && rm -rf /var/lib/apt/lists/*'
     )
     .runCmd(
       `curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | env UV_INSTALL_DIR=/usr/local/bin UV_NO_MODIFY_PATH=1 sh`
@@ -34,6 +35,11 @@ export const createTemplate = () => {
     .copy('ecosystem.config.js', '/project/workspace/ecosystem.config.js')
     .copy('systemd/subbly-pm2.service', '/etc/systemd/system/subbly-pm2.service', { mode: 0o644 })
     .runCmd('systemctl enable subbly-pm2.service')
+    .copy(`daemon/keys/${environment}.json`, '/etc/subbly/daemon-keys.json', { mode: 0o644 })
+    .copy('daemon/src', '/tmp/subbly-daemon/src')
+    .copy('daemon/vendor', '/tmp/subbly-daemon/vendor')
+    .copy('daemon/install', '/tmp/subbly-daemon/install')
+    .runCmd('sh /tmp/subbly-daemon/install/install.sh')
     .runCmd('chown -R user:user /project/workspace')
     .setUser('user')
     .runCmd('cd /project/workspace/main && pnpm install --dangerously-allow-all-builds')
@@ -41,10 +47,10 @@ export const createTemplate = () => {
       "cat /project/workspace/main/package.json /project/workspace/main/pnpm-lock.yaml | md5sum | cut -d' ' -f1 > /project/workspace/.subbly/deps-hash"
     )
     .runCmd(
-      'pm2 install pm2-logrotate && ' +
+      'pm2 install pm2-logrotate@3.0.0 && ' +
       'pm2 set pm2-logrotate:max_size 5M && ' +
       'pm2 set pm2-logrotate:retain 2 && ' +
-      'pm2 set pm2-logrotate:compress true && ' +
+      'pm2 set pm2-logrotate:compress false && ' +
       'pm2 set pm2-logrotate:workerInterval 30 && ' +
       'pm2 kill'
     )

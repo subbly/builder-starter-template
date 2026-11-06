@@ -1,0 +1,228 @@
+{
+  "keyFile": {
+    "iss": "subbly-builder-test",
+    "keys": [
+      {
+        "kid": "test-a",
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "vSiZV3F4RjRAI1b49378mdcwTmnfiN8GTBLf_VW1eGQ"
+      },
+      {
+        "kid": "test-b",
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "kdWivDzE_IC9j-zcbDxoV2I8m7ywjQO7ybp8AXswHSo"
+      }
+    ]
+  },
+  "otherKeyFile": {
+    "iss": "subbly-builder-other",
+    "keys": [
+      {
+        "kid": "other-a",
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "UGEJBBGdSglEUJKPc24Z5Pka2F1eL0YVoU0llqPszKg"
+      }
+    ]
+  },
+  "signers": {
+    "test-a": {
+      "kid": "test-a",
+      "crv": "Ed25519",
+      "d": "bFoRi_C47vZKyKgN8E146cc-FCX4C2hy7VGvM_W4P6Y",
+      "x": "vSiZV3F4RjRAI1b49378mdcwTmnfiN8GTBLf_VW1eGQ",
+      "kty": "OKP"
+    },
+    "test-b": {
+      "kid": "test-b",
+      "crv": "Ed25519",
+      "d": "jIEry9CgKlouAqOhO9wAZeGmTda3LDHsureL7l0MVhY",
+      "x": "kdWivDzE_IC9j-zcbDxoV2I8m7ywjQO7ybp8AXswHSo",
+      "kty": "OKP"
+    }
+  },
+  "mints": [
+    {
+      "name": "the first slot signs",
+      "kid": "test-a",
+      "sandboxId": "itestsandbox000000001",
+      "projectId": "01JTESTPROJECT00000000000A",
+      "userId": "user-test-1",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.ECqB3sLya027lPL_DZmWW6_jTY4n-YxOYDAwYCGdl1b9iDvBaXPzxVOt5Cc0KYoNZ0yX2RnJm7nQSoC40No5Cg"
+    },
+    {
+      "name": "the second slot signs",
+      "kid": "test-b",
+      "sandboxId": "itestsandbox000000001",
+      "projectId": "01JTESTPROJECT00000000000A",
+      "userId": "user-test-1",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYiIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.h4kGwn-IjwJzfRHaKU4IwMmTgnwcT4Bg-lDHWhQToBzZhyWmorm1GGSNvEMn8ZHAGez9nc_Q-9C0gD_Sc3v4Cg"
+    }
+  ],
+  "verifies": [
+    {
+      "name": "a fresh token is accepted",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.ECqB3sLya027lPL_DZmWW6_jTY4n-YxOYDAwYCGdl1b9iDvBaXPzxVOt5Cc0KYoNZ0yX2RnJm7nQSoC40No5Cg",
+      "reason": null
+    },
+    {
+      "name": "the second kid slot is accepted",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYiIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.h4kGwn-IjwJzfRHaKU4IwMmTgnwcT4Bg-lDHWhQToBzZhyWmorm1GGSNvEMn8ZHAGez9nc_Q-9C0gD_Sc3v4Cg",
+      "reason": null
+    },
+    {
+      "name": "a token is accepted 30 s after exp",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000330,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.ECqB3sLya027lPL_DZmWW6_jTY4n-YxOYDAwYCGdl1b9iDvBaXPzxVOt5Cc0KYoNZ0yX2RnJm7nQSoC40No5Cg",
+      "reason": null
+    },
+    {
+      "name": "a token is refused 31 s after exp",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000331,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.ECqB3sLya027lPL_DZmWW6_jTY4n-YxOYDAwYCGdl1b9iDvBaXPzxVOt5Cc0KYoNZ0yX2RnJm7nQSoC40No5Cg",
+      "reason": "expired"
+    },
+    {
+      "name": "a token issued 30 s ahead is accepted",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1792999970,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.ECqB3sLya027lPL_DZmWW6_jTY4n-YxOYDAwYCGdl1b9iDvBaXPzxVOt5Cc0KYoNZ0yX2RnJm7nQSoC40No5Cg",
+      "reason": null
+    },
+    {
+      "name": "a token issued 31 s ahead is refused",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1792999969,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.ECqB3sLya027lPL_DZmWW6_jTY4n-YxOYDAwYCGdl1b9iDvBaXPzxVOt5Cc0KYoNZ0yX2RnJm7nQSoC40No5Cg",
+      "reason": "early"
+    },
+    {
+      "name": "another sandbox refuses it",
+      "keyFile": "keyFile",
+      "sandboxId": "iothersandbox00000002",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.ECqB3sLya027lPL_DZmWW6_jTY4n-YxOYDAwYCGdl1b9iDvBaXPzxVOt5Cc0KYoNZ0yX2RnJm7nQSoC40No5Cg",
+      "reason": "audience"
+    },
+    {
+      "name": "a sandbox with no id file refuses it",
+      "keyFile": "keyFile",
+      "sandboxId": null,
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.ECqB3sLya027lPL_DZmWW6_jTY4n-YxOYDAwYCGdl1b9iDvBaXPzxVOt5Cc0KYoNZ0yX2RnJm7nQSoC40No5Cg",
+      "reason": "audience"
+    },
+    {
+      "name": "a token without streams:read is refused",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoiZmlsZXM6d3JpdGUiLCJpYXQiOjE3OTMwMDAwMDAsImV4cCI6MTc5MzAwMDMwMH0.7kxFGM_1Meor6Tz5M9aRdeAJrBbWSWPArW_laylf8vucDp_oYhG2leqsvdR-H1b3kP1nACHMU0TBZe-c2daPCg",
+      "reason": "scope"
+    },
+    {
+      "name": "a token with no scope is refused",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsImlhdCI6MTc5MzAwMDAwMCwiZXhwIjoxNzkzMDAwMzAwfQ.OKx-9PuHws3jnpL2HeZwAY1lsh4TI4xjopHIHhcNrjRD9ZZ_84tN59drfOZtoApK52gxPlW7DCTi_US6pznwAw",
+      "reason": "scope"
+    },
+    {
+      "name": "streams:read among other scopes is accepted",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoiZmlsZXM6cmVhZCBzdHJlYW1zOnJlYWQiLCJpYXQiOjE3OTMwMDAwMDAsImV4cCI6MTc5MzAwMDMwMH0.eQLRWwKkMcSlvCsnQPdu_2_gyd7KW19B3geE004e_96hcxsbhUq2c3yIFtNLjOFkB3D6Jv1UKw6-uwPqkDf_Bg",
+      "reason": null
+    },
+    {
+      "name": "a token of another issuer is refused",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci1vdGhlciIsImF1ZCI6Iml0ZXN0c2FuZGJveDAwMDAwMDAwMSIsInN1YiI6IjAxSlRFU1RQUk9KRUNUMDAwMDAwMDAwMDBBIiwidWlkIjoidXNlci10ZXN0LTEiLCJzY29wZSI6InN0cmVhbXM6cmVhZCIsImlhdCI6MTc5MzAwMDAwMCwiZXhwIjoxNzkzMDAwMzAwfQ.A9rJ2VhAYF1AX8tKkLzD8imp9_yUqCoM4bax-6uZJz4bfxa9Bj_9THIEVVY5f9sqzYouQZoVLpZW5q_QrIIMCQ",
+      "reason": "issuer"
+    },
+    {
+      "name": "a token of another environment never verifies here",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6Im90aGVyLWEiLCJ0eXAiOiJzYW5kYm94LWRhZW1vbitqd3QifQ.eyJpc3MiOiJzdWJibHktYnVpbGRlci1vdGhlciIsImF1ZCI6Iml0ZXN0c2FuZGJveDAwMDAwMDAwMSIsInN1YiI6IjAxSlRFU1RQUk9KRUNUMDAwMDAwMDAwMDBBIiwidWlkIjoidXNlci10ZXN0LTEiLCJzY29wZSI6InN0cmVhbXM6cmVhZCIsImlhdCI6MTc5MzAwMDAwMCwiZXhwIjoxNzkzMDAwMzAwfQ.stZiJBSr6RUy-3nolkdjEngWMHmWURt2ts0eXu5v9gM4U4rd2aEWVhHwjodSzSnuBAMarUvSzlx5LH9EjDRzBg",
+      "reason": "kid"
+    },
+    {
+      "name": "this environment token never verifies in another environment",
+      "keyFile": "otherKeyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.ECqB3sLya027lPL_DZmWW6_jTY4n-YxOYDAwYCGdl1b9iDvBaXPzxVOt5Cc0KYoNZ0yX2RnJm7nQSoC40No5Cg",
+      "reason": "kid"
+    },
+    {
+      "name": "a known kid signed by another key is refused",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.SMF8aH-Dj2gYWTynMu7oZQUOQ_XPTbxOvO09mwgOdF5lXCRofde3rlHHMAW08dp-5SvCQPVG1VYZgkt4vyTaBw",
+      "reason": "signature"
+    },
+    {
+      "name": "a changed payload is refused",
+      "keyFile": "keyFile",
+      "sandboxId": "iothersandbox00000002",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaW90aGVyc2FuZGJveDAwMDAwMDAyIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.ECqB3sLya027lPL_DZmWW6_jTY4n-YxOYDAwYCGdl1b9iDvBaXPzxVOt5Cc0KYoNZ0yX2RnJm7nQSoC40No5Cg",
+      "reason": "signature"
+    },
+    {
+      "name": "alg none is refused",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJub25lIiwia2lkIjoidGVzdC1hIiwidHlwIjoic2FuZGJveC1kYWVtb24rand0In0.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.",
+      "reason": "header"
+    },
+    {
+      "name": "another typ is refused",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9.Iyr_KRWNetW6yednVj3tq91KcyaSTpuWYlM78tYk4HFSW8Sy2cBy_AMFqQQLv0DTwBMTmySuADLDFdHFksBvAw",
+      "reason": "header"
+    },
+    {
+      "name": "a token of two parts is refused",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3QtYSIsInR5cCI6InNhbmRib3gtZGFlbW9uK2p3dCJ9.eyJpc3MiOiJzdWJibHktYnVpbGRlci10ZXN0IiwiYXVkIjoiaXRlc3RzYW5kYm94MDAwMDAwMDAxIiwic3ViIjoiMDFKVEVTVFBST0pFQ1QwMDAwMDAwMDAwMEEiLCJ1aWQiOiJ1c2VyLXRlc3QtMSIsInNjb3BlIjoic3RyZWFtczpyZWFkIiwiaWF0IjoxNzkzMDAwMDAwLCJleHAiOjE3OTMwMDAzMDB9",
+      "reason": "malformed"
+    },
+    {
+      "name": "a token that is not JSON is refused",
+      "keyFile": "keyFile",
+      "sandboxId": "itestsandbox000000001",
+      "now": 1793000000,
+      "token": "bm90.anNvbg.c2ln",
+      "reason": "malformed"
+    }
+  ]
+}

@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 1.3.0
+
+### Minor Changes
+
+- Site version 1.3.0. Add the sandbox daemon, a small Node 24 server under its own systemd unit that streams dev server output, dev server status and file changes to the Builder, with every TCP path but /version guarded by a daemon token. Run the three template helpers as shell loops instead of Node, and let css-watcher watch main filtered to src, so removing src never leaves it deaf
+
 ## 1.2.10
 
 ### Patch Changes
