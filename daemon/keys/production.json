@@ -1,4 +1,11 @@
 {
   "iss": "subbly-builder-production",
-  "keys": []
+  "keys": [
+    {
+      "kid": "prod-2026-11",
+      "crv": "Ed25519",
+      "x": "jIkVzn575k7SiQjfFLfrDY785QjJdbo8ZMe8CSKeNuw",
+      "kty": "OKP"
+    }
+  ]
 }
