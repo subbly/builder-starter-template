@@ -1,5 +1,11 @@
 # subbly-builder-default
 
+## 1.3.1
+
+### Patch Changes
+
+- Site version 1.3.1. Ship a clone of the plugin marketplace at `.subbly/marketplaces/<slug>`, so a new sandbox stages its default plugins without cloning the marketplace from the git server
+
 ## 1.3.0
 
 ### Minor Changes
