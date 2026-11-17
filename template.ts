@@ -1,4 +1,5 @@
 import { Template, ReadyCmd } from 'e2b'
+import { MARKETPLACES_DIR } from './marketplace'
 
 const UV_VERSION = '0.12.10'
 const PYTHON_VERSION = '3.13'
@@ -31,6 +32,7 @@ export const createTemplate = (environment: Environment) => {
     .runCmd('HOME=/home/user agent-browser install --with-deps && chown -R user:user /home/user')
     .copy('main', '/project/workspace/main')
     .copy('.subbly', '/project/workspace/.subbly')
+    .copy(MARKETPLACES_DIR, '/project/workspace/.subbly/marketplaces')
     .copy('scripts', '/project/workspace/scripts')
     .copy('ecosystem.config.js', '/project/workspace/ecosystem.config.js')
     .copy('systemd/subbly-pm2.service', '/etc/systemd/system/subbly-pm2.service', { mode: 0o644 })

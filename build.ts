@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process'
 import { Template, defaultBuildLogger } from 'e2b'
+import { seedMarketplace } from './marketplace'
 import { type Environment, createTemplate } from './template'
 
 export function getVersionArg(): string {
@@ -16,6 +17,7 @@ export function getVersionArg(): string {
 export async function buildTemplate(name: string, environment: Environment) {
   const version = getVersionArg()
   execFileSync('node', ['daemon/manifest.mjs', '--check'], { stdio: 'inherit' })
+  seedMarketplace()
   const info = await Template.build(createTemplate(environment), name, {
     tags: [version, 'latest'],
     cpuCount: 4,
